@@ -1,0 +1,3 @@
+[submodule "modules/sway.module_core"]
+	path = modules/sway.module_core
+	url = git://github.com/timcogames/sway.module_core.git
