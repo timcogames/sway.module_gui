@@ -1,25 +1,20 @@
-#ifndef SWAY_UI_BUILDER_H
-#define SWAY_UI_BUILDER_H
+#ifndef SWAY_UI_PAINTER_H
+#define SWAY_UI_PAINTER_H
 
 #include <sway/ui/prereqs.h>
 
 NAMESPACE_BEGIN(sway)
 NAMESPACE_BEGIN(ui)
 
-class Builder : public core::foundation::Object {
-	DECLARE_OBJECT(Builder, core::foundation::Object)
-
+class Painter {
 public:
 	/*!
 	 * \brief
 	 *    Конструктор класса.
 	 *
 	 *    Выполняет инициализацию нового экземпляра класса.
-	 * 
-	 * \param[in] context
-	 *    Контекст подсистемы.
 	 */
-	Builder(core::foundation::Context * context);
+	Painter();
 
 	/*!
 	 * \brief
@@ -27,7 +22,7 @@ public:
 	 *
 	 *    Освобождает захваченные ресурсы.
 	 */
-	virtual ~Builder();
+	~Painter();
 
 private:
 };
@@ -35,4 +30,4 @@ private:
 NAMESPACE_END(ui)
 NAMESPACE_END(sway)
 
-#endif // SWAY_UI_BUILDER_H
+#endif // SWAY_UI_PAINTER_H
