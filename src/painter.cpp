@@ -1,15 +1,15 @@
-#include <sway/ui/painter.h>
+#include <sway/gui/painter.hpp>
 
 NAMESPACE_BEGIN(sway)
-NAMESPACE_BEGIN(ui)
+NAMESPACE_BEGIN(gui)
 
 Painter::Painter() {
-	// Empty
+  // Empty
 }
 
 Painter::~Painter() {
-	// Empty
+  // Empty
 }
 
-NAMESPACE_END(ui)
+NAMESPACE_END(gui)
 NAMESPACE_END(sway)
