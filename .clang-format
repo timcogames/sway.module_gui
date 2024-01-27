@@ -2,6 +2,7 @@ BasedOnStyle: LLVM
 IndentWidth: 2
 Standard: c++17
 AllowShortEnumsOnASingleLine: true
+BreakAfterAttributes: Always
 BreakConstructorInitializers: BeforeComma
 BreakBeforeBraces: Custom
 BraceWrapping:
@@ -26,7 +27,7 @@ IncludeCategories:
     Priority:        1
   - Regex:           '^<sway/.*\.hpp>'
     Priority:        2
-  - Regex:           '<(catch2|boost|gtest)\/'
+  - Regex:           '<(catch2|boost|gtest|gmock)\/'
     Priority:        3
   - Regex:           '^<.*'
     Priority:        4
@@ -40,4 +41,6 @@ TypenameMacros:
   - PURE_VIRTUAL
   - MTHD_OVERRIDE
   - DECLARE_EVENT
+  - TEST
+  - TEST_F
 AlwaysBreakTemplateDeclarations: true

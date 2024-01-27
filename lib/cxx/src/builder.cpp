@@ -1,7 +1,7 @@
-#include <sway/gui/builder.hpp>
+#include <sway/ui/builder.hpp>
 
 NAMESPACE_BEGIN(sway)
-NAMESPACE_BEGIN(gui)
+NAMESPACE_BEGIN(ui)
 
 Builder::Builder(core::foundation::Context *context)
     : core::foundation::Object(context) {
@@ -12,5 +12,5 @@ Builder::~Builder() {
   // Empty
 }
 
-NAMESPACE_END(gui)
+NAMESPACE_END(ui)
 NAMESPACE_END(sway)

@@ -1,7 +1,7 @@
-#include <sway/gui/painter.hpp>
+#include <sway/ui/painter.hpp>
 
 NAMESPACE_BEGIN(sway)
-NAMESPACE_BEGIN(gui)
+NAMESPACE_BEGIN(ui)
 
 Painter::Painter() {
   // Empty
@@ -11,5 +11,5 @@ Painter::~Painter() {
   // Empty
 }
 
-NAMESPACE_END(gui)
+NAMESPACE_END(ui)
 NAMESPACE_END(sway)

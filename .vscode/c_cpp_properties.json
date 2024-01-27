@@ -1,0 +1,14 @@
+{
+  "configurations": [
+    {
+      "name": "Mac",
+      "includePath": [
+        "/opt/homebrew/Cellar/freetype/2.13.2/include",
+        "${workspaceFolder}/lib/cxx/include",
+        "${workspaceFolder}/submodules/sway.module_core/lib/cxx/include",
+        "/Users/apriori85/Documents/Third-party/emsdk/upstream/emscripten/system/include"
+      ]
+    }
+  ],
+  "version": 4
+}
