@@ -7,6 +7,7 @@
 using namespace sway;
 
 TEST(FontTest, Ctor) {
-  auto font = std::make_shared<ui::ft2::Font>();
-  ASSERT_TRUE(font != nullptr);
+  auto fontMngr = std::make_shared<ui::ft2::FontManager>();
+  fontMngr->load("array", "./assets/fonts/array.ttf");
+  ASSERT_TRUE(fontMngr != nullptr);
 }
