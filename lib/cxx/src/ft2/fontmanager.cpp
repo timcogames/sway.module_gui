@@ -27,7 +27,8 @@ void FontManager::initLibrary() {
 void FontManager::freeLibrary() { FT_Done_FreeType(lib_); }
 
 void FontManager::load(const std::string &name, const std::string &filepath) {
-  cache_.insert(std::make_pair(name, std::make_shared<Face>(lib_, filepath.c_str(), 0)));
+  auto loader = std::make_shared<FaceLoader>(lib_, filepath.c_str());
+  cache_.insert(std::make_pair(name, loader->faceResponse_));
 }
 
 NAMESPACE_END(ft2)

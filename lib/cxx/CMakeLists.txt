@@ -17,6 +17,8 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fvisibility=hidden -fPIE")
 include_directories("${GLOB_FT2_ROOT_DIR}/include/freetype2")
 include_directories("${MODULE_UI_LIST_DIR}/lib/cxx/include")
 include_directories("${MODULE_UI_LIST_DIR}/submodules/sway.module_core/lib/cxx/include")
+include_directories("${MODULE_UI_LIST_DIR}/submodules/sway.module_math/lib/cxx/include")
+include_directories("${MODULE_UI_LIST_DIR}/submodules/sway.module_rms/lib/cxx/include")
 
 #---------------------------------------------------------------------------------
 # Build object library
@@ -42,10 +44,15 @@ set(MODULE_UI_DEPENDENCY_LIST "module_ui_dependences")
 
 if(NOT TARGET module_ui_dependences)
   set(TARGET_OBJECT_LIST)
-  set(MODULE_CORE_OBJ_TARGET "module_core_obj")
 
+  set(MODULE_CORE_OBJ_TARGET "module_core_obj")
   if(TARGET ${MODULE_CORE_OBJ_TARGET})
     list(APPEND TARGET_OBJECT_LIST $<TARGET_OBJECTS:${MODULE_CORE_OBJ_TARGET}>)
+  endif()
+
+  set(MODULE_RMS_OBJ_TARGET "module_rms_obj")
+  if(TARGET ${MODULE_RMS_OBJ_TARGET})
+    list(APPEND TARGET_OBJECT_LIST $<TARGET_OBJECTS:${MODULE_RMS_OBJ_TARGET}>)
   endif()
 
   if(TARGET ${MODULE_UI_OBJ_TARGET})
