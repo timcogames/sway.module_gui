@@ -45,7 +45,7 @@ public:
 #if EMSCRIPTEN_PLATFORM
     thread_ = std::thread([this]() -> void {
       auto callback = [this](rms::fetch_res_t fetch) {
-        faceResponse_ = std::make_shared<Face>(lib_, fetch->data, fetch->numBytes, 0);
+        faceResponse_ = std::make_shared<Face>(lib_, (const u8_t *)fetch->data, fetch->numBytes, 0);
         fetching_.store(false);
       };
 

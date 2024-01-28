@@ -23,7 +23,7 @@ public:
 
   void freeLibrary();
 
-  void load(const std::string &name, const std::string &filepath);
+  void load(std::shared_ptr<rms::FetcherQueue> fetcherQueue, const std::string &name, const std::string &filepath);
 
 private:
   FT_Library lib_;

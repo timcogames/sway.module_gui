@@ -26,8 +26,10 @@ void FontManager::initLibrary() {
 
 void FontManager::freeLibrary() { FT_Done_FreeType(lib_); }
 
-void FontManager::load(const std::string &name, const std::string &filepath) {
+void FontManager::load(
+    std::shared_ptr<rms::FetcherQueue> fetcherQueue, const std::string &name, const std::string &filepath) {
   auto loader = std::make_shared<FaceLoader>(lib_, filepath.c_str());
+  fetcherQueue->add(loader);
   cache_.insert(std::make_pair(name, loader->faceResponse_));
 }
 
