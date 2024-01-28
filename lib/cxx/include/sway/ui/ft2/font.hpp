@@ -16,6 +16,8 @@ public:
 
   ~Font();
 
+  void create(FT_Face face, lpcstr_t symbols, bool hinted, bool antialiased);
+
 private:
   FT_Face face_;
 };

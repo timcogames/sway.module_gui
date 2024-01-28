@@ -10,3 +10,9 @@
 [submodule "submodules/sway.module_math"]
 	path = submodules/sway.module_math
 	url = https://github.com/timcogames/sway.module_math.git
+[submodule "submodules/sway.module_render"]
+	path = submodules/sway.module_render
+	url = https://github.com/timcogames/sway.module_render.git
+[submodule "submodules/sway.module_gapi"]
+	path = submodules/sway.module_gapi
+	url = https://github.com/timcogames/sway.module_gapi.git

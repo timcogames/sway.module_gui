@@ -2,6 +2,7 @@
 #define SWAY_UI_PAINTER_HPP
 
 #include <sway/core.hpp>
+#include <sway/gapi.hpp>
 
 NAMESPACE_BEGIN(sway)
 NAMESPACE_BEGIN(ui)

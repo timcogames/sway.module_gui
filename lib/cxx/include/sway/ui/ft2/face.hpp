@@ -29,34 +29,8 @@ public:
     return face_->style_name;
   }
 
-private:
+public:
   FT_Face face_;
-};
-
-class FaceLoader : public rms::Fetcher {
-public:
-  FaceLoader(FT_Library lib, const std::string &url)
-      : rms::Fetcher(url)
-      , lib_(lib) {}
-
-  ~FaceLoader() {}
-
-  MTHD_OVERRIDE(void fetch()) {
-#if EMSCRIPTEN_PLATFORM
-    thread_ = std::thread([this]() -> void {
-      auto callback = [this](rms::fetch_res_t fetch) {
-        faceResponse_ = std::make_shared<Face>(lib_, (const u8_t *)fetch->data, fetch->numBytes, 0);
-        fetching_.store(false);
-      };
-
-      rms::RemoteFile::fetch(getUrl().c_str(), callback);
-    });
-#endif
-  }
-
-public:
-  FT_Library lib_;
-  std::shared_ptr<Face> faceResponse_;
 };
 
 NAMESPACE_END(ft2)

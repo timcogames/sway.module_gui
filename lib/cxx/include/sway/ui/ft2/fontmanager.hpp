@@ -3,6 +3,7 @@
 
 #include <sway/core.hpp>
 #include <sway/ui/ft2/face.hpp>
+#include <sway/ui/ft2/font.hpp>
 
 #include <freetype/ftstroke.h>
 #include <ft2build.h>
@@ -25,11 +26,18 @@ public:
 
   void load(std::shared_ptr<rms::FetcherQueue> fetcherQueue, const std::string &name, const std::string &filepath);
 
+  auto addFont(const std::string &name) -> std::shared_ptr<Font>;
+
+  auto find(const std::string &name) -> std::shared_ptr<Font>;
+
+  void removeFont();
+
 private:
   FT_Library lib_;
   bool initialized_;
 
   std::unordered_map<std::string, std::shared_ptr<Face>> cache_;
+  std::unordered_map<std::string, std::shared_ptr<Font>> fonts_;
 };
 
 NAMESPACE_END(ft2)

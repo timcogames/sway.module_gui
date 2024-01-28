@@ -12,6 +12,8 @@ Font::~Font() {
   // Empty
 }
 
+void Font::create(FT_Face face, lpcstr_t symbols, bool hinted, bool antialiased) {}
+
 NAMESPACE_END(ft2)
 NAMESPACE_END(ui)
 NAMESPACE_END(sway)

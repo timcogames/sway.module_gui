@@ -5,6 +5,7 @@
       "includePath": [
         "/opt/homebrew/Cellar/freetype/2.13.2/include",
         "${workspaceFolder}/lib/cxx/include",
+        "${workspaceFolder}/submodules/sway.module_gapi/api/cxx/include",
         "${workspaceFolder}/submodules/sway.module_loader/api/cxx/include",
         "${workspaceFolder}/submodules/sway.module_core/lib/cxx/include",
         "${workspaceFolder}/submodules/sway.module_math/lib/cxx/include",
