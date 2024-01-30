@@ -5,6 +5,7 @@ NAMESPACE_BEGIN(sway)
 NAMESPACE_BEGIN(ui)
 NAMESPACE_BEGIN(ft2)
 
+#define ASCII_SIZE 256
 lpcstr_t SymbolSet = "1234567890-=!@#$%^&*()_+\\|/><,.?~`';: "
                      "АБВГДЕЁЖЗИЙКЛМНОПРСТУФХЦЧШЩЬЪЫЭЮЯ"
                      "абвгдеёжзийклмнопрстуфхцчшщьъыэюя"
@@ -45,10 +46,6 @@ auto FontManager::addFont(const std::string &name) -> std::shared_ptr<Font> {
   if (iter == cache_.end()) {
     return nullptr;
   }
-
-  // _charmap = new FreeTypeCharmap(iter->second);
-  // if (_charmap->hasUnicodeSupport())
-  // 	_charmap->setCharmap(FT_ENCODING_UNICODE);
 
   auto font = std::make_shared<Font>();
   font->create(iter->second->face_, SymbolSet, false, true);

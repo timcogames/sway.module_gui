@@ -77,6 +77,7 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fvisibility=hidden -fPIE")
 
 add_submodule("module_core" submodules/sway.module_core)
 add_submodule("module_rms" submodules/sway.module_rms)
+add_submodule("module_render" submodules/sway.module_render)
 
 #---------------------------------------------------------------------------------
 # Executable output path
@@ -90,11 +91,12 @@ set_output_dir(${MODULE_UI_BIN_DIR})
 
 include_directories("${GLOB_THIRD_PARTY_DIR}/json/include")
 include_directories("${MODULE_UI_LIST_DIR}/lib/cxx/include")
+include_directories("${MODULE_UI_LIST_DIR}/submodules/sway.module_gapi/api/cxx/include")
 include_directories("${MODULE_UI_LIST_DIR}/submodules/sway.module_loader/api/cxx/include")
 include_directories("${MODULE_UI_LIST_DIR}/submodules/sway.module_core/lib/cxx/include")
 include_directories("${MODULE_UI_LIST_DIR}/submodules/sway.module_math/lib/cxx/include")
-include_directories("${MODULE_UI_LIST_DIR}/submodules/sway.module_loader/lib/cxx/include")
 include_directories("${MODULE_UI_LIST_DIR}/submodules/sway.module_rms/lib/cxx/include")
+include_directories("${MODULE_UI_LIST_DIR}/submodules/sway.module_render/lib/cxx/include")
 
 #---------------------------------------------------------------------------------
 # Library

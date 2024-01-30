@@ -7,5 +7,6 @@
 #include <sway/ui/ft2/font.hpp>
 #include <sway/ui/ft2/fontmanager.hpp>
 #include <sway/ui/ft2/glyph.hpp>
+#include <sway/ui/painter.hpp>
 
 #endif  // SWAY_UI_HPP
