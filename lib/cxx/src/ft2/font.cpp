@@ -1,63 +1,130 @@
 #include <sway/gapi.hpp>
 #include <sway/ui/ft2/font.hpp>
 
+#include <algorithm>  // std::max
+
 NAMESPACE_BEGIN(sway)
 NAMESPACE_BEGIN(ui)
 NAMESPACE_BEGIN(ft2)
 
-Font::Font() {
-  // Empty
-}
+Font::Font(std::shared_ptr<Face> face, math::size2i_t atlasSize)
+    : face_(face)
+    , atlasSize_(atlasSize) {}
 
-Font::~Font() {
-  // Empty
-}
-
-void Font::create(FT_Face face, lpcstr_t symbols, bool hinted, bool antialiased) {
-  s8_t charcode;
-  for (auto i = 0; i < strlen(symbols); i++) {
-    charcode = (s8_t)symbols[i];
-
-    if (FT_Load_Glyph(face, FT_Get_Char_Index(face, charcode), FT_LOAD_DEFAULT)) {
+void Font::create(lpcstr_t charcodes, bool hinted, bool antialiased) {
+  for (auto i = 0; i < strlen(charcodes); i++) {
+    if (hasCharInfo(charcodes[i])) {
       continue;
     }
 
-    if (FT_Render_Glyph(face->glyph, FT_RENDER_MODE_NORMAL)) {
+    FontGlyphId glyphId(face_->data(), charcodes[i]);
+    glyphs_.push_back(glyphId);
+
+    auto slot = FontGlyph::load(face_->data(), glyphId);
+    if (!slot.has_value()) {
       continue;
     }
 
-    FT_GlyphSlot slot = face->glyph;
-    FT_Bitmap bitmap = slot->bitmap;
+    auto info = getCharMetrics(slot.value());
+    info.symidx = glyphId.idx;
+    cache_[glyphId.code] = info;
 
-    gapi::TextureCreateInfo createInfo;
-    createInfo.target = gapi::TextureTarget::TEX_2D;
-    createInfo.size = math::size2i_t(bitmap.width, bitmap.rows);
-    // createInfo.arraySize
-    createInfo.format = gapi::PixelFormat::R;
-    createInfo.internalFormat = gapi::PixelFormat::R;
-    createInfo.dataType = core::ValueDataType::UBYTE;
-    createInfo.pixels = (s8_t *)bitmap.buffer;
-    createInfo.mipLevels = 0;
-    // createInfo.sampleCount
+    FT_Glyph glyph;
+    FT_Get_Glyph(slot.value(), &glyph);
 
-    // gapi::Texture *texture = image->getTexture();
-    // texture->setUnpackAlignement(1);
-    // texture->create(createInfo, false);
-    // texture->setUnpackAlignement(4);
-
-    auto t = slot->bitmap_top;
-    auto l = slot->bitmap_left;
-    auto w = bitmap.width;
-    auto h = bitmap.rows;
-
-    GlyphInfo fontCharacter;
-    fontCharacter.bearing = math::vec2i_t(l, t);
-    fontCharacter.size = math::vec2i_t(w, h);
-    fontCharacter.advance = math::vec2i_t(FT_PosToInt(slot->advance.x), FT_PosToInt(slot->advance.y));
-    // fontCharacter.image = image;
-
-    // glyphInfo_.insert(std::pair<UInt32, LGLYPH_INFO>(charcode, fontCharacter));
+    maxSize_ = this->computeMaxSize_(glyph, maxSize_);
   }
+}
+
+auto Font::computeMaxSize_(FT_Glyph glyph, math::size2i_t size) -> math::size2i_t {
+  FT_Glyph_To_Bitmap(&glyph, FT_RENDER_MODE_NORMAL, 0, 1);
+  auto *bitmap = &((FT_BitmapGlyph)glyph)->bitmap;
+
+  // clang-format off
+  return {
+    std::max<s32_t>(size.getW(), math::util::powerOf2(bitmap->width)),
+    std::max<s32_t>(size.getH(), math::util::powerOf2(bitmap->rows))
+  };  // clang-format on
+}
+
+auto Font::getBitmapData(FontGlyphId sym) -> BitmapInfo {
+  auto slot = FontGlyph::load(face_->data(), sym);
+  if (!slot.has_value()) {
+    // Empty
+  }
+
+  FT_Glyph glyph;
+  FT_Get_Glyph(slot.value(), &glyph);
+
+  FT_Glyph_To_Bitmap(&glyph, FT_RENDER_MODE_NORMAL, 0, 1);
+  auto *bitmap = &((FT_BitmapGlyph)glyph)->bitmap;
+
+  const auto texWdt = math::util::powerOf2(bitmap->width);
+  const auto texHgt = math::util::powerOf2(bitmap->rows);
+
+  auto x = (float)bitmap->width / (float)texWdt;
+  auto y = (float)bitmap->rows / (float)texHgt;
+
+  const auto texPitch = bitmap->pitch;
+  const auto texAreaSize = texWdt * texHgt;
+  // const auto texPixelComponents = 4;  // R, G, B, A
+  const auto texPixelComponents = 2;
+
+  auto *texData = (u8_t *)malloc(texAreaSize * texPixelComponents * sizeof(u8_t));
+  for (auto y = 0; y < texHgt; y++) {
+    for (auto x = 0; x < texWdt; x++) {
+      auto texPixelIdx = texPixelComponents * (x + texWdt * y);
+
+      // clang-format off
+      // texData[texPixelIdx + 0] = style_.foreground.getR();
+      // texData[texPixelIdx + 1] = style_.foreground.getG();
+      // texData[texPixelIdx + 2] = style_.foreground.getB();
+      // texData[texPixelIdx + 3] = bitmap->buffer[x + texPitch * y]; // A
+      // clang-format on
+
+      texData[texPixelIdx] = 255;
+
+      if (x >= bitmap->width || y >= bitmap->rows) {
+        texData[texPixelIdx + 1] = 0;
+      } else {
+        texData[texPixelIdx + 1] = (bitmap->buffer[x + bitmap->width * y]);
+      }
+    }
+  }
+
+  BitmapInfo bi;
+  bi.data = texData;
+  bi.size = math::size2i_t(texWdt, texHgt);
+
+  free(texData);
+  return bi;
+}
+
+auto Font::getCharInfo(s8_t code) const -> std::optional<CharInfo> {
+  const auto &iter = cache_.find(code);
+  if (iter != cache_.end()) {
+    return std::make_optional<CharInfo>((*iter).second);
+  }
+
+  return std::nullopt;
+}
+
+[[nodiscard]]
+auto Font::hasCharInfo(s8_t code) const -> bool {
+  return cache_.find(code) != cache_.end();
+}
+
+auto Font::getCharMetrics(FT_GlyphSlot slot) -> CharInfo {
+  auto metrics = slot->metrics;
+
+  CharInfo info;
+  info.size = math::size2i_t(metrics.width, metrics.height) / 64;
+  info.bearing = math::vec2i_t(metrics.horiBearingX >> 6, metrics.horiBearingY >> 6);
+  info.advance = metrics.horiAdvance / 64;
+  auto advanceX = slot->advance.x >> 6;
+  auto advanceY = slot->advance.y >> 6;
+
+  return info;
 }
 
 NAMESPACE_END(ft2)

@@ -4,6 +4,7 @@
 #include <sway/core.hpp>
 #include <sway/gapi.hpp>
 #include <sway/render.hpp>
+#include <sway/ui/ft2/font.hpp>
 
 #include <memory>
 
@@ -49,16 +50,16 @@ public:
 
   ~Painter() = default;
 
-  void initialize(std::shared_ptr<render::RenderSubsystem> subsystem,
-      std::shared_ptr<render::MaterialManager> materialMngr, std::shared_ptr<rms::ImageResourceManager> imgResMngr,
-      std::shared_ptr<rms::GLSLResourceManager> glslResMngr);
+  void initialize(std::shared_ptr<ft2::Font> font, const gapi::TextureCreateInfo &createInfo,
+      std::shared_ptr<render::RenderSubsystem> subsystem, std::shared_ptr<render::MaterialManager> materialMngr,
+      std::shared_ptr<rms::ImageResourceManager> imgResMngr, std::shared_ptr<rms::GLSLResourceManager> glslResMngr);
 
   MTHD_OVERRIDE(void onUpdate(math::mat4f_t tfrm, math::mat4f_t proj, math::mat4f_t view, f32_t dtime));
 
 private:
   std::shared_ptr<render::RenderSubqueue> subqueue_;
-  std::shared_ptr<render::Material> material_;
-  std::shared_ptr<render::Geometry> geometry_;
+  std::shared_ptr<render::Material> mtrl_;
+  std::shared_ptr<render::Geometry> geom_;
 
   // GeometryBatchChunk geomBatchChunks_[GEOMERTY_BATCH_CHUNK_SIZE];
   // u32_t geomBatchChunkSize_;

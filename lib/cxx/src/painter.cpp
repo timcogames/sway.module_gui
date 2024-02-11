@@ -3,120 +3,87 @@
 NAMESPACE_BEGIN(sway)
 NAMESPACE_BEGIN(ui)
 
-template <typename TVertexDataType>
-class Plane : public render::procedurals::Shape {
-public:
-  Plane(const math::size2f_t &size, const math::size2i_t &subdivisions, const math::col4f_t &col = COL4F_WHITE)
-      : data_(std::make_shared<render::GeometryIndexedVertexData<TVertexDataType>>(
-            4 * subdivisions.getW() * subdivisions.getH())) {
-    auto sizeHalf = size / 2.0F;
-
-    render::GeometryVertexAttribSet attribs = {
-        .pos = data_->template createVertexAttrib<math::vec3f_t>(gapi::VertexSemantic::POS),
-        .col = data_->template createVertexAttrib<math::vec4f_t>(gapi::VertexSemantic::COL),
-        .tex = data_->template createVertexAttrib<math::vec2f_t>(gapi::VertexSemantic::TEXCOORD_0)};
-
-    auto unitScale = 1.5F;
-    auto tileWt = size.getW() * unitScale;
-    auto tileHt = size.getH() * unitScale;
-
-    u32_t tileCount = 0;
-
-    for (auto y = 0; y < subdivisions.getH(); y++) {
-      for (auto x = 0; x < subdivisions.getW(); x++) {
-        attribs.pos->addVtxData({(0.0F + (f32_t)x) * tileWt, (0.0F + (f32_t)y) * tileHt, 0.0F});
-        attribs.pos->addVtxData({(1.0F + (f32_t)x) * tileWt, (0.0F + (f32_t)y) * tileHt, 0.0F});
-        attribs.pos->addVtxData({(0.0F + (f32_t)x) * tileWt, (1.0F + (f32_t)y) * tileHt, 0.0F});
-        attribs.pos->addVtxData({(1.0F + (f32_t)x) * tileWt, (1.0F + (f32_t)y) * tileHt, 0.0F});
-
-        attribs.col->addVtxData(col.toVec4());
-        attribs.col->addVtxData(col.toVec4());
-        attribs.col->addVtxData(col.toVec4());
-        attribs.col->addVtxData(col.toVec4());
-
-        attribs.tex->addVtxData(math::vec2f_t(1.0F, 1.0F));
-        attribs.tex->addVtxData(math::vec2f_t(0.0F, 1.0F));
-        attribs.tex->addVtxData(math::vec2f_t(1.0F, 0.0F));
-        attribs.tex->addVtxData(math::vec2f_t(0.0F, 0.0F));
-
-        data_->addTriIndices(0 + (tileCount * 4), 2 + (tileCount * 4), 1 + (tileCount * 4));
-        data_->addTriIndices(1 + (tileCount * 4), 2 + (tileCount * 4), 3 + (tileCount * 4));
-
-        tileCount++;
-      }
-    }
-  }
-
-  virtual ~Plane() = default;
-
-  [[nodiscard]]
-  auto getGeometryData() const -> render::GeometryDataPtr<TVertexDataType> {
-    return data_;
-  }
-
-  template <std::size_t TSize>
-  void useVertexSemanticSet(std::array<sway::gapi::VertexSemantic, TSize> &arr) {
-    data_->useVertexSemanticSet(arr);
-  }
-
-  // clang-format off
-  MTHD_OVERRIDE(auto getVertexAttribs() const -> render::VertexAttribMap_t) {  // clang-format on
-    return data_->getAttribs();
-  }
-
-  // clang-format off
-  MTHD_OVERRIDE(auto getVertexAttrib(gapi::VertexSemantic semantic) const -> render::VertexAttribPtr_t) {  // clang-format on
-    return data_->getAttrib(semantic);
-  }
-
-  // clang-format off
-  MTHD_OVERRIDE(auto getGeometryInfo() const -> render::GeometryCreateInfo) {  // clang-format on
-    render::GeometryCreateInfo info;
-
-    info.topology = gapi::TopologyType::TRIANGLE_LIST;
-    info.vb.desc.usage = gapi::BufferUsage::DYNAMIC;
-    info.vb.desc.byteStride = sizeof(TVertexDataType);
-    info.vb.desc.capacity = data_->getVtxCount();
-    info.vb.data = data_->getVtxRawdata();
-
-    info.ib.desc.usage = gapi::BufferUsage::DYNAMIC;
-    info.ib.desc.byteStride = sizeof(u32_t);
-    info.ib.desc.capacity = data_->getIdxCount();
-    info.ib.data = data_->getIndices().data();
-
-    return info;
-  }
-
-  // clang-format off
-  MTHD_OVERRIDE(auto getVertices() -> void *) {  // clang-format on
-    return data_->getVtxRawdata();
-  }
-
-private:
-  render::GeometryDataPtr<TVertexDataType> data_;
-};
-
 Painter::Painter()
-    : geometry_(nullptr) {}
+    : geom_(nullptr) {}
 
-void Painter::initialize(std::shared_ptr<render::RenderSubsystem> subsystem,
-    std::shared_ptr<render::MaterialManager> materialMngr, std::shared_ptr<rms::ImageResourceManager> imgResMngr,
-    std::shared_ptr<rms::GLSLResourceManager> glslResMngr) {
+void Painter::initialize(std::shared_ptr<ft2::Font> font, const gapi::TextureCreateInfo &createInfo,
+    std::shared_ptr<render::RenderSubsystem> subsystem, std::shared_ptr<render::MaterialManager> materialMngr,
+    std::shared_ptr<rms::ImageResourceManager> imgResMngr, std::shared_ptr<rms::GLSLResourceManager> glslResMngr) {
   subqueue_ = subsystem->getQueueByIdx(0)->getSubqueues(render::RenderSubqueueGroup::OPAQUE)[0];
 
-  material_ = std::make_shared<render::Material>("material_ui", imgResMngr, glslResMngr);
-  material_->addImage("myimg1", "diffuse_sampler");
-  material_->addEffect({"ui_vs", "ui_fs"});
-  materialMngr->addMaterial(material_);
+  mtrl_ = std::make_shared<render::Material>("material_ui", imgResMngr, glslResMngr);
+
+  gapi::TextureCreateInfo texCreateInfo;
+  texCreateInfo.target = gapi::TextureTarget::TEX_2D;
+  texCreateInfo.size = font->getAtlasSize();
+  texCreateInfo.format = gapi::PixelFormat::LUMINANCE_ALPHA;
+  texCreateInfo.internalFormat = gapi::PixelFormat::LUMINANCE_ALPHA;
+  texCreateInfo.dataType = core::ValueDataType::UBYTE;
+  texCreateInfo.pixels = nullptr;
+  texCreateInfo.mipLevels = 0;
+
+  auto image = mtrl_->addImage(texCreateInfo, "diffuse_sampler");
+  mtrl_->addEffect({"ui_vs", "ui_fs"});
+  materialMngr->addMaterial(mtrl_);
+
+  const auto wdt = font->getAtlasSize().getW() / font->maxSize_.getW();
+  const auto hdt = font->getAtlasSize().getH() / font->maxSize_.getH();
+
+  for (auto i = 0; i < font->glyphs_.size(); i++) {
+    auto bi = font->getBitmapData(font->glyphs_[i]);
+
+    auto symidx = font->glyphs_[i].idx;
+    const auto x = symidx % wdt;
+    const auto y = symidx / hdt;
+
+    gapi::TextureSubdataDescriptor texSubdataDesc;
+    texSubdataDesc.level = 0;
+    texSubdataDesc.offset = math::point2i_t(x * font->maxSize_.getW(), y * font->maxSize_.getH());
+    texSubdataDesc.size = bi.size;
+    texSubdataDesc.format = gapi::PixelFormat::LUMINANCE_ALPHA;
+    texSubdataDesc.type = core::ValueDataType::UBYTE;
+    texSubdataDesc.pixels = bi.data;
+    image->getTexture()->updateSubdata(texSubdataDesc);
+  }
 
   std::array<gapi::VertexSemantic, 3> semantics = {
       gapi::VertexSemantic::POS, gapi::VertexSemantic::COL, gapi::VertexSemantic::TEXCOORD_0};
 
-  auto shape = std::make_shared<Plane<math::VertexTexCoordEx>>(math::size2f_t(0.2F), math::size2i_t(1));
-  shape->useVertexSemanticSet(semantics);
+  auto geomShape_ = std::make_shared<render::PlaneArray<math::VertexTexCoordEx>>();
+  geomShape_->useVertexSemanticSet(semantics);
 
-  geometry_ = std::make_shared<render::Geometry>(subsystem->getIdGenerator(), material_->getEffect(), true);
-  geometry_->create(shape);
+  geom_ = std::make_shared<render::Geometry>(subsystem->getIdGenerator(), mtrl_->getEffect(), true);
+  geom_->createArray(geomShape_);
+
+  auto off = 0.0F;
+  auto chr = "HELLO hello 12345";
+  for (auto i = 0; i < strlen(chr); i++) {
+    auto info = font->getCharInfo(chr[i]);
+    if (info.has_value()) {
+      auto symidx = info.value().symidx;
+      const auto x = symidx % wdt;
+      const auto y = symidx / hdt;
+
+      auto offset_x = (f32_t)x * (f32_t)font->maxSize_.getW();
+      auto offset_y = (f32_t)y * (f32_t)font->maxSize_.getH();
+
+      math::rect4f_t uv;
+      uv.setL(static_cast<f32_t>(offset_x) / static_cast<f32_t>(font->getAtlasSize().getW()));
+      uv.setT(static_cast<f32_t>(offset_y) / static_cast<f32_t>(font->getAtlasSize().getH()));
+      uv.setR(static_cast<f32_t>(offset_x + font->maxSize_.getW()) / static_cast<f32_t>(font->getAtlasSize().getW()));
+      uv.setB(static_cast<f32_t>(offset_y + font->maxSize_.getH()) / static_cast<f32_t>(font->getAtlasSize().getH()));
+
+      geomShape_->updateVertices(math::point2f_t(off, 0.0F), math::size2f_t(0.1F, 0.1F), uv);
+      off += 0.05F;
+    }
+  }
+
+  gapi::BufferSubdataDescriptor subdataDesc;
+  subdataDesc.offset = 0;
+  subdataDesc.size = geomShape_->data_->getVtxCount();
+  subdataDesc.data = geomShape_->data_->getVtxRawdata();
+  auto bufset = geom_->getBufferSet();
+  bufset.vbo->updateSubdata(subdataDesc);
 }
 
 void Painter::onUpdate(math::mat4f_t tfrm, math::mat4f_t proj, math::mat4f_t view, f32_t dtime) {
@@ -142,8 +109,8 @@ void Painter::onUpdate(math::mat4f_t tfrm, math::mat4f_t proj, math::mat4f_t vie
   cmd.stencilDesc.front.wmask = cmd.stencilDesc.front.rmask;
   cmd.stencilDesc.front.reference = 1;
   cmd.stencilDesc.back = cmd.stencilDesc.front;
-  cmd.geometry = geometry_;
-  cmd.material = material_;
+  cmd.geometry = geom_;
+  cmd.material = mtrl_;
   cmd.tfrm = tfrm;
   cmd.proj = proj;
   cmd.view = view;

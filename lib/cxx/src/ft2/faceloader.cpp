@@ -12,7 +12,7 @@ void FaceLoader::fetch() {
 #if EMSCRIPTEN_PLATFORM
   thread_ = std::thread([this]() -> void {
     auto callback = [this](rms::fetch_res_t fetch) {
-      faceResponse_ = std::make_shared<Face>(lib_, (const u8_t *)fetch->data, fetch->numBytes, 0);
+      response_ = new ObjectFetchResponse(fetch->data, fetch->numBytes);
       fetching_.store(false);
     };
 

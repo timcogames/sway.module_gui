@@ -19,7 +19,7 @@ file(GLOB MODULE_UI_SOURCE_TESTS ${PROJECT_SOURCE_DIR}/*.cpp)
 
 add_executable(${META_UI_LIBNAME_TESTS} ${MODULE_UI_SOURCE_TESTS} "${GTEST_SRC_DIR}/gtest_main.cc")
 target_link_libraries(${META_UI_LIBNAME_TESTS} 
-  module_ui_obj module_core_obj 
+  module_ui_obj module_core_obj module_rms_obj module_render_obj 
   -L${GLOB_FT2_ROOT_DIR}/lib -lfreetype 
   -L${GLOB_LIBPNG_ROOT_DIR}/lib -lpng16 
   ${GLOB_GTEST_LIB_DIR}/libgtest.a 

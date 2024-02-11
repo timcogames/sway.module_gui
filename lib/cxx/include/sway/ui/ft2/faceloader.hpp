@@ -12,6 +12,15 @@ NAMESPACE_BEGIN(sway)
 NAMESPACE_BEGIN(ui)
 NAMESPACE_BEGIN(ft2)
 
+struct ObjectFetchResponse : public rms::FetchResponse {
+  ObjectFetchResponse(lpcstr_t data, u32_t numBytes)
+      : rms::FetchResponse(data, numBytes) {}
+
+  auto serialize(FT_Library lib) -> std::shared_ptr<Face> {
+    return std::make_shared<Face>(lib, this->data, this->numBytes, 0);
+  }
+};
+
 class FaceLoader : public rms::Fetcher {
 public:
   FaceLoader(FT_Library lib, const std::string &url);
@@ -20,9 +29,9 @@ public:
 
   MTHD_OVERRIDE(void fetch());
 
-public:
+private:
   FT_Library lib_;
-  std::shared_ptr<Face> faceResponse_;
+  // std::shared_ptr<Face> faceResponse_;
 };
 
 NAMESPACE_END(ft2)

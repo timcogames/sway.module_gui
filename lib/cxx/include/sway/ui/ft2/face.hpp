@@ -15,18 +15,18 @@ class Face {
 public:
   Face(FT_Library lib, lpcstr_t filepath, u32_t idx);
 
-  Face(FT_Library lib, const u8_t *data, u32_t size, u32_t idx);
+  Face(FT_Library lib, lpcstr_t data, u32_t size, u32_t idx);
 
   ~Face();
 
   [[nodiscard]]
-  auto getFamilyName() const -> std::string {
-    return face_->family_name;
+  auto data() const -> FT_Face {
+    return face_;
   }
 
   [[nodiscard]]
-  auto getStyle() const -> std::string {
-    return face_->style_name;
+  auto getBitmap() const -> FT_Bitmap {
+    return face_->glyph->bitmap;
   }
 
 public:
