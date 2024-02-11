@@ -59,6 +59,7 @@ public:
 private:
   std::shared_ptr<render::RenderSubqueue> subqueue_;
   std::shared_ptr<render::Material> mtrl_;
+  std::shared_ptr<render::PlaneArray<math::VertexTexCoordEx>> geomShape_;
   std::shared_ptr<render::Geometry> geom_;
 
   // GeometryBatchChunk geomBatchChunks_[GEOMERTY_BATCH_CHUNK_SIZE];

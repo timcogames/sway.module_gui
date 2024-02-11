@@ -49,7 +49,7 @@ void Painter::initialize(std::shared_ptr<ft2::Font> font, const gapi::TextureCre
   std::array<gapi::VertexSemantic, 3> semantics = {
       gapi::VertexSemantic::POS, gapi::VertexSemantic::COL, gapi::VertexSemantic::TEXCOORD_0};
 
-  auto geomShape_ = std::make_shared<render::PlaneArray<math::VertexTexCoordEx>>();
+  geomShape_ = std::make_shared<render::PlaneArray<math::VertexTexCoordEx>>();
   geomShape_->useVertexSemanticSet(semantics);
 
   geom_ = std::make_shared<render::Geometry>(subsystem->getIdGenerator(), mtrl_->getEffect(), true);

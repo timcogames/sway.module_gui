@@ -2,6 +2,7 @@
 #define SWAY_UI_BUILDER_HPP
 
 #include <sway/core.hpp>
+#include <sway/ui/widget/widget.hpp>
 
 NAMESPACE_BEGIN(sway)
 NAMESPACE_BEGIN(ui)
@@ -15,6 +16,7 @@ public:
   virtual ~Builder();
 
 private:
+  Widget root_;
 };
 
 NAMESPACE_END(ui)
