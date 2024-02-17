@@ -5,13 +5,6 @@ NAMESPACE_BEGIN(sway)
 NAMESPACE_BEGIN(ui)
 NAMESPACE_BEGIN(ft2)
 
-#define ASCII_SIZE 256
-// lpcstr_t SymbolSet = "1234567890-=!@#$%^&*()_+\\|/><,.?~`';: "
-//                      "АБВГДЕЁЖЗИЙКЛМНОПРСТУФХЦЧШЩЬЪЫЭЮЯ"
-//                      "абвгдеёжзийклмнопрстуфхцчшщьъыэюя"
-//                      "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
-//                      "abcdefghijklmnopqrstuvwxyz";
-
 lpcstr_t SymbolSet = "1234567890-=!@#$%^&*()_+\\|/><,.?~`';: "
                      "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
                      "abcdefghijklmnopqrstuvwxyz";

@@ -4,13 +4,16 @@ NAMESPACE_BEGIN(sway)
 NAMESPACE_BEGIN(ui)
 
 Painter::Painter()
-    : geom_(nullptr) {}
+    : geom_(nullptr)
+    , geomBatchChunkSize_(0) {}
 
-void Painter::initialize(std::shared_ptr<ft2::Font> font, const gapi::TextureCreateInfo &createInfo,
-    std::shared_ptr<render::RenderSubsystem> subsystem, std::shared_ptr<render::MaterialManager> materialMngr,
-    std::shared_ptr<rms::ImageResourceManager> imgResMngr, std::shared_ptr<rms::GLSLResourceManager> glslResMngr) {
+void Painter::initialize(std::shared_ptr<ft2::Font> font, std::shared_ptr<render::RenderSubsystem> subsystem,
+    std::shared_ptr<render::MaterialManager> materialMngr, std::shared_ptr<rms::ImageResourceManager> imgResMngr,
+    std::shared_ptr<rms::GLSLResourceManager> glslResMngr) {
+
+  font_ = font;
+
   subqueue_ = subsystem->getQueueByIdx(0)->getSubqueues(render::RenderSubqueueGroup::OPAQUE)[0];
-
   mtrl_ = std::make_shared<render::Material>("material_ui", imgResMngr, glslResMngr);
 
   gapi::TextureCreateInfo texCreateInfo;
@@ -26,19 +29,19 @@ void Painter::initialize(std::shared_ptr<ft2::Font> font, const gapi::TextureCre
   mtrl_->addEffect({"ui_vs", "ui_fs"});
   materialMngr->addMaterial(mtrl_);
 
-  const auto wdt = font->getAtlasSize().getW() / font->maxSize_.getW();
-  const auto hdt = font->getAtlasSize().getH() / font->maxSize_.getH();
+  const auto wdt = font_->getAtlasSize().getW() / font_->maxSize_.getW();
+  const auto hdt = font_->getAtlasSize().getH() / font_->maxSize_.getH();
 
-  for (auto i = 0; i < font->glyphs_.size(); i++) {
-    auto bi = font->getBitmapData(font->glyphs_[i]);
+  for (auto i = 0; i < font_->glyphs_.size(); i++) {
+    auto bi = font_->getBitmapData(font_->glyphs_[i]);
 
-    auto symidx = font->glyphs_[i].idx;
+    auto symidx = font_->glyphs_[i].idx;
     const auto x = symidx % wdt;
     const auto y = symidx / hdt;
 
     gapi::TextureSubdataDescriptor texSubdataDesc;
     texSubdataDesc.level = 0;
-    texSubdataDesc.offset = math::point2i_t(x * font->maxSize_.getW(), y * font->maxSize_.getH());
+    texSubdataDesc.offset = math::point2i_t(x * font_->maxSize_.getW(), y * font_->maxSize_.getH());
     texSubdataDesc.size = bi.size;
     texSubdataDesc.format = gapi::PixelFormat::LUMINANCE_ALPHA;
     texSubdataDesc.type = core::ValueDataType::UBYTE;
@@ -54,39 +57,85 @@ void Painter::initialize(std::shared_ptr<ft2::Font> font, const gapi::TextureCre
 
   geom_ = std::make_shared<render::Geometry>(subsystem->getIdGenerator(), mtrl_->getEffect(), true);
   geom_->createArray(geomShape_);
+}
 
-  auto off = 0.0F;
-  auto chr = "HELLO hello 12345";
-  for (auto i = 0; i < strlen(chr); i++) {
-    auto info = font->getCharInfo(chr[i]);
-    if (info.has_value()) {
-      auto symidx = info.value().symidx;
-      const auto x = symidx % wdt;
-      const auto y = symidx / hdt;
+void Painter::drawText(f32_t x, f32_t y, f32_t w, f32_t h, lpcstr_t text) {
+  if (geomBatchChunkSize_ >= GEOMERTY_BATCH_CHUNK_SIZE) {
+    return;
+  }
 
-      auto offset_x = (f32_t)x * (f32_t)font->maxSize_.getW();
-      auto offset_y = (f32_t)y * (f32_t)font->maxSize_.getH();
+  GeometryBatchChunk &chunk = geomBatchChunks_[geomBatchChunkSize_++];
+  chunk.type = GeometryBatchChunkType::TEXT;
+  chunk.text.x = x;
+  chunk.text.y = y;
+  chunk.text.w = w;
+  chunk.text.h = h;
+  // chunk.text.r = colour.getR();
+  // chunk.text.g = colour.getG();
+  // chunk.text.b = colour.getB();
+  // chunk.text.a = colour.getA();
+  // chunk.text.setImage(image);
+  chunk.text.text = text;
+}
 
-      math::rect4f_t uv;
-      uv.setL(static_cast<f32_t>(offset_x) / static_cast<f32_t>(font->getAtlasSize().getW()));
-      uv.setT(static_cast<f32_t>(offset_y) / static_cast<f32_t>(font->getAtlasSize().getH()));
-      uv.setR(static_cast<f32_t>(offset_x + font->maxSize_.getW()) / static_cast<f32_t>(font->getAtlasSize().getW()));
-      uv.setB(static_cast<f32_t>(offset_y + font->maxSize_.getH()) / static_cast<f32_t>(font->getAtlasSize().getH()));
+void Painter::onUpdateBatchChunks() {
+  const auto wdt = font_->getAtlasSize().getW() / font_->maxSize_.getW();
+  const auto hdt = font_->getAtlasSize().getH() / font_->maxSize_.getH();
 
-      geomShape_->updateVertices(math::point2f_t(off, 0.0F), math::size2f_t(0.1F, 0.1F), uv);
-      off += 0.05F;
+  for (auto chunkIndex = 0; chunkIndex < geomBatchChunkSize_; ++chunkIndex) {
+    const GeometryBatchChunk &chunk = geomBatchChunks_[chunkIndex];
+    if (chunk.type == GeometryBatchChunkType::TEXT) {
+
+      auto vert_offset_x = 0.0F;
+
+      for (auto i = 0; i < strlen(chunk.text.text); i++) {
+        auto info = font_->getCharInfo(chunk.text.text[i]);
+        if (info.has_value()) {
+          auto symidx = info.value().symidx;
+          const auto x = symidx % wdt;
+          const auto y = symidx / hdt;
+
+          auto bearing = info.value().bearing;
+          auto advance = info.value().advance;
+
+          auto symSizeW = static_cast<f32_t>(font_->maxSize_.getW()) / static_cast<f32_t>(font_->getAtlasSize().getW());
+          auto symSizeH = static_cast<f32_t>(font_->maxSize_.getH()) / static_cast<f32_t>(font_->getAtlasSize().getH());
+
+          auto offset_x = (f32_t)x * (f32_t)font_->maxSize_.getW();
+          auto offset_y = (f32_t)y * (f32_t)font_->maxSize_.getH();
+
+          math::rect4f_t uv;
+          uv.setL(static_cast<f32_t>(offset_x) / static_cast<f32_t>(font_->getAtlasSize().getW()));
+          uv.setT(static_cast<f32_t>(offset_y) / static_cast<f32_t>(font_->getAtlasSize().getH()));
+          uv.setR(
+              static_cast<f32_t>(offset_x + font_->maxSize_.getW()) / static_cast<f32_t>(font_->getAtlasSize().getW()));
+          uv.setB(
+              static_cast<f32_t>(offset_y + font_->maxSize_.getH()) / static_cast<f32_t>(font_->getAtlasSize().getH()));
+
+          geomShape_->updateVertices(
+              math::point2f_t(
+                  vert_offset_x, ((f32_t)bearing.getY() / static_cast<f32_t>(font_->getAtlasSize().getH())) - symSizeH),
+              math::size2f_t(symSizeW, symSizeH), uv);
+
+          vert_offset_x += ((f32_t)bearing.getX() / static_cast<f32_t>(font_->getAtlasSize().getW())) + symSizeW;
+        }
+      }
+
+      gapi::BufferSubdataDescriptor subdataDesc;
+      subdataDesc.offset = 0;
+      subdataDesc.size = geomShape_->data_->getVtxCount();
+      subdataDesc.data = geomShape_->data_->getVtxRawdata();
+      auto bufset = geom_->getBufferSet();
+      bufset.vbo->updateSubdata(subdataDesc);
     }
   }
 
-  gapi::BufferSubdataDescriptor subdataDesc;
-  subdataDesc.offset = 0;
-  subdataDesc.size = geomShape_->data_->getVtxCount();
-  subdataDesc.data = geomShape_->data_->getVtxRawdata();
-  auto bufset = geom_->getBufferSet();
-  bufset.vbo->updateSubdata(subdataDesc);
+  geomBatchChunkSize_ = 0;
 }
 
 void Painter::onUpdate(math::mat4f_t tfrm, math::mat4f_t proj, math::mat4f_t view, f32_t dtime) {
+  this->onUpdateBatchChunks();
+
   render::pipeline::ForwardRenderCommand cmd;
   cmd.stage = 0;
   cmd.blendDesc.enabled = true;

@@ -8,8 +8,16 @@ Widget::Widget() {
   // Empty
 }
 
-Widget::~Widget() {
-  // Empty
+void Widget::update() {
+  for (auto const &child : this->getChildNodes()) {
+    std::static_pointer_cast<Widget>(child)->update();
+  }
+}
+
+void Widget::draw(std::shared_ptr<Painter> painter) {
+  for (auto const &child : this->getChildNodes()) {
+    std::static_pointer_cast<Widget>(child)->draw(painter);
+  }
 }
 
 NAMESPACE_END(widget)

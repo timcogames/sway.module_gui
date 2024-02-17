@@ -74,7 +74,7 @@ public:
   auto getFace() -> FT_Face { return face_->data(); }
 
   // auto computeMetrics_(FT_GlyphSlot slot, math::size2i_t size) -> math::size2i_t;
-  auto computeMaxSize_(FT_Glyph glyph, math::size2i_t size) -> math::size2i_t;
+  auto computeMaxSize_(FT_Bitmap *bitmap, math::size2i_t size) -> math::size2i_t;
 
 public:
   std::shared_ptr<Face> face_;

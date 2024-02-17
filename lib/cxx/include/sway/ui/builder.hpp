@@ -2,6 +2,8 @@
 #define SWAY_UI_BUILDER_HPP
 
 #include <sway/core.hpp>
+#include <sway/ui/ft2/fontmanager.hpp>
+#include <sway/ui/painter.hpp>
 #include <sway/ui/widget/widget.hpp>
 
 NAMESPACE_BEGIN(sway)
@@ -11,12 +13,19 @@ class Builder : public core::foundation::Object {
   DECLARE_CLASS_METADATA(Builder, core::foundation::Object)
 
 public:
-  Builder(core::foundation::Context *context);
+  Builder(core::foundation::Context *context, std::shared_ptr<Painter> painter);
 
-  virtual ~Builder();
+  virtual ~Builder() = default;
+
+  void initialize(std::shared_ptr<ft2::Font> font, std::shared_ptr<render::MaterialManager> materialMngr,
+      std::shared_ptr<rms::ImageResourceManager> imgResMngr, std::shared_ptr<rms::GLSLResourceManager> glslResMngr);
+
+  auto getRootWidget() -> std::shared_ptr<widget::Widget> { return root_; }
 
 private:
-  Widget root_;
+  std::shared_ptr<Painter> painter_;
+  std::shared_ptr<ft2::FontManager> fontMngr_;
+  std::shared_ptr<widget::Widget> root_;
 };
 
 NAMESPACE_END(ui)

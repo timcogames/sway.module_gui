@@ -6,6 +6,7 @@
 #include <sway/render.hpp>
 #include <sway/ui/ft2/font.hpp>
 
+#include <array>
 #include <memory>
 
 #define GEOMERTY_BATCH_CHUNK_SIZE 5000
@@ -35,11 +36,11 @@ struct GeometryBatchChunkImage {
 struct GeometryBatchChunk {
   GeometryBatchChunkType type;
 
-  union {
-    GeometryBatchChunkRect rect;
-    GeometryBatchChunkText text;
-    GeometryBatchChunkImage image;
-  };
+  // union {
+  // GeometryBatchChunkRect rect;
+  GeometryBatchChunkText text;
+  // GeometryBatchChunkImage image;
+  // };
 };
 
 class Painter : public render::RenderComponent {
@@ -50,9 +51,13 @@ public:
 
   ~Painter() = default;
 
-  void initialize(std::shared_ptr<ft2::Font> font, const gapi::TextureCreateInfo &createInfo,
-      std::shared_ptr<render::RenderSubsystem> subsystem, std::shared_ptr<render::MaterialManager> materialMngr,
-      std::shared_ptr<rms::ImageResourceManager> imgResMngr, std::shared_ptr<rms::GLSLResourceManager> glslResMngr);
+  void initialize(std::shared_ptr<ft2::Font> font, std::shared_ptr<render::RenderSubsystem> subsystem,
+      std::shared_ptr<render::MaterialManager> materialMngr, std::shared_ptr<rms::ImageResourceManager> imgResMngr,
+      std::shared_ptr<rms::GLSLResourceManager> glslResMngr);
+
+  void drawText(f32_t x, f32_t y, f32_t w, f32_t h, lpcstr_t text);
+
+  void onUpdateBatchChunks();
 
   MTHD_OVERRIDE(void onUpdate(math::mat4f_t tfrm, math::mat4f_t proj, math::mat4f_t view, f32_t dtime));
 
@@ -62,8 +67,10 @@ private:
   std::shared_ptr<render::PlaneArray<math::VertexTexCoordEx>> geomShape_;
   std::shared_ptr<render::Geometry> geom_;
 
-  // GeometryBatchChunk geomBatchChunks_[GEOMERTY_BATCH_CHUNK_SIZE];
-  // u32_t geomBatchChunkSize_;
+  std::shared_ptr<ft2::Font> font_;
+
+  std::array<GeometryBatchChunk, GEOMERTY_BATCH_CHUNK_SIZE> geomBatchChunks_;
+  u32_t geomBatchChunkSize_;
 };
 
 NAMESPACE_END(ui)

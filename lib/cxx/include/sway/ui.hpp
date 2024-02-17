@@ -8,5 +8,8 @@
 #include <sway/ui/ft2/fontmanager.hpp>
 #include <sway/ui/ft2/glyph.hpp>
 #include <sway/ui/painter.hpp>
+#include <sway/ui/widget/label.hpp>
+#include <sway/ui/widget/progressbar.hpp>
+#include <sway/ui/widget/widget.hpp>
 
 #endif  // SWAY_UI_HPP

@@ -27,19 +27,21 @@ void Font::create(lpcstr_t charcodes, bool hinted, bool antialiased) {
 
     auto info = getCharMetrics(slot.value());
     info.symidx = glyphId.idx;
-    cache_[glyphId.code] = info;
 
     FT_Glyph glyph;
     FT_Get_Glyph(slot.value(), &glyph);
+    FT_Glyph_To_Bitmap(&glyph, FT_RENDER_MODE_NORMAL, 0, 1);
 
-    maxSize_ = this->computeMaxSize_(glyph, maxSize_);
+    FT_BitmapGlyph bitmapGlyph = (FT_BitmapGlyph)glyph;
+    FT_Bitmap *bitmap = &(bitmapGlyph)->bitmap;
+
+    cache_[glyphId.code] = info;
+
+    maxSize_ = this->computeMaxSize_(bitmap, maxSize_);
   }
 }
 
-auto Font::computeMaxSize_(FT_Glyph glyph, math::size2i_t size) -> math::size2i_t {
-  FT_Glyph_To_Bitmap(&glyph, FT_RENDER_MODE_NORMAL, 0, 1);
-  auto *bitmap = &((FT_BitmapGlyph)glyph)->bitmap;
-
+auto Font::computeMaxSize_(FT_Bitmap *bitmap, math::size2i_t size) -> math::size2i_t {
   // clang-format off
   return {
     std::max<s32_t>(size.getW(), math::util::powerOf2(bitmap->width)),
@@ -67,20 +69,12 @@ auto Font::getBitmapData(FontGlyphId sym) -> BitmapInfo {
 
   const auto texPitch = bitmap->pitch;
   const auto texAreaSize = texWdt * texHgt;
-  // const auto texPixelComponents = 4;  // R, G, B, A
   const auto texPixelComponents = 2;
 
   auto *texData = (u8_t *)malloc(texAreaSize * texPixelComponents * sizeof(u8_t));
   for (auto y = 0; y < texHgt; y++) {
     for (auto x = 0; x < texWdt; x++) {
       auto texPixelIdx = texPixelComponents * (x + texWdt * y);
-
-      // clang-format off
-      // texData[texPixelIdx + 0] = style_.foreground.getR();
-      // texData[texPixelIdx + 1] = style_.foreground.getG();
-      // texData[texPixelIdx + 2] = style_.foreground.getB();
-      // texData[texPixelIdx + 3] = bitmap->buffer[x + texPitch * y]; // A
-      // clang-format on
 
       texData[texPixelIdx] = 255;
 

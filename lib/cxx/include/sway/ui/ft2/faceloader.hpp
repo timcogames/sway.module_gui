@@ -25,7 +25,7 @@ class FaceLoader : public rms::Fetcher {
 public:
   FaceLoader(FT_Library lib, const std::string &url);
 
-  ~FaceLoader() = default;
+  virtual ~FaceLoader() = default;
 
   MTHD_OVERRIDE(void fetch());
 
