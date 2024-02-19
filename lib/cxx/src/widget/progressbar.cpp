@@ -9,6 +9,12 @@ NAMESPACE_BEGIN(widget)
 ProgressBar::ProgressBar()
     : steps_(0.0F) {}
 
+void ProgressBar::update() {}
+
+void ProgressBar::draw(std::shared_ptr<Painter> painter) {
+  painter->drawRect(rect_.getL(), rect_.getT(), rect_.getR(), rect_.getB(), COL4F_WHITE);
+}
+
 void ProgressBar::setProgress(f32_t progress) {
   if (steps_ != progress) {
     auto minValue = 0.0F;

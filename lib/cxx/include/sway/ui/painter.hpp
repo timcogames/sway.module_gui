@@ -36,11 +36,9 @@ struct GeometryBatchChunkImage {
 struct GeometryBatchChunk {
   GeometryBatchChunkType type;
 
-  // union {
-  // GeometryBatchChunkRect rect;
+  GeometryBatchChunkRect rect;
   GeometryBatchChunkText text;
-  // GeometryBatchChunkImage image;
-  // };
+  GeometryBatchChunkImage image;
 };
 
 class Painter : public render::RenderComponent {
@@ -55,7 +53,9 @@ public:
       std::shared_ptr<render::MaterialManager> materialMngr, std::shared_ptr<rms::ImageResourceManager> imgResMngr,
       std::shared_ptr<rms::GLSLResourceManager> glslResMngr);
 
-  void drawText(f32_t x, f32_t y, f32_t w, f32_t h, lpcstr_t text);
+  void drawRect(f32_t x, f32_t y, f32_t w, f32_t h, math::col4f_t col);
+
+  void drawText(f32_t x, f32_t y, f32_t w, f32_t h, math::col4f_t col, lpcstr_t text);
 
   void onUpdateBatchChunks();
 

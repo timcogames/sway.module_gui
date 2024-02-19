@@ -59,7 +59,24 @@ void Painter::initialize(std::shared_ptr<ft2::Font> font, std::shared_ptr<render
   geom_->createArray(geomShape_);
 }
 
-void Painter::drawText(f32_t x, f32_t y, f32_t w, f32_t h, lpcstr_t text) {
+void Painter::drawRect(f32_t x, f32_t y, f32_t w, f32_t h, math::col4f_t col) {
+  if (geomBatchChunkSize_ >= GEOMERTY_BATCH_CHUNK_SIZE) {
+    return;
+  }
+
+  GeometryBatchChunk &chunk = geomBatchChunks_[geomBatchChunkSize_++];
+  chunk.type = GeometryBatchChunkType::RECT;
+  chunk.rect.x = x;
+  chunk.rect.y = y;
+  chunk.rect.w = w;
+  chunk.rect.h = h;
+  chunk.rect.r = col.getR();
+  chunk.rect.g = col.getG();
+  chunk.rect.b = col.getB();
+  chunk.rect.a = col.getA();
+}
+
+void Painter::drawText(f32_t x, f32_t y, f32_t w, f32_t h, math::col4f_t col, lpcstr_t text) {
   if (geomBatchChunkSize_ >= GEOMERTY_BATCH_CHUNK_SIZE) {
     return;
   }
@@ -70,11 +87,10 @@ void Painter::drawText(f32_t x, f32_t y, f32_t w, f32_t h, lpcstr_t text) {
   chunk.text.y = y;
   chunk.text.w = w;
   chunk.text.h = h;
-  // chunk.text.r = colour.getR();
-  // chunk.text.g = colour.getG();
-  // chunk.text.b = colour.getB();
-  // chunk.text.a = colour.getA();
-  // chunk.text.setImage(image);
+  chunk.text.r = col.getR();
+  chunk.text.g = col.getG();
+  chunk.text.b = col.getB();
+  chunk.text.a = col.getA();
   chunk.text.text = text;
 }
 
@@ -82,9 +98,35 @@ void Painter::onUpdateBatchChunks() {
   const auto wdt = font_->getAtlasSize().getW() / font_->maxSize_.getW();
   const auto hdt = font_->getAtlasSize().getH() / font_->maxSize_.getH();
 
+  auto offset = 0;
+
   for (auto chunkIndex = 0; chunkIndex < geomBatchChunkSize_; ++chunkIndex) {
     const GeometryBatchChunk &chunk = geomBatchChunks_[chunkIndex];
-    if (chunk.type == GeometryBatchChunkType::TEXT) {
+
+    if (chunk.type == GeometryBatchChunkType::RECT) {
+      auto pos = math::point2f_t(chunk.rect.x, chunk.rect.y);
+      auto size = math::size2f_t(chunk.rect.w, chunk.rect.h);
+
+      math::rect4f_t uv;
+      uv.setL(0.0F);
+      uv.setT(0.0F);
+      uv.setR(1.0F);
+      uv.setB(1.0F);
+
+      geomShape_->updateVertices(pos, size, uv);
+
+      gapi::BufferSubdataDescriptor subdataDesc;
+      subdataDesc.offset = offset;
+      subdataDesc.size = geomShape_->data_->getVtxCount();
+      subdataDesc.data = geomShape_->data_->getVtxRawdata();
+      auto bufset = geom_->getBufferSet();
+      bufset.vbo->updateSubdata(subdataDesc);
+
+      offset += 4 * sizeof(math::VertexTexCoordEx);
+
+    } else if (chunk.type == GeometryBatchChunkType::TEXT) {
+      auto pos = math::point2f_t(chunk.text.x, chunk.text.y);
+      auto size = math::size2f_t(chunk.text.w, chunk.text.h);
 
       auto vert_offset_x = 0.0F;
 
@@ -113,8 +155,8 @@ void Painter::onUpdateBatchChunks() {
               static_cast<f32_t>(offset_y + font_->maxSize_.getH()) / static_cast<f32_t>(font_->getAtlasSize().getH()));
 
           geomShape_->updateVertices(
-              math::point2f_t(
-                  vert_offset_x, ((f32_t)bearing.getY() / static_cast<f32_t>(font_->getAtlasSize().getH())) - symSizeH),
+              math::point2f_t(pos.getX() + vert_offset_x,
+                  pos.getY() + ((f32_t)bearing.getY() / static_cast<f32_t>(font_->getAtlasSize().getH())) - symSizeH),
               math::size2f_t(symSizeW, symSizeH), uv);
 
           vert_offset_x += ((f32_t)bearing.getX() / static_cast<f32_t>(font_->getAtlasSize().getW())) + symSizeW;
@@ -122,19 +164,35 @@ void Painter::onUpdateBatchChunks() {
       }
 
       gapi::BufferSubdataDescriptor subdataDesc;
-      subdataDesc.offset = 0;
+      subdataDesc.offset = offset;
       subdataDesc.size = geomShape_->data_->getVtxCount();
       subdataDesc.data = geomShape_->data_->getVtxRawdata();
       auto bufset = geom_->getBufferSet();
       bufset.vbo->updateSubdata(subdataDesc);
+
+      offset += (4 * sizeof(math::VertexTexCoordEx)) * strlen(chunk.text.text);
     }
   }
 
-  geomBatchChunkSize_ = 0;
+  // if (geomBatchChunkSize_ == 0) {
+  //   gapi::BufferSubdataDescriptor subdataDesc;
+  //   subdataDesc.offset = 0;
+  //   subdataDesc.size = geomShape_->data_->getVtxCount();
+  //   subdataDesc.data = nullptr;
+  //   auto bufset = geom_->getBufferSet();
+  //   bufset.vbo->updateSubdata(subdataDesc);
+  // }
 }
 
 void Painter::onUpdate(math::mat4f_t tfrm, math::mat4f_t proj, math::mat4f_t view, f32_t dtime) {
+  geomShape_->clear();
   this->onUpdateBatchChunks();
+
+  // if (geomBatchChunkSize_ == 0) {
+  //   return;
+  // }
+
+  geomBatchChunkSize_ = 0;
 
   render::pipeline::ForwardRenderCommand cmd;
   cmd.stage = 0;
