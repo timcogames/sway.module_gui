@@ -62,6 +62,7 @@ public:
   MTHD_OVERRIDE(void onUpdate(math::mat4f_t tfrm, math::mat4f_t proj, math::mat4f_t view, f32_t dtime));
 
 private:
+  std::shared_ptr<render::RenderQueue> queue_;
   std::shared_ptr<render::RenderSubqueue> subqueue_;
   std::shared_ptr<render::Material> mtrl_;
   std::shared_ptr<render::PlaneArray<math::VertexTexCoordEx>> geomShape_;

@@ -13,7 +13,14 @@ void Painter::initialize(std::shared_ptr<ft2::Font> font, std::shared_ptr<render
 
   font_ = font;
 
-  subqueue_ = subsystem->getQueueByIdx(0)->getSubqueues(render::RenderSubqueueGroup::OPAQUE)[0];
+  subqueue_ = std::make_shared<render::RenderSubqueue>();
+  subqueue_->initialize();
+
+  queue_ = subsystem->createQueue(core::detail::toUnderlying(core::intrusive::Priority::VERY_HIGH));
+  queue_->addSubqueue(subqueue_);
+
+  subqueue_ = subsystem->getQueueByPriority(core::detail::toUnderlying(core::intrusive::Priority::VERY_HIGH))
+                  ->getSubqueues(render::RenderSubqueueGroup::OPAQUE)[0];
   mtrl_ = std::make_shared<render::Material>("material_ui", imgResMngr, glslResMngr);
 
   gapi::TextureCreateInfo texCreateInfo;
