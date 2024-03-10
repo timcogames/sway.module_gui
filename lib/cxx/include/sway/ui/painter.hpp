@@ -4,6 +4,10 @@
 #include <sway/core.hpp>
 #include <sway/gapi.hpp>
 #include <sway/render.hpp>
+#include <sway/render/geom/geom.hpp>
+#include <sway/render/geom/geombuilder.hpp>
+#include <sway/render/geom/geominstance.hpp>
+#include <sway/render/procedurals/shape.hpp>
 #include <sway/ui/ft2/font.hpp>
 
 #include <array>
@@ -35,7 +39,6 @@ struct GeometryBatchChunkImage {
 
 struct GeometryBatchChunk {
   GeometryBatchChunkType type;
-
   GeometryBatchChunkRect rect;
   GeometryBatchChunkText text;
   GeometryBatchChunkImage image;
@@ -64,9 +67,15 @@ public:
 private:
   std::shared_ptr<render::RenderQueue> queue_;
   std::shared_ptr<render::RenderSubqueue> subqueue_;
-  std::shared_ptr<render::Material> mtrl_;
-  std::shared_ptr<render::PlaneArray<math::VertexTexCoordEx>> geomShape_;
-  std::shared_ptr<render::Geometry> geom_;
+
+  std::shared_ptr<render::Material> rectMtrl_;
+  render::GeomInstance *rectGeom_;
+  std::shared_ptr<render::GeomBuilder> geomBuilder_;
+  std::shared_ptr<render::procedurals::prims::Quadrilateral<math::VertexColor>> rectGeomShape_;
+
+  std::shared_ptr<render::Material> textMtrl_;
+  std::shared_ptr<render::PlaneArray<math::VertexTexCoord>> textGeomShape_;
+  std::shared_ptr<render::Geometry> textGeom_;
 
   std::shared_ptr<ft2::Font> font_;
 

@@ -4,9 +4,8 @@ NAMESPACE_BEGIN(sway)
 NAMESPACE_BEGIN(ui)
 NAMESPACE_BEGIN(widget)
 
-Widget::Widget() {
-  // Empty
-}
+Widget::Widget()
+    : rect_(math::rect4f_t(0.0F, 0.0F, 1.0F, 1.0F)) {}
 
 void Widget::update() {
   for (auto const &child : this->getChildNodes()) {

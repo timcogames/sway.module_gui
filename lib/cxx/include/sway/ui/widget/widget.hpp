@@ -21,9 +21,35 @@ public:
 
   void setRect(const math::rect4f_t &rect) { rect_ = rect; }
 
-  auto setPosition(const math::vec2f_t &position) {
-    rect_.setL(position.getX());
-    rect_.setT(position.getY());
+  [[nodiscard]]
+  auto hasRelated() -> bool {
+    auto parentOpt = this->getParentNode();
+    if (!parentOpt.has_value()) {
+      return false;
+    }
+
+    auto parent = parentOpt.value();
+    return (parent->getNodeIdx().chainEqual(std::vector<int>({-1}))) ? false : true;
+  }
+
+  auto setPosition(const math::vec2f_t &pos) {
+    rect_.setL(pos.getX());
+    rect_.setT(pos.getY());
+
+    if (this->hasRelated()) {
+      auto parentOpt = this->getParentNode();
+      if (!parentOpt.has_value()) {
+        return;
+      }
+
+      auto parent = std::static_pointer_cast<Widget>(parentOpt.value());
+      rect_.offset(parent->getPosition());
+    }
+  }
+
+  [[nodiscard]]
+  auto getPosition() const -> math::point2f_t {
+    return rect_.position();
   }
 
   auto setSize(const math::size2f_t &size) {

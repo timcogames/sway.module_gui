@@ -18,10 +18,12 @@ public:
 
   MTHD_VIRTUAL(void draw(std::shared_ptr<Painter> painter));
 
-  void setProgress(f32_t progress);
+  void setProgress(f32_t val);
+
+  void addProgress(f32_t val);
 
 private:
-  f32_t steps_;
+  f32_t current_;
 };
 
 NAMESPACE_END(widget)
