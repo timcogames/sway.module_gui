@@ -11,11 +11,14 @@ ProgressBar::ProgressBar()
 
 void ProgressBar::update() {}
 
-void ProgressBar::draw(std::shared_ptr<Painter> painter) {
+void ProgressBar::paintEvent(std::shared_ptr<Painter> painter) {
   auto margin = 0.002F;
-  auto barLen = (rect_.getR() - (margin * 2.0F)) * current_;
+  auto rectWithBorder = rect_;
+  rectWithBorder.reduce(math::Border<f32_t>(margin));
 
-  painter->drawRect(rect_.getL() + margin, rect_.getT() + margin, barLen, rect_.getB() - (margin * 2.0F), COL4F_BLACK);
+  auto barLen = rectWithBorder.getR() * current_;
+
+  painter->drawRect(rectWithBorder.getL(), rectWithBorder.getT(), barLen, rectWithBorder.getB(), COL4F_BLACK);
   painter->drawRect(rect_.getL(), rect_.getT(), rect_.getR(), rect_.getB(), COL4F_WHITE);
 }
 

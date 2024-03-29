@@ -35,6 +35,8 @@ void Font::create(lpcstr_t charcodes, bool hinted, bool antialiased) {
     FT_BitmapGlyph bitmapGlyph = (FT_BitmapGlyph)glyph;
     FT_Bitmap *bitmap = &(bitmapGlyph)->bitmap;
 
+    info.tl = math::vec2i_t(bitmapGlyph->left, bitmapGlyph->top);
+
     cache_[glyphId.code] = info;
 
     maxSize_ = this->computeMaxSize_(bitmap, maxSize_);
@@ -59,13 +61,11 @@ auto Font::getBitmapData(FontGlyphId sym) -> BitmapInfo {
   FT_Get_Glyph(slot.value(), &glyph);
 
   FT_Glyph_To_Bitmap(&glyph, FT_RENDER_MODE_NORMAL, 0, 1);
-  auto *bitmap = &((FT_BitmapGlyph)glyph)->bitmap;
+  FT_BitmapGlyph bitmapGlyph = (FT_BitmapGlyph)glyph;
+  FT_Bitmap *bitmap = &(bitmapGlyph)->bitmap;
 
   const auto texWdt = math::util::powerOf2(bitmap->width);
   const auto texHgt = math::util::powerOf2(bitmap->rows);
-
-  auto x = (float)bitmap->width / (float)texWdt;
-  auto y = (float)bitmap->rows / (float)texHgt;
 
   const auto texPitch = bitmap->pitch;
   const auto texAreaSize = texWdt * texHgt;
@@ -81,14 +81,16 @@ auto Font::getBitmapData(FontGlyphId sym) -> BitmapInfo {
       if (x >= bitmap->width || y >= bitmap->rows) {
         texData[texPixelIdx + 1] = 0;
       } else {
-        texData[texPixelIdx + 1] = (bitmap->buffer[x + bitmap->width * y]);
+        texData[texPixelIdx + 1] = bitmap->buffer[x + bitmap->pitch * y];
       }
     }
   }
 
   BitmapInfo bi;
-  bi.data = texData;
+  bi.pitch = texPitch;
+  bi.data = texData;  // bitmap->buffer
   bi.size = math::size2i_t(texWdt, texHgt);
+  bi.tl = math::vec2i_t(bitmapGlyph->left, bitmapGlyph->top);
 
   free(texData);
   return bi;
@@ -114,9 +116,9 @@ auto Font::getCharMetrics(FT_GlyphSlot slot) -> CharInfo {
   CharInfo info;
   info.size = math::size2i_t(metrics.width, metrics.height) / 64;
   info.bearing = math::vec2i_t(metrics.horiBearingX >> 6, metrics.horiBearingY >> 6);
-  info.advance = metrics.horiAdvance / 64;
-  auto advanceX = slot->advance.x >> 6;
-  auto advanceY = slot->advance.y >> 6;
+  info.advance = metrics.horiAdvance >> 6;
+  // auto advanceX = slot->advance.x >> 6;
+  // auto advanceY = slot->advance.y >> 6;
 
   return info;
 }

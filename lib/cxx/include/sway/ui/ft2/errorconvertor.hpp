@@ -11,7 +11,7 @@ NAMESPACE_BEGIN(ui)
 NAMESPACE_BEGIN(ft2)
 
 struct ErrorConvertor {
-  static lpcstr_t conv(FT_Error error) {
+  static auto conv(FT_Error error) -> lpcstr_t {
 #undef FTERRORS_H_
 #define FT_ERRORDEF(code, value, desc) \
   case code:                           \

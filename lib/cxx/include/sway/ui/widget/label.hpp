@@ -13,11 +13,11 @@ class Label : public Widget {
 public:
   Label(const std::string &text);
 
-  ~Label() = default;
+  virtual ~Label() = default;
 
   MTHD_VIRTUAL(void update());
 
-  MTHD_VIRTUAL(void draw(std::shared_ptr<Painter> painter));
+  MTHD_VIRTUAL(void paintEvent(std::shared_ptr<Painter> painter));
 
   void setText(const std::string &text);
 

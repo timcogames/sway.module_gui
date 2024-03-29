@@ -28,9 +28,11 @@ void Builder::initialize(std::shared_ptr<ft2::Font> font, std::shared_ptr<render
 
   // root_->setAbsolutePosition(0, 0);
   // root_->setSize(800, 600);
+}
 
+void Builder::update() {
   root_->update();
-  root_->draw(painter_);
+  root_->paintEvent(painter_);
 }
 
 NAMESPACE_END(ui)

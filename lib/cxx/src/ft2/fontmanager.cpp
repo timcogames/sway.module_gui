@@ -51,7 +51,7 @@ auto FontManager::addFont(const std::string &name) -> std::shared_ptr<Font> {
     return nullptr;
   }
 
-  auto texAtlasSize = math::size2i_t(624, 624);
+  auto texAtlasSize = math::size2i_t(1080, 1080);
   auto font = std::make_shared<Font>(iter->second, texAtlasSize);
   font->create(SymbolSet, false, true);
 

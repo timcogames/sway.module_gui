@@ -4,16 +4,15 @@
 #include <sway/core.hpp>
 #include <sway/gapi.hpp>
 #include <sway/render.hpp>
-#include <sway/render/geom/geom.hpp>
-#include <sway/render/geom/geombuilder.hpp>
-#include <sway/render/geom/geominstance.hpp>
-#include <sway/render/procedurals/shape.hpp>
 #include <sway/ui/ft2/font.hpp>
 
 #include <array>
 #include <memory>
 
 #define GEOMERTY_BATCH_CHUNK_SIZE 5000
+
+constexpr std::size_t MAX_UI_RECT = {3};
+constexpr std::size_t MAX_UI_TEXT = {5};
 
 NAMESPACE_BEGIN(sway)
 NAMESPACE_BEGIN(ui)
@@ -22,18 +21,18 @@ enum class GeometryBatchChunkType : u32_t { RECT, TEXT, IMG };
 
 struct GeometryBatchChunkRect {
   f32_t x, y, w, h;
-  f32_t r, g, b, a;
+  math::col4f_t color;
 };
 
 struct GeometryBatchChunkText {
   f32_t x, y, w, h;
-  f32_t r, g, b, a;
+  math::col4f_t color;
   lpcstr_t text;
 };
 
 struct GeometryBatchChunkImage {
-  float x, y, w, h;
-  float r, g, b, a;
+  f32_t x, y, w, h;
+  math::col4f_t color;
   std::shared_ptr<render::Image> image;
 };
 
@@ -50,7 +49,7 @@ public:
 
   Painter();
 
-  ~Painter() = default;
+  ~Painter();
 
   void initialize(std::shared_ptr<ft2::Font> font, std::shared_ptr<render::RenderSubsystem> subsystem,
       std::shared_ptr<render::MaterialManager> materialMngr, std::shared_ptr<rms::ImageResourceManager> imgResMngr,
@@ -64,18 +63,30 @@ public:
 
   MTHD_OVERRIDE(void onUpdate(math::mat4f_t tfrm, math::mat4f_t proj, math::mat4f_t view, f32_t dtime));
 
+  void clear() {
+    // geomBuilder_->remove(1);
+    // geomBuilder_->remove(0);
+  }
+
 private:
   std::shared_ptr<render::RenderQueue> queue_;
   std::shared_ptr<render::RenderSubqueue> subqueue_;
 
+  std::string atlasGeomUid_;
+  render::Geom *atlasGeom_;
+
   std::shared_ptr<render::Material> rectMtrl_;
-  render::GeomInstance *rectGeom_;
-  std::shared_ptr<render::GeomBuilder> geomBuilder_;
-  std::shared_ptr<render::procedurals::prims::Quadrilateral<math::VertexColor>> rectGeomShape_;
+  render::GeomInstanceDataDivisor<render::procedurals::prims::Quadrilateral<math::VertexColor>> *rectGeomDataDivisor_;
+  render::GeomInstance<render::procedurals::prims::Quadrilateral<math::VertexColor>> *rectGeom_;  // mapped
 
   std::shared_ptr<render::Material> textMtrl_;
-  std::shared_ptr<render::PlaneArray<math::VertexTexCoord>> textGeomShape_;
-  std::shared_ptr<render::Geometry> textGeom_;
+  render::GeomInstanceDataDivisor<render::procedurals::prims::Quadrilateral<math::VertexTexCoord>>
+      *textGeomDataDivisor_;
+  render::GeomInstance<render::procedurals::prims::Quadrilateral<math::VertexTexCoord>> *textGeom_;
+  std::string textId_;
+
+  render::GeomInstanceDataDivisor<render::procedurals::guides::Line<math::VertexColor>> *debugGeomDataDivisor_;
+  render::GeomInstance<render::procedurals::guides::Line<math::VertexColor>> *debugGeom_;
 
   std::shared_ptr<ft2::Font> font_;
 

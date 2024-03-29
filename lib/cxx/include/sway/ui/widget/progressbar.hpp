@@ -12,11 +12,11 @@ class ProgressBar : public Widget {
 public:
   ProgressBar();
 
-  ~ProgressBar() = default;
+  virtual ~ProgressBar() = default;
 
   MTHD_VIRTUAL(void update());
 
-  MTHD_VIRTUAL(void draw(std::shared_ptr<Painter> painter));
+  MTHD_VIRTUAL(void paintEvent(std::shared_ptr<Painter> painter));
 
   void setProgress(f32_t val);
 

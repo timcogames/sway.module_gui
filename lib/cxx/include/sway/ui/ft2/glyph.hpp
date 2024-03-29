@@ -2,6 +2,7 @@
 #define SWAY_UI_FT2_GLYPH_HPP
 
 #include <sway/core.hpp>
+#include <sway/math.hpp>
 #include <sway/ui/ft2/errormacros.hpp>
 #include <sway/ui/ft2/face.hpp>
 

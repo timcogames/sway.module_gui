@@ -20,6 +20,8 @@ public:
   void initialize(std::shared_ptr<ft2::Font> font, std::shared_ptr<render::MaterialManager> materialMngr,
       std::shared_ptr<rms::ImageResourceManager> imgResMngr, std::shared_ptr<rms::GLSLResourceManager> glslResMngr);
 
+  void update();
+
   auto getRootWidget() -> std::shared_ptr<widget::Widget> { return root_; }
 
 private:

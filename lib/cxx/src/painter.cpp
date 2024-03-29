@@ -4,9 +4,13 @@
 NAMESPACE_BEGIN(sway)
 NAMESPACE_BEGIN(ui)
 
+static int maxCharTall = 0;
+static math::point2i_t pos;
+
 Painter::Painter()
-    : textGeom_(nullptr)
-    , geomBatchChunkSize_(0) {}
+    : geomBatchChunkSize_(0) {}
+
+Painter::~Painter() {}
 
 void Painter::initialize(std::shared_ptr<ft2::Font> font, std::shared_ptr<render::RenderSubsystem> subsystem,
     std::shared_ptr<render::MaterialManager> materialMngr, std::shared_ptr<rms::ImageResourceManager> imgResMngr,
@@ -41,59 +45,183 @@ void Painter::initialize(std::shared_ptr<ft2::Font> font, std::shared_ptr<render
   texCreateInfo.mipLevels = 0;
   auto image = textMtrl_->addImage(texCreateInfo, "diffuse_sampler");
 
-  const auto wdt = font_->getAtlasSize().getW() / font_->maxSize_.getW();
-  const auto hdt = font_->getAtlasSize().getH() / font_->maxSize_.getH();
+  // const auto wdt = font_->getAtlasSize().getW() / font_->maxSize_.getW();
+  // const auto hdt = font_->getAtlasSize().getH() / font_->maxSize_.getH();
 
   for (auto i = 0; i < font_->glyphs_.size(); i++) {
     auto bi = font_->getBitmapData(font_->glyphs_[i]);
 
     auto symidx = font_->glyphs_[i].idx;
-    const auto x = symidx % wdt;
-    const auto y = symidx / hdt;
+    // const auto x = i % wdt;
+    // const auto y = i / hdt;
+
+    if (font_->maxSize_.getW() + pos.getX() > font_->getAtlasSize().getW()) {
+      int newLineY = pos.getY() + maxCharTall;
+
+      pos.set(0, newLineY);
+      maxCharTall = 0;
+    }
 
     gapi::TextureSubdataDescriptor texSubdataDesc;
     texSubdataDesc.level = 0;
-    texSubdataDesc.offset = math::point2i_t(x * font_->maxSize_.getW(), y * font_->maxSize_.getH());
+    texSubdataDesc.offset = pos;
     texSubdataDesc.size = bi.size;
     texSubdataDesc.format = gapi::PixelFormat::LUMINANCE_ALPHA;
     texSubdataDesc.type = core::ValueDataType::UBYTE;
     texSubdataDesc.pixels = bi.data;
+
+    // image->getTexture()->setPixelStorage(gapi::PixelStorageMode::UNPACK_ALIGNMENT, 1);
+    // image->getTexture()->setPixelStorage(gapi::PixelStorageMode::UNPACK_ROW_LENGTH, bi.pitch);
     image->getTexture()->updateSubdata(texSubdataDesc);
+    // image->getTexture()->setPixelStorage(gapi::PixelStorageMode::UNPACK_ROW_LENGTH, 0);
+
+    font_->cache_[font_->glyphs_[i].code].rect = math::rect4f_t(pos.getX() / (f32_t)font_->getAtlasSize().getW(),
+        pos.getY() / (f32_t)font_->getAtlasSize().getH(),
+        (pos.getX() + font_->maxSize_.getW()) / (f32_t)font_->getAtlasSize().getW(),
+        (pos.getY() + font_->maxSize_.getH()) / (f32_t)font_->getAtlasSize().getH());
+
+    auto posx = pos.getX() + font_->maxSize_.getW();
+    pos.setX(posx);
+
+    if (font_->maxSize_.getH() > maxCharTall) {
+      maxCharTall = font_->maxSize_.getH();
+    }
   }
 
+  auto shape = new render::procedurals::prims::Quadrilateral<math::VertexTexCoord>(
+      {gapi::VertexSemantic::POS, gapi::VertexSemantic::COL, gapi::VertexSemantic::TEXCOORD_0});
+
+  shape->setPosDataAttrib(math::rect4f_t(-0.3F, -0.3F, 0.3F, 0.3F));
+  shape->setColDataAttrib(COL4F_WHITE);
+  shape->setTexDataAttrib(math::rect4f_t(0.0F, 0.0F, 1.0F, 1.0F));
+
+  render::GeometryCreateInfo atlasGeomCreateInfo;
+  atlasGeomCreateInfo.indexed = true;
+  atlasGeomCreateInfo.topology = gapi::TopologyType::TRIANGLE_LIST;
+  atlasGeomCreateInfo.bo[render::Constants::IDX_VBO].desc.usage = gapi::BufferUsage::STATIC;
+  atlasGeomCreateInfo.bo[render::Constants::IDX_VBO].desc.byteStride = sizeof(math::VertexTexCoord);
+  atlasGeomCreateInfo.bo[render::Constants::IDX_VBO].desc.capacity = 4;
+  auto dataa = new f32_t[4 * sizeof(math::VertexTexCoord)];
+  shape->data()->getVertices(dataa, 0, 4);
+  atlasGeomCreateInfo.bo[render::Constants::IDX_VBO].data = dataa;
+  std::cout << math::vec3f_t(dataa[0], dataa[1], dataa[2]) << std::endl;
+  std::cout << math::vec3f_t(dataa[9], dataa[10], dataa[11]) << std::endl;
+
+  atlasGeomCreateInfo.bo[render::Constants::IDX_EBO].desc.usage = gapi::BufferUsage::STATIC;
+  atlasGeomCreateInfo.bo[render::Constants::IDX_EBO].desc.byteStride = sizeof(u32_t);
+  atlasGeomCreateInfo.bo[render::Constants::IDX_EBO].desc.capacity = 6;
+  atlasGeomCreateInfo.bo[render::Constants::IDX_EBO].data = shape->data()->getElements();
+
+  atlasGeomUid_ = subsystem->getGeomBuilder()
+                      ->create(3, atlasGeomCreateInfo, shape->getVertexAttribs(), textMtrl_->getEffect())
+                      .value();
+
   // --------------
 
-  auto numInstances = 2;
-  rectGeomShape_ = std::make_shared<render::procedurals::prims::Quadrilateral<math::VertexColor>>(numInstances);
-  rectGeomShape_->useVertexSemanticSet({gapi::VertexSemantic::POS, gapi::VertexSemantic::COL});
+  rectGeomDataDivisor_ =
+      new render::GeomInstanceDataDivisor<render::procedurals::prims::Quadrilateral<math::VertexColor>>(
+          render::Constants::MAX_NUM_INSTANCES);
 
-  geomBuilder_ = render::GeomBuilder::create(subsystem->getIdGenerator());
-  geomBuilder_->reserve(1);
-  geomBuilder_->createInstance(0);
+  rectGeomDataDivisor_->addInstanceData({gapi::VertexSemantic::POS, gapi::VertexSemantic::COL});
+  rectGeomDataDivisor_->addInstanceData({gapi::VertexSemantic::POS, gapi::VertexSemantic::COL});
+  rectGeomDataDivisor_->addInstanceData({gapi::VertexSemantic::POS, gapi::VertexSemantic::COL});
 
-  render::GeometryCreateInfo geomCreateInfo;
-  geomCreateInfo.indexed = true;
-  geomCreateInfo.topology = gapi::TopologyType::TRIANGLE_LIST;
-  geomCreateInfo.bo[render::Constants::IDX_VBO].desc.usage = gapi::BufferUsage::DYNAMIC;
-  geomCreateInfo.bo[render::Constants::IDX_VBO].desc.byteStride = sizeof(math::VertexColor);
-  geomCreateInfo.bo[render::Constants::IDX_VBO].desc.capacity = rectGeomShape_->data_->getVtxSize();
-  geomCreateInfo.bo[render::Constants::IDX_VBO].data = nullptr;
+  render::GeometryCreateInfo rectGeomCreateInfo;
+  rectGeomCreateInfo.indexed = true;
+  rectGeomCreateInfo.topology = gapi::TopologyType::TRIANGLE_LIST;
+  rectGeomCreateInfo.bo[render::Constants::IDX_VBO].desc.usage = gapi::BufferUsage::DYNAMIC;
+  rectGeomCreateInfo.bo[render::Constants::IDX_VBO].desc.byteStride = sizeof(math::VertexColor);
+  rectGeomCreateInfo.bo[render::Constants::IDX_VBO].desc.capacity = 4 * rectGeomDataDivisor_->getInstSize();
+  rectGeomCreateInfo.bo[render::Constants::IDX_VBO].data = nullptr;
 
-  geomCreateInfo.bo[render::Constants::IDX_EBO].desc.usage = gapi::BufferUsage::STATIC;
-  geomCreateInfo.bo[render::Constants::IDX_EBO].desc.byteStride = sizeof(u32_t);
-  geomCreateInfo.bo[render::Constants::IDX_EBO].desc.capacity = rectGeomShape_->data_->getElmSize();
-  geomCreateInfo.bo[render::Constants::IDX_EBO].data = rectGeomShape_->data_->getElements();
-  rectGeom_ = static_cast<render::GeomInstance *>(geomBuilder_->getGeometry(0));
-  rectGeom_->create(geomCreateInfo, rectMtrl_->getEffect(), rectGeomShape_->getVertexAttribs());
+  rectGeomCreateInfo.bo[render::Constants::IDX_EBO].desc.usage = gapi::BufferUsage::STATIC;
+  rectGeomCreateInfo.bo[render::Constants::IDX_EBO].desc.byteStride = sizeof(u32_t);
+  auto rectIdxs = rectGeomDataDivisor_->getIndices<MAX_UI_RECT>();
+  rectGeomCreateInfo.bo[render::Constants::IDX_EBO].desc.capacity = rectIdxs.size();
+  rectGeomCreateInfo.bo[render::Constants::IDX_EBO].data = rectIdxs.data();
+
+  // for (auto i = 0; i < rectGeomCreateInfo.bo[render::Constants::IDX_EBO].desc.capacity; ++i) {
+  //   std::cout << i << " = " << ((u32_t *)rectGeomCreateInfo.bo[render::Constants::IDX_EBO].data)[i] << std::endl;
+  // }
+
+  subsystem->getGeomBuilder()->createInstance<render::procedurals::prims::Quadrilateral<math::VertexColor>>(
+      0 /* rect */, rectGeomDataDivisor_, rectGeomCreateInfo, rectMtrl_->getEffect());
 
   // --------------
 
-  std::array<gapi::VertexSemantic, 3> textSemantics = {
-      gapi::VertexSemantic::POS, gapi::VertexSemantic::COL, gapi::VertexSemantic::TEXCOORD_0};
-  textGeomShape_ = std::make_shared<render::PlaneArray<math::VertexTexCoord>>();
-  textGeomShape_->useVertexSemanticSet(textSemantics);
-  textGeom_ = std::make_shared<render::Geometry>(subsystem->getIdGenerator(), textMtrl_->getEffect(), true);
-  textGeom_->createArray(textGeomShape_);
+  textGeomDataDivisor_ =
+      new render::GeomInstanceDataDivisor<render::procedurals::prims::Quadrilateral<math::VertexTexCoord>>(
+          render::Constants::MAX_NUM_INSTANCES);
+
+  textGeomDataDivisor_->addInstanceData(
+      {gapi::VertexSemantic::POS, gapi::VertexSemantic::COL, gapi::VertexSemantic::TEXCOORD_0});
+  textGeomDataDivisor_->addInstanceData(
+      {gapi::VertexSemantic::POS, gapi::VertexSemantic::COL, gapi::VertexSemantic::TEXCOORD_0});
+  textGeomDataDivisor_->addInstanceData(
+      {gapi::VertexSemantic::POS, gapi::VertexSemantic::COL, gapi::VertexSemantic::TEXCOORD_0});
+  textGeomDataDivisor_->addInstanceData(
+      {gapi::VertexSemantic::POS, gapi::VertexSemantic::COL, gapi::VertexSemantic::TEXCOORD_0});
+  textGeomDataDivisor_->addInstanceData(
+      {gapi::VertexSemantic::POS, gapi::VertexSemantic::COL, gapi::VertexSemantic::TEXCOORD_0});
+
+  render::GeometryCreateInfo textGeomCreateInfo;
+  textGeomCreateInfo.indexed = true;
+  textGeomCreateInfo.topology = gapi::TopologyType::TRIANGLE_LIST;
+  textGeomCreateInfo.bo[render::Constants::IDX_VBO].desc.usage = gapi::BufferUsage::DYNAMIC;
+  textGeomCreateInfo.bo[render::Constants::IDX_VBO].desc.byteStride = sizeof(math::VertexTexCoord);
+  textGeomCreateInfo.bo[render::Constants::IDX_VBO].desc.capacity = 4 * textGeomDataDivisor_->getInstSize();
+  textGeomCreateInfo.bo[render::Constants::IDX_VBO].data = nullptr;
+
+  textGeomCreateInfo.bo[render::Constants::IDX_EBO].desc.usage = gapi::BufferUsage::STATIC;
+  textGeomCreateInfo.bo[render::Constants::IDX_EBO].desc.byteStride = sizeof(u32_t);
+  auto textIdxs = textGeomDataDivisor_->getIndices<MAX_UI_TEXT>();
+  textGeomCreateInfo.bo[render::Constants::IDX_EBO].desc.capacity = textIdxs.size();
+  textGeomCreateInfo.bo[render::Constants::IDX_EBO].data = textIdxs.data();
+
+  // for (auto i = 0; i < textGeomCreateInfo.bo[render::Constants::IDX_EBO].desc.capacity; ++i) {
+  //   std::cout << i << " = " << ((u32_t *)textGeomCreateInfo.bo[render::Constants::IDX_EBO].data)[i] << std::endl;
+  // }
+
+  textId_ = subsystem->getGeomBuilder()
+                ->createInstance<render::procedurals::prims::Quadrilateral<math::VertexTexCoord>>(
+                    1 /* text */, textGeomDataDivisor_, textGeomCreateInfo, textMtrl_->getEffect())
+                .value();
+
+  // --------------
+
+  debugGeomDataDivisor_ = new render::GeomInstanceDataDivisor<render::procedurals::guides::Line<math::VertexColor>>(
+      render::Constants::MAX_NUM_INSTANCES);
+
+  debugGeomDataDivisor_->addInstanceData({gapi::VertexSemantic::POS, gapi::VertexSemantic::COL});
+  debugGeomDataDivisor_->addInstanceData({gapi::VertexSemantic::POS, gapi::VertexSemantic::COL});
+  debugGeomDataDivisor_->addInstanceData({gapi::VertexSemantic::POS, gapi::VertexSemantic::COL});
+  debugGeomDataDivisor_->addInstanceData({gapi::VertexSemantic::POS, gapi::VertexSemantic::COL});
+  debugGeomDataDivisor_->addInstanceData({gapi::VertexSemantic::POS, gapi::VertexSemantic::COL});
+
+  // debugGeomDataDivisor_->addInstanceData({gapi::VertexSemantic::POS, gapi::VertexSemantic::COL});
+  // debugGeomDataDivisor_->addInstanceData({gapi::VertexSemantic::POS, gapi::VertexSemantic::COL});
+  // debugGeomDataDivisor_->addInstanceData({gapi::VertexSemantic::POS, gapi::VertexSemantic::COL});
+  // debugGeomDataDivisor_->addInstanceData({gapi::VertexSemantic::POS, gapi::VertexSemantic::COL});
+  // debugGeomDataDivisor_->addInstanceData({gapi::VertexSemantic::POS, gapi::VertexSemantic::COL});
+
+  render::GeometryCreateInfo debugGeomCreateInfo;
+  debugGeomCreateInfo.indexed = false;
+  debugGeomCreateInfo.topology = gapi::TopologyType::LINE_LIST;
+  debugGeomCreateInfo.bo[render::Constants::IDX_VBO].desc.usage = gapi::BufferUsage::DYNAMIC;
+  debugGeomCreateInfo.bo[render::Constants::IDX_VBO].desc.byteStride = sizeof(math::VertexColor);
+  debugGeomCreateInfo.bo[render::Constants::IDX_VBO].desc.capacity = 5 * debugGeomDataDivisor_->getInstSize();
+  debugGeomCreateInfo.bo[render::Constants::IDX_VBO].data = nullptr;
+
+  subsystem->getGeomBuilder()->createInstance<render::procedurals::guides::Line<math::VertexColor>>(
+      2 /* debug */, debugGeomDataDivisor_, debugGeomCreateInfo, rectMtrl_->getEffect());
+
+  auto geoms = subsystem->getGeomBuilder()->getGeometries();
+  rectGeom_ =
+      static_cast<render::GeomInstance<render::procedurals::prims::Quadrilateral<math::VertexColor>> *>(geoms[0]);
+  textGeom_ =
+      static_cast<render::GeomInstance<render::procedurals::prims::Quadrilateral<math::VertexTexCoord>> *>(geoms[1]);
+  debugGeom_ = static_cast<render::GeomInstance<render::procedurals::guides::Line<math::VertexColor>> *>(geoms[2]);
+  atlasGeom_ = subsystem->getGeomBuilder()->find(atlasGeomUid_);
 }
 
 void Painter::drawRect(f32_t x, f32_t y, f32_t w, f32_t h, math::col4f_t col) {
@@ -107,10 +235,7 @@ void Painter::drawRect(f32_t x, f32_t y, f32_t w, f32_t h, math::col4f_t col) {
   chunk.rect.y = y;
   chunk.rect.w = w;
   chunk.rect.h = h;
-  chunk.rect.r = col.getR();
-  chunk.rect.g = col.getG();
-  chunk.rect.b = col.getB();
-  chunk.rect.a = col.getA();
+  chunk.rect.color = col;
 }
 
 void Painter::drawText(f32_t x, f32_t y, f32_t w, f32_t h, math::col4f_t col, lpcstr_t text) {
@@ -124,10 +249,7 @@ void Painter::drawText(f32_t x, f32_t y, f32_t w, f32_t h, math::col4f_t col, lp
   chunk.text.y = y;
   chunk.text.w = w;
   chunk.text.h = h;
-  chunk.text.r = col.getR();
-  chunk.text.g = col.getG();
-  chunk.text.b = col.getB();
-  chunk.text.a = col.getA();
+  chunk.text.color = col;
   chunk.text.text = text;
 }
 
@@ -135,86 +257,115 @@ void Painter::onUpdateBatchChunks() {
   const auto wdt = font_->getAtlasSize().getW() / font_->maxSize_.getW();
   const auto hdt = font_->getAtlasSize().getH() / font_->maxSize_.getH();
 
-  auto rectOffset = 0;
-  auto rectOffsetIdx = 0;
-  auto textOffset = 0;
-  auto test = false;
+  auto nextRectIdx = 0;
+  auto nextTextIdx = 0;
+  auto nextDebugIdx = 0;
 
   for (auto chunkIndex = 0; chunkIndex < geomBatchChunkSize_; ++chunkIndex) {
     const GeometryBatchChunk &chunk = geomBatchChunks_[chunkIndex];
 
     if (chunk.type == GeometryBatchChunkType::RECT) {
-      auto rect = math::rect4f_t(chunk.rect.x, chunk.rect.y, chunk.rect.w, chunk.rect.h);
-      auto rectColor = math::col4f_t(chunk.rect.r, chunk.rect.g, chunk.rect.b, chunk.rect.a);
-      rectGeomShape_->update(rectOffsetIdx, rect, rectColor);
-
-      // gapi::BufferSubdataDescriptor subdataDesc;
-      // subdataDesc.offset = rectOffset;
-      // subdataDesc.size = 4 * sizeof(math::VertexColor);
-      // subdataDesc.data = rectGeomShape_->data_->getVertices(0, 8);
-
-      if (rectGeom_->getBuffer(render::Constants::IDX_VBO).has_value()) {
-        // rectGeom_->getVertexArray()->bind();
-        // rectGeom_->getBuffer(render::Constants::IDX_VBO).value()->updateSubdata(subdataDesc);
-        // rectGeom_->getVertexArray()->unbind();
-
-        auto *data = rectGeom_->getBuffer(render::Constants::IDX_VBO).value()->map();
-        memcpy(data, rectGeomShape_->data_->getVertices(0, 8), 8 * sizeof(math::VertexColor));
-        rectGeom_->getBuffer(render::Constants::IDX_VBO).value()->unmap();
+      if (rectGeom_) {
+        auto inst = rectGeom_->getDivisor()->at(nextRectIdx);
+        if (!inst) {
+          std::cout << "[ERR]: Inst" << std::endl;
+        } else {
+          inst->update(math::rect4f_t(chunk.rect.x, chunk.rect.y, chunk.rect.w, chunk.rect.h), chunk.rect.color);
+          nextRectIdx += 1;
+        }
       }
-
-      rectOffset += 4 * sizeof(math::VertexColor);
-      rectOffsetIdx += 4;
     } else if (chunk.type == GeometryBatchChunkType::TEXT) {
       auto pos = math::point2f_t(chunk.text.x, chunk.text.y);
-      auto size = math::size2f_t(chunk.text.w, chunk.text.h);
+      // auto size = math::size2f_t(chunk.text.w, chunk.text.h);
 
-      auto vert_offset_x = 0.0F;
-
-      for (auto i = 0; i < strlen(chunk.text.text); i++) {
+      for (auto i = 0; i < strlen(chunk.text.text); ++i) {
         auto info = font_->getCharInfo(chunk.text.text[i]);
         if (info.has_value()) {
-          auto symidx = info.value().symidx;
-          const auto x = symidx % wdt;
-          const auto y = symidx / hdt;
+          // auto symidx = info.value().symidx;
+          // const auto x = symidx % wdt;
+          // const auto y = symidx / hdt;
 
+          auto size = info.value().size;
+          auto tlTop = info.value().tl.getX() / static_cast<f32_t>(font_->getAtlasSize().getW());
+          auto tlLft = info.value().tl.getY() / static_cast<f32_t>(font_->getAtlasSize().getH());
           auto bearing = info.value().bearing;
           auto advance = info.value().advance;
 
-          auto symSizeW = static_cast<f32_t>(font_->maxSize_.getW()) / static_cast<f32_t>(font_->getAtlasSize().getW());
-          auto symSizeH = static_cast<f32_t>(font_->maxSize_.getH()) / static_cast<f32_t>(font_->getAtlasSize().getH());
+          auto msx = size.getW() / static_cast<f32_t>(font_->getAtlasSize().getW());
+          auto msy = size.getH() / static_cast<f32_t>(font_->getAtlasSize().getH());
 
-          auto offset_x = (f32_t)x * (f32_t)font_->maxSize_.getW();
-          auto offset_y = (f32_t)y * (f32_t)font_->maxSize_.getH();
+          auto scale = 0.5F;
 
-          math::rect4f_t uv;
-          uv.setL(static_cast<f32_t>(offset_x) / static_cast<f32_t>(font_->getAtlasSize().getW()));
-          uv.setT(static_cast<f32_t>(offset_y) / static_cast<f32_t>(font_->getAtlasSize().getH()));
-          uv.setR(
-              static_cast<f32_t>(offset_x + font_->maxSize_.getW()) / static_cast<f32_t>(font_->getAtlasSize().getW()));
-          uv.setB(
-              static_cast<f32_t>(offset_y + font_->maxSize_.getH()) / static_cast<f32_t>(font_->getAtlasSize().getH()));
+          auto textPos = math::rect4f_t(pos.getX(), pos.getY(), pos.getX() + msx * scale,
+              pos.getY() +
+                  (msy + (info.value().bearing.getY() / static_cast<f32_t>(font_->getAtlasSize().getH()))) * scale);
 
-          textGeomShape_->updateVertices(
-              math::point2f_t(pos.getX() + vert_offset_x,
-                  pos.getY() + ((f32_t)bearing.getY() / static_cast<f32_t>(font_->getAtlasSize().getH())) - symSizeH),
-              math::size2f_t(symSizeW, symSizeH),
-              // math::col4f_t(chunk.text.r, chunk.text.g, chunk.text.b, chunk.text.a),
-              uv);
+          if (textGeom_) {
+            auto inst = textGeom_->getDivisor()->at(nextTextIdx);
+            if (!inst) {
+              std::cout << "[ERR]: Inst" << std::endl;
+            } else {
+              inst->setPosDataAttrib(textPos);
+              inst->setColDataAttrib(chunk.text.color);
 
-          vert_offset_x += ((f32_t)bearing.getX() / static_cast<f32_t>(font_->getAtlasSize().getW())) + symSizeW;
+              auto newRect = info.value().rect;
+              auto mmx = font_->maxSize_.getW() / static_cast<f32_t>(font_->getAtlasSize().getW());
+              auto ttx = info.value().size.getW() / static_cast<f32_t>(font_->getAtlasSize().getW());
+              auto mmy = font_->maxSize_.getH() / static_cast<f32_t>(font_->getAtlasSize().getH());
+              auto tty = info.value().size.getH() / static_cast<f32_t>(font_->getAtlasSize().getH());
+
+              auto bby = info.value().bearing.getY() / static_cast<f32_t>(font_->getAtlasSize().getH());
+
+              // std::cout << info.value().rect << " x "
+              //           << (info.value().size.getW() / static_cast<f32_t>(font_->getAtlasSize().getW())) << " "
+              //           << (info.value().size.getH() / static_cast<f32_t>(font_->getAtlasSize().getH())) <<
+              //           std::endl;
+
+              newRect.setR(info.value().rect.getR() - (mmx - ttx));
+              newRect.setB(info.value().rect.getB() - (mmy - tty));  // + (tty - bby));
+              inst->setTexDataAttrib(newRect);
+              nextTextIdx += 1;
+            }
+          }
+
+          if (debugGeom_) {
+            auto inst = debugGeom_->getDivisor()->at(nextDebugIdx);
+            // auto inst2 = debugGeom_->getDivisor()->at(nextDebugIdx + 1);
+            if (!inst) {
+              std::cout << "[ERR]: Inst" << std::endl;
+            } else {
+              inst->setPosDataAttrib(math::vec3f_t(textPos.getL(), textPos.getT(), 0.0F),
+                  math::vec3f_t(textPos.getL(), textPos.getB(), 0.0F));
+
+              inst->setPosDataAttrib2(math::vec3f_t(textPos.getR(), textPos.getT(), 0.0F),
+                  math::vec3f_t(textPos.getR(), textPos.getB(), 0.0F));
+
+              inst->setColDataAttrib(COL4F_RED);
+
+              // inst2->setPosDataAttrib(math::vec3f_t(textPos.getL(), textPos.getB(), 0.0F),
+              //     math::vec3f_t(textPos.getR(), textPos.getB(), 0.0F));
+              // inst2->setColDataAttrib(COL4F_BLUE);
+
+              nextDebugIdx += 1;
+            }
+          }
+
+          pos.setX(pos.getX() + msx * scale);
         }
       }
-
-      gapi::BufferSubdataDescriptor subdataDesc;
-      subdataDesc.offset = textOffset;
-      subdataDesc.size = textGeomShape_->data_->getVtxCount();
-      subdataDesc.data = textGeomShape_->data_->getVtxRawdata();
-      auto bufset = textGeom_->getBufferSet();
-      bufset.vbo->updateSubdata(subdataDesc);
-
-      textOffset += (4 * sizeof(math::VertexTexCoord)) * strlen(chunk.text.text);
     }
+  }
+
+  if (rectGeom_) {
+    rectGeom_->remap();
+  }
+
+  if (textGeom_) {
+    textGeom_->remap();
+  }
+
+  if (debugGeom_) {
+    debugGeom_->remap();
   }
 }
 
@@ -223,66 +374,148 @@ void Painter::onUpdate(math::mat4f_t tfrm, math::mat4f_t proj, math::mat4f_t vie
 
   geomBatchChunkSize_ = 0;
 
-  render::pipeline::ForwardRenderCommand cmd;
-  cmd.stage = 0;
-  cmd.blendDesc.enabled = false;
-  cmd.blendDesc.src = gapi::BlendFn::SRC_ALPHA;
-  cmd.blendDesc.dst = gapi::BlendFn::ONE_MINUS_SRC_ALPHA;
-  cmd.blendDesc.mask = true;
-  cmd.rasterizerDesc.mode = gapi::CullFace::BACK;
-  cmd.rasterizerDesc.ccw = false;
-  cmd.depthDesc.enabled = true;
-  cmd.depthDesc.func = gapi::CompareFn::LESS;
-  cmd.depthDesc.mask = true;
-  cmd.depthDesc.near = 0;
-  cmd.depthDesc.far = 0;
-  cmd.stencilDesc.enabled = true;
-  cmd.stencilDesc.front.func = gapi::CompareFn::ALWAYS;
-  cmd.stencilDesc.front.fail = gapi::StencilOp::KEEP;
-  cmd.stencilDesc.front.depthFail = gapi::StencilOp::KEEP;
-  cmd.stencilDesc.front.depthPass = gapi::StencilOp::REPLACE;
-  cmd.stencilDesc.front.rmask = 0xFFFFFF;
-  cmd.stencilDesc.front.wmask = cmd.stencilDesc.front.rmask;
-  cmd.stencilDesc.front.reference = 1;
-  cmd.stencilDesc.back = cmd.stencilDesc.front;
-  // cmd.geometry = rectGeom_;
-  cmd.geom = rectGeom_;
-  cmd.material = rectMtrl_;
-  cmd.tfrm = tfrm;
-  cmd.proj = proj;
-  cmd.view = math::mat4f_t();
+  render::pipeline::ForwardRenderCommand textCmd;
+  if (textGeom_) {
+    textCmd.stage = 0;
+    textCmd.blendDesc.enabled = true;
+    textCmd.blendDesc.src = gapi::BlendFn::SRC_ALPHA;
+    textCmd.blendDesc.dst = gapi::BlendFn::ONE_MINUS_SRC_ALPHA;
+    textCmd.blendDesc.mask = true;
+    textCmd.rasterizerDesc.mode = gapi::CullFace::BACK;
+    textCmd.rasterizerDesc.ccw = false;
+    textCmd.depthDesc.enabled = true;
+    textCmd.depthDesc.func = gapi::CompareFn::LESS;
+    textCmd.depthDesc.mask = true;
+    textCmd.depthDesc.near = 0;
+    textCmd.depthDesc.far = 0;
+    textCmd.stencilDesc.enabled = true;
+    textCmd.stencilDesc.front.func = gapi::CompareFn::ALWAYS;
+    textCmd.stencilDesc.front.fail = gapi::StencilOp::KEEP;
+    textCmd.stencilDesc.front.depthFail = gapi::StencilOp::KEEP;
+    textCmd.stencilDesc.front.depthPass = gapi::StencilOp::REPLACE;
+    textCmd.stencilDesc.front.rmask = 0xFFFFFF;
+    textCmd.stencilDesc.front.wmask = textCmd.stencilDesc.front.rmask;
+    textCmd.stencilDesc.front.reference = 1;
+    textCmd.stencilDesc.back = textCmd.stencilDesc.front;
+    // textCmd.geometry = textGeom_;
+    textCmd.geom = textGeom_;
+    textCmd.topology = gapi::TopologyType::TRIANGLE_LIST;
+    textCmd.material = textMtrl_;
+    textCmd.tfrm = tfrm;
+    textCmd.proj = proj;
+    textCmd.view = math::mat4f_t();  // view;
 
-  subqueue_->post(cmd);
+    subqueue_->post(textCmd);
+  }
 
-  render::pipeline::ForwardRenderCommand cmd2;
-  cmd2.stage = 0;
-  cmd2.blendDesc.enabled = true;
-  cmd2.blendDesc.src = gapi::BlendFn::SRC_ALPHA;
-  cmd2.blendDesc.dst = gapi::BlendFn::ONE_MINUS_SRC_ALPHA;
-  cmd2.blendDesc.mask = true;
-  cmd2.rasterizerDesc.mode = gapi::CullFace::BACK;
-  cmd2.rasterizerDesc.ccw = false;
-  cmd2.depthDesc.enabled = true;
-  cmd2.depthDesc.func = gapi::CompareFn::LESS;
-  cmd2.depthDesc.mask = true;
-  cmd2.depthDesc.near = 0;
-  cmd2.depthDesc.far = 0;
-  cmd2.stencilDesc.enabled = true;
-  cmd2.stencilDesc.front.func = gapi::CompareFn::ALWAYS;
-  cmd2.stencilDesc.front.fail = gapi::StencilOp::KEEP;
-  cmd2.stencilDesc.front.depthFail = gapi::StencilOp::KEEP;
-  cmd2.stencilDesc.front.depthPass = gapi::StencilOp::REPLACE;
-  cmd2.stencilDesc.front.rmask = 0xFFFFFF;
-  cmd2.stencilDesc.front.wmask = cmd2.stencilDesc.front.rmask;
-  cmd2.stencilDesc.front.reference = 1;
-  cmd2.stencilDesc.back = cmd2.stencilDesc.front;
-  cmd2.geometry = textGeom_;
-  cmd2.material = textMtrl_;
-  cmd2.tfrm = tfrm;
-  cmd2.proj = proj;
-  cmd2.view = view;
+  render::pipeline::ForwardRenderCommand rectCmd;
+  if (rectGeom_) {
+    rectCmd.stage = 0;
+    rectCmd.blendDesc.enabled = false;
+    rectCmd.blendDesc.src = gapi::BlendFn::SRC_ALPHA;
+    rectCmd.blendDesc.dst = gapi::BlendFn::ONE_MINUS_SRC_ALPHA;
+    rectCmd.blendDesc.mask = true;
+    rectCmd.rasterizerDesc.mode = gapi::CullFace::BACK;
+    rectCmd.rasterizerDesc.ccw = false;
+    rectCmd.depthDesc.enabled = true;
+    rectCmd.depthDesc.func = gapi::CompareFn::LESS;
+    rectCmd.depthDesc.mask = true;
+    rectCmd.depthDesc.near = 0;
+    rectCmd.depthDesc.far = 0;
+    rectCmd.stencilDesc.enabled = true;
+    rectCmd.stencilDesc.front.func = gapi::CompareFn::ALWAYS;
+    rectCmd.stencilDesc.front.fail = gapi::StencilOp::KEEP;
+    rectCmd.stencilDesc.front.depthFail = gapi::StencilOp::KEEP;
+    rectCmd.stencilDesc.front.depthPass = gapi::StencilOp::REPLACE;
+    rectCmd.stencilDesc.front.rmask = 0xFFFFFF;
+    rectCmd.stencilDesc.front.wmask = rectCmd.stencilDesc.front.rmask;
+    rectCmd.stencilDesc.front.reference = 1;
+    rectCmd.stencilDesc.back = rectCmd.stencilDesc.front;
+    rectCmd.topology = gapi::TopologyType::TRIANGLE_LIST;
+    rectCmd.geom = rectGeom_;
+    rectCmd.material = rectMtrl_;
+    rectCmd.tfrm = tfrm;
+    rectCmd.proj = proj;
+    // rectCmd.proj.setData(math::Projection(
+    //     (struct math::ProjectionDescription){.rect = {{-0.5F /* L */, -0.5F /* T */, 0.5F /* R */, 0.5F /* B */}},
+    //         .fov = 0,
+    //         .aspect = f32_t(800 / 600),
+    //         .znear = -1.0F,
+    //         .zfar = 1.0F})
+    //                          .makeOrtho());
 
-  subqueue_->post(cmd2);
+    rectCmd.view = math::mat4f_t();
+
+    subqueue_->post(rectCmd);
+  }
+
+  render::pipeline::ForwardRenderCommand debugCmd;
+  if (debugGeom_) {
+    debugCmd.stage = 0;
+    debugCmd.blendDesc.enabled = true;
+    debugCmd.blendDesc.src = gapi::BlendFn::SRC_ALPHA;
+    debugCmd.blendDesc.dst = gapi::BlendFn::ONE_MINUS_SRC_ALPHA;
+    debugCmd.blendDesc.mask = true;
+    debugCmd.rasterizerDesc.mode = gapi::CullFace::BACK;
+    debugCmd.rasterizerDesc.ccw = false;
+    debugCmd.depthDesc.enabled = true;
+    debugCmd.depthDesc.func = gapi::CompareFn::LESS;
+    debugCmd.depthDesc.mask = true;
+    debugCmd.depthDesc.near = 0;
+    debugCmd.depthDesc.far = 0;
+    debugCmd.stencilDesc.enabled = true;
+    debugCmd.stencilDesc.front.func = gapi::CompareFn::ALWAYS;
+    debugCmd.stencilDesc.front.fail = gapi::StencilOp::KEEP;
+    debugCmd.stencilDesc.front.depthFail = gapi::StencilOp::KEEP;
+    debugCmd.stencilDesc.front.depthPass = gapi::StencilOp::REPLACE;
+    debugCmd.stencilDesc.front.rmask = 0xFFFFFF;
+    debugCmd.stencilDesc.front.wmask = debugCmd.stencilDesc.front.rmask;
+    debugCmd.stencilDesc.front.reference = 1;
+    debugCmd.stencilDesc.back = debugCmd.stencilDesc.front;
+    // debugCmd.geometry = textGeom_;
+    debugCmd.geom = debugGeom_;
+    debugCmd.topology = gapi::TopologyType::LINE_LIST;
+    debugCmd.material = rectMtrl_;
+    debugCmd.tfrm = tfrm;
+    debugCmd.proj = rectCmd.proj;
+    debugCmd.view = math::mat4f_t();  // view;
+
+    subqueue_->post(debugCmd);
+  }
+
+  render::pipeline::ForwardRenderCommand atlasCmd;
+  if (atlasGeom_) {
+    atlasCmd.stage = 0;
+    atlasCmd.blendDesc.enabled = true;
+    atlasCmd.blendDesc.src = gapi::BlendFn::SRC_ALPHA;
+    atlasCmd.blendDesc.dst = gapi::BlendFn::ONE_MINUS_SRC_ALPHA;
+    atlasCmd.blendDesc.mask = true;
+    atlasCmd.rasterizerDesc.mode = gapi::CullFace::BACK;
+    atlasCmd.rasterizerDesc.ccw = false;
+    atlasCmd.depthDesc.enabled = true;
+    atlasCmd.depthDesc.func = gapi::CompareFn::LESS;
+    atlasCmd.depthDesc.mask = true;
+    atlasCmd.depthDesc.near = 0;
+    atlasCmd.depthDesc.far = 0;
+    atlasCmd.stencilDesc.enabled = true;
+    atlasCmd.stencilDesc.front.func = gapi::CompareFn::ALWAYS;
+    atlasCmd.stencilDesc.front.fail = gapi::StencilOp::KEEP;
+    atlasCmd.stencilDesc.front.depthFail = gapi::StencilOp::KEEP;
+    atlasCmd.stencilDesc.front.depthPass = gapi::StencilOp::REPLACE;
+    atlasCmd.stencilDesc.front.rmask = 0xFFFFFF;
+    atlasCmd.stencilDesc.front.wmask = atlasCmd.stencilDesc.front.rmask;
+    atlasCmd.stencilDesc.front.reference = 1;
+    atlasCmd.stencilDesc.back = atlasCmd.stencilDesc.front;
+    // debugCmd.geometry = textGeom_;
+    atlasCmd.geom = atlasGeom_;
+    atlasCmd.topology = gapi::TopologyType::TRIANGLE_LIST;
+    atlasCmd.material = textMtrl_;
+    atlasCmd.tfrm = tfrm;
+    atlasCmd.proj = rectCmd.proj;
+    atlasCmd.view = math::mat4f_t();  // view;
+
+    subqueue_->post(atlasCmd);
+  }
 }
 
 NAMESPACE_END(ui)

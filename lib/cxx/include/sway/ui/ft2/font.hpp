@@ -24,8 +24,10 @@ struct GlyphInfo {
 };
 
 struct BitmapInfo {
+  s32_t pitch;
   u8_t *data;
   math::size2i_t size;
+  math::vec2i_t tl;
 };
 
 struct CharInfo {
@@ -35,6 +37,8 @@ struct CharInfo {
   // math::vec2i_t advance;
   s32_t advance;
   // s8_t *data;
+  math::vec2i_t tl;
+  math::rect4f_t rect;
 };
 
 struct FontCharacter {

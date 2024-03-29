@@ -4,6 +4,7 @@
 #include <sway/core.hpp>
 #include <sway/math.hpp>
 #include <sway/ui/painter.hpp>
+#include <sway/ui/widget/appearance.hpp>
 
 NAMESPACE_BEGIN(sway)
 NAMESPACE_BEGIN(ui)
@@ -13,52 +14,75 @@ class Widget : public core::container::Node {
 public:
   Widget();
 
-  ~Widget() = default;
+  virtual ~Widget() = default;
 
   MTHD_VIRTUAL(void update());
 
-  MTHD_VIRTUAL(void draw(std::shared_ptr<Painter> painter));
+  MTHD_VIRTUAL(void paintEvent(std::shared_ptr<Painter> painter));
 
-  void setRect(const math::rect4f_t &rect) { rect_ = rect; }
+  void setRect(const math::rect4f_t &rect);
 
   [[nodiscard]]
-  auto hasRelated() -> bool {
-    auto parentOpt = this->getParentNode();
-    if (!parentOpt.has_value()) {
-      return false;
-    }
+  auto getRect() const -> math::rect4f_t;
 
-    auto parent = parentOpt.value();
-    return (parent->getNodeIdx().chainEqual(std::vector<int>({-1}))) ? false : true;
-  }
+  [[nodiscard]]
+  auto hasRelated() -> bool;
 
-  auto setPosition(const math::vec2f_t &pos) {
-    rect_.setL(pos.getX());
-    rect_.setT(pos.getY());
+  void setPosition(const math::vec2f_t &pos);
 
-    if (this->hasRelated()) {
-      auto parentOpt = this->getParentNode();
-      if (!parentOpt.has_value()) {
-        return;
+  [[nodiscard]]
+  auto getPosition() const -> math::point2f_t;
+
+  void setSize(const math::size2f_t &size);
+
+  void setBackgroundColor(const math::col4f_t &col);
+
+  [[nodiscard]]
+  auto getBackgroundColor() const -> math::col4f_t;
+
+  void setForegroundColor(const math::col4f_t &col);
+
+  [[nodiscard]]
+  auto getForegroundColor() const -> math::col4f_t;
+
+  void setVisible(bool val);
+
+  [[nodiscard]]
+  auto hasVisible() const -> bool;
+
+  auto getChildAt(const math::point2f_t &point) -> Widget * {
+    for (auto node : this->getChildNodes()) {
+      auto child = std::static_pointer_cast<Widget>(node);
+      if (!child->hasVisible()) {
+        break;
       }
 
-      auto parent = std::static_pointer_cast<Widget>(parentOpt.value());
-      rect_.offset(parent->getPosition());
+      std::cout << child->getRect() << std::endl;
+
+      if (auto *const widget = child->getChildAt(point)) {
+        return widget;
+      } else if (child->getRect().contains(point)) {
+        child->setHover(true);
+        return child.get();
+      }
+
+      child->setHover(false);
     }
+
+    return nullptr;
   }
 
-  [[nodiscard]]
-  auto getPosition() const -> math::point2f_t {
-    return rect_.position();
-  }
+  void setHover(bool val) { hovered_ = val; }
 
-  auto setSize(const math::size2f_t &size) {
-    rect_.setR(rect_.getL() + size.getW());
-    rect_.setB(rect_.getT() + size.getH());
-  }
+  auto hasHovered() -> bool { return hovered_; }
 
 protected:
   math::rect4f_t rect_;
+
+  Appearance appearance_;
+
+  bool visibled_;
+  bool hovered_;
 };
 
 NAMESPACE_END(widget)

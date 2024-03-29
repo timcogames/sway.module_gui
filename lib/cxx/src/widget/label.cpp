@@ -11,8 +11,8 @@ Label::Label(const std::string &text)
 
 void Label::update() {}
 
-void Label::draw(std::shared_ptr<Painter> painter) {
-  painter->drawText(rect_.getL(), rect_.getT(), rect_.getR(), rect_.getB(), COL4F_WHITE, text_.c_str());
+void Label::paintEvent(std::shared_ptr<Painter> painter) {
+  painter->drawText(rect_.getL(), rect_.getT(), rect_.getR(), rect_.getB(), this->getForegroundColor(), text_.c_str());
 }
 
 NAMESPACE_END(widget)
