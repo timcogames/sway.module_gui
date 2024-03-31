@@ -1,11 +1,13 @@
+#include <sway/ui/builder.hpp>
 #include <sway/ui/widget/label.hpp>
 
 NAMESPACE_BEGIN(sway)
 NAMESPACE_BEGIN(ui)
 NAMESPACE_BEGIN(widget)
 
-Label::Label(const std::string &text)
-    : text_(text)
+Label::Label(Builder *builder, const std::string &text)
+    : Widget(builder)
+    , text_(text)
     , font_("")
     , fontSize_(12) {}
 

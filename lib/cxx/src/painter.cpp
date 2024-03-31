@@ -45,15 +45,8 @@ void Painter::initialize(std::shared_ptr<ft2::Font> font, std::shared_ptr<render
   texCreateInfo.mipLevels = 0;
   auto image = textMtrl_->addImage(texCreateInfo, "diffuse_sampler");
 
-  // const auto wdt = font_->getAtlasSize().getW() / font_->maxSize_.getW();
-  // const auto hdt = font_->getAtlasSize().getH() / font_->maxSize_.getH();
-
   for (auto i = 0; i < font_->glyphs_.size(); i++) {
     auto bi = font_->getBitmapData(font_->glyphs_[i]);
-
-    auto symidx = font_->glyphs_[i].idx;
-    // const auto x = i % wdt;
-    // const auto y = i / hdt;
 
     if (font_->maxSize_.getW() + pos.getX() > font_->getAtlasSize().getW()) {
       int newLineY = pos.getY() + maxCharTall;
@@ -75,10 +68,13 @@ void Painter::initialize(std::shared_ptr<ft2::Font> font, std::shared_ptr<render
     image->getTexture()->updateSubdata(texSubdataDesc);
     // image->getTexture()->setPixelStorage(gapi::PixelStorageMode::UNPACK_ROW_LENGTH, 0);
 
-    font_->cache_[font_->glyphs_[i].code].rect = math::rect4f_t(pos.getX() / (f32_t)font_->getAtlasSize().getW(),
-        pos.getY() / (f32_t)font_->getAtlasSize().getH(),
+    // clang-format off
+    font_->cache_[font_->glyphs_[i].code].rect = math::rect4f_t(
+         pos.getX() / (f32_t)font_->getAtlasSize().getW(),
+         pos.getY() / (f32_t)font_->getAtlasSize().getH(),
         (pos.getX() + font_->maxSize_.getW()) / (f32_t)font_->getAtlasSize().getW(),
         (pos.getY() + font_->maxSize_.getH()) / (f32_t)font_->getAtlasSize().getH());
+    // clang-format on
 
     auto posx = pos.getX() + font_->maxSize_.getW();
     pos.setX(posx);
@@ -88,43 +84,20 @@ void Painter::initialize(std::shared_ptr<ft2::Font> font, std::shared_ptr<render
     }
   }
 
-  auto shape = new render::procedurals::prims::Quadrilateral<math::VertexTexCoord>(
-      {gapi::VertexSemantic::POS, gapi::VertexSemantic::COL, gapi::VertexSemantic::TEXCOORD_0});
+  createRectGeom(subsystem, 0);
+  createTextGeom(subsystem, 1);
+  createDebugGeom(subsystem, 2);
+  createAtlasGeom(subsystem, 3);
+}
 
-  shape->setPosDataAttrib(math::rect4f_t(-0.3F, -0.3F, 0.3F, 0.3F));
-  shape->setColDataAttrib(COL4F_WHITE);
-  shape->setTexDataAttrib(math::rect4f_t(0.0F, 0.0F, 1.0F, 1.0F));
-
-  render::GeometryCreateInfo atlasGeomCreateInfo;
-  atlasGeomCreateInfo.indexed = true;
-  atlasGeomCreateInfo.topology = gapi::TopologyType::TRIANGLE_LIST;
-  atlasGeomCreateInfo.bo[render::Constants::IDX_VBO].desc.usage = gapi::BufferUsage::STATIC;
-  atlasGeomCreateInfo.bo[render::Constants::IDX_VBO].desc.byteStride = sizeof(math::VertexTexCoord);
-  atlasGeomCreateInfo.bo[render::Constants::IDX_VBO].desc.capacity = 4;
-  auto dataa = new f32_t[4 * sizeof(math::VertexTexCoord)];
-  shape->data()->getVertices(dataa, 0, 4);
-  atlasGeomCreateInfo.bo[render::Constants::IDX_VBO].data = dataa;
-  std::cout << math::vec3f_t(dataa[0], dataa[1], dataa[2]) << std::endl;
-  std::cout << math::vec3f_t(dataa[9], dataa[10], dataa[11]) << std::endl;
-
-  atlasGeomCreateInfo.bo[render::Constants::IDX_EBO].desc.usage = gapi::BufferUsage::STATIC;
-  atlasGeomCreateInfo.bo[render::Constants::IDX_EBO].desc.byteStride = sizeof(u32_t);
-  atlasGeomCreateInfo.bo[render::Constants::IDX_EBO].desc.capacity = 6;
-  atlasGeomCreateInfo.bo[render::Constants::IDX_EBO].data = shape->data()->getElements();
-
-  atlasGeomUid_ = subsystem->getGeomBuilder()
-                      ->create(3, atlasGeomCreateInfo, shape->getVertexAttribs(), textMtrl_->getEffect())
-                      .value();
-
-  // --------------
-
+void Painter::createRectGeom(std::shared_ptr<render::RenderSubsystem> subsystem, u32_t geomIdx) {
   rectGeomDataDivisor_ =
       new render::GeomInstanceDataDivisor<render::procedurals::prims::Quadrilateral<math::VertexColor>>(
-          render::Constants::MAX_NUM_INSTANCES);
+          {gapi::VertexSemantic::POS, gapi::VertexSemantic::COL}, render::Constants::MAX_NUM_INSTANCES);
 
-  rectGeomDataDivisor_->addInstanceData({gapi::VertexSemantic::POS, gapi::VertexSemantic::COL});
-  rectGeomDataDivisor_->addInstanceData({gapi::VertexSemantic::POS, gapi::VertexSemantic::COL});
-  rectGeomDataDivisor_->addInstanceData({gapi::VertexSemantic::POS, gapi::VertexSemantic::COL});
+  rectGeomDataDivisor_->addInstanceData();
+  rectGeomDataDivisor_->addInstanceData();
+  rectGeomDataDivisor_->addInstanceData();
 
   render::GeometryCreateInfo rectGeomCreateInfo;
   rectGeomCreateInfo.indexed = true;
@@ -140,29 +113,24 @@ void Painter::initialize(std::shared_ptr<ft2::Font> font, std::shared_ptr<render
   rectGeomCreateInfo.bo[render::Constants::IDX_EBO].desc.capacity = rectIdxs.size();
   rectGeomCreateInfo.bo[render::Constants::IDX_EBO].data = rectIdxs.data();
 
-  // for (auto i = 0; i < rectGeomCreateInfo.bo[render::Constants::IDX_EBO].desc.capacity; ++i) {
-  //   std::cout << i << " = " << ((u32_t *)rectGeomCreateInfo.bo[render::Constants::IDX_EBO].data)[i] << std::endl;
-  // }
-
   subsystem->getGeomBuilder()->createInstance<render::procedurals::prims::Quadrilateral<math::VertexColor>>(
-      0 /* rect */, rectGeomDataDivisor_, rectGeomCreateInfo, rectMtrl_->getEffect());
+      geomIdx, rectGeomDataDivisor_, rectGeomCreateInfo, rectMtrl_->getEffect());
 
-  // --------------
+  rectGeom_ = static_cast<render::GeomInstance<render::procedurals::prims::Quadrilateral<math::VertexColor>> *>(
+      subsystem->getGeomBuilder()->getGeometries()[geomIdx]);
+}
 
+void Painter::createTextGeom(std::shared_ptr<render::RenderSubsystem> subsystem, u32_t geomIdx) {
   textGeomDataDivisor_ =
       new render::GeomInstanceDataDivisor<render::procedurals::prims::Quadrilateral<math::VertexTexCoord>>(
+          {gapi::VertexSemantic::POS, gapi::VertexSemantic::COL, gapi::VertexSemantic::TEXCOORD_0},
           render::Constants::MAX_NUM_INSTANCES);
 
-  textGeomDataDivisor_->addInstanceData(
-      {gapi::VertexSemantic::POS, gapi::VertexSemantic::COL, gapi::VertexSemantic::TEXCOORD_0});
-  textGeomDataDivisor_->addInstanceData(
-      {gapi::VertexSemantic::POS, gapi::VertexSemantic::COL, gapi::VertexSemantic::TEXCOORD_0});
-  textGeomDataDivisor_->addInstanceData(
-      {gapi::VertexSemantic::POS, gapi::VertexSemantic::COL, gapi::VertexSemantic::TEXCOORD_0});
-  textGeomDataDivisor_->addInstanceData(
-      {gapi::VertexSemantic::POS, gapi::VertexSemantic::COL, gapi::VertexSemantic::TEXCOORD_0});
-  textGeomDataDivisor_->addInstanceData(
-      {gapi::VertexSemantic::POS, gapi::VertexSemantic::COL, gapi::VertexSemantic::TEXCOORD_0});
+  textGeomDataDivisor_->addInstanceData();
+  textGeomDataDivisor_->addInstanceData();
+  textGeomDataDivisor_->addInstanceData();
+  textGeomDataDivisor_->addInstanceData();
+  textGeomDataDivisor_->addInstanceData();
 
   render::GeometryCreateInfo textGeomCreateInfo;
   textGeomCreateInfo.indexed = true;
@@ -178,31 +146,24 @@ void Painter::initialize(std::shared_ptr<ft2::Font> font, std::shared_ptr<render
   textGeomCreateInfo.bo[render::Constants::IDX_EBO].desc.capacity = textIdxs.size();
   textGeomCreateInfo.bo[render::Constants::IDX_EBO].data = textIdxs.data();
 
-  // for (auto i = 0; i < textGeomCreateInfo.bo[render::Constants::IDX_EBO].desc.capacity; ++i) {
-  //   std::cout << i << " = " << ((u32_t *)textGeomCreateInfo.bo[render::Constants::IDX_EBO].data)[i] << std::endl;
-  // }
-
   textId_ = subsystem->getGeomBuilder()
                 ->createInstance<render::procedurals::prims::Quadrilateral<math::VertexTexCoord>>(
-                    1 /* text */, textGeomDataDivisor_, textGeomCreateInfo, textMtrl_->getEffect())
+                    geomIdx, textGeomDataDivisor_, textGeomCreateInfo, textMtrl_->getEffect())
                 .value();
 
-  // --------------
+  textGeom_ = static_cast<render::GeomInstance<render::procedurals::prims::Quadrilateral<math::VertexTexCoord>> *>(
+      subsystem->getGeomBuilder()->getGeometries()[geomIdx]);
+}
 
+void Painter::createDebugGeom(std::shared_ptr<render::RenderSubsystem> subsystem, u32_t geomIdx) {
   debugGeomDataDivisor_ = new render::GeomInstanceDataDivisor<render::procedurals::guides::Line<math::VertexColor>>(
-      render::Constants::MAX_NUM_INSTANCES);
+      {gapi::VertexSemantic::POS, gapi::VertexSemantic::COL}, render::Constants::MAX_NUM_INSTANCES);
 
-  debugGeomDataDivisor_->addInstanceData({gapi::VertexSemantic::POS, gapi::VertexSemantic::COL});
-  debugGeomDataDivisor_->addInstanceData({gapi::VertexSemantic::POS, gapi::VertexSemantic::COL});
-  debugGeomDataDivisor_->addInstanceData({gapi::VertexSemantic::POS, gapi::VertexSemantic::COL});
-  debugGeomDataDivisor_->addInstanceData({gapi::VertexSemantic::POS, gapi::VertexSemantic::COL});
-  debugGeomDataDivisor_->addInstanceData({gapi::VertexSemantic::POS, gapi::VertexSemantic::COL});
-
-  // debugGeomDataDivisor_->addInstanceData({gapi::VertexSemantic::POS, gapi::VertexSemantic::COL});
-  // debugGeomDataDivisor_->addInstanceData({gapi::VertexSemantic::POS, gapi::VertexSemantic::COL});
-  // debugGeomDataDivisor_->addInstanceData({gapi::VertexSemantic::POS, gapi::VertexSemantic::COL});
-  // debugGeomDataDivisor_->addInstanceData({gapi::VertexSemantic::POS, gapi::VertexSemantic::COL});
-  // debugGeomDataDivisor_->addInstanceData({gapi::VertexSemantic::POS, gapi::VertexSemantic::COL});
+  debugGeomDataDivisor_->addInstanceData();
+  debugGeomDataDivisor_->addInstanceData();
+  debugGeomDataDivisor_->addInstanceData();
+  debugGeomDataDivisor_->addInstanceData();
+  debugGeomDataDivisor_->addInstanceData();
 
   render::GeometryCreateInfo debugGeomCreateInfo;
   debugGeomCreateInfo.indexed = false;
@@ -213,14 +174,39 @@ void Painter::initialize(std::shared_ptr<ft2::Font> font, std::shared_ptr<render
   debugGeomCreateInfo.bo[render::Constants::IDX_VBO].data = nullptr;
 
   subsystem->getGeomBuilder()->createInstance<render::procedurals::guides::Line<math::VertexColor>>(
-      2 /* debug */, debugGeomDataDivisor_, debugGeomCreateInfo, rectMtrl_->getEffect());
+      geomIdx, debugGeomDataDivisor_, debugGeomCreateInfo, rectMtrl_->getEffect());
 
-  auto geoms = subsystem->getGeomBuilder()->getGeometries();
-  rectGeom_ =
-      static_cast<render::GeomInstance<render::procedurals::prims::Quadrilateral<math::VertexColor>> *>(geoms[0]);
-  textGeom_ =
-      static_cast<render::GeomInstance<render::procedurals::prims::Quadrilateral<math::VertexTexCoord>> *>(geoms[1]);
-  debugGeom_ = static_cast<render::GeomInstance<render::procedurals::guides::Line<math::VertexColor>> *>(geoms[2]);
+  debugGeom_ = static_cast<render::GeomInstance<render::procedurals::guides::Line<math::VertexColor>> *>(
+      subsystem->getGeomBuilder()->getGeometries()[geomIdx]);
+}
+
+void Painter::createAtlasGeom(std::shared_ptr<render::RenderSubsystem> subsystem, u32_t geomIdx) {
+  auto shape = new render::procedurals::prims::Quadrilateral<math::VertexTexCoord>(
+      {gapi::VertexSemantic::POS, gapi::VertexSemantic::COL, gapi::VertexSemantic::TEXCOORD_0});
+
+  shape->setPosDataAttrib(math::rect4f_t(-0.3F, -0.3F, 0.3F, 0.3F));
+  shape->setColDataAttrib(COL4F_WHITE);
+  shape->setTexDataAttrib(math::rect4f_t(0.0F, 0.0F, 1.0F, 1.0F));
+
+  render::GeometryCreateInfo atlasGeomCreateInfo;
+  atlasGeomCreateInfo.indexed = true;
+  atlasGeomCreateInfo.topology = gapi::TopologyType::TRIANGLE_LIST;
+  atlasGeomCreateInfo.bo[render::Constants::IDX_VBO].desc.usage = gapi::BufferUsage::STATIC;
+  atlasGeomCreateInfo.bo[render::Constants::IDX_VBO].desc.byteStride = sizeof(math::VertexTexCoord);
+  atlasGeomCreateInfo.bo[render::Constants::IDX_VBO].desc.capacity = 4;
+  auto data = new f32_t[4 * sizeof(math::VertexTexCoord)];
+  shape->data()->getVertices(data, 0, 4);
+  atlasGeomCreateInfo.bo[render::Constants::IDX_VBO].data = data;
+
+  atlasGeomCreateInfo.bo[render::Constants::IDX_EBO].desc.usage = gapi::BufferUsage::STATIC;
+  atlasGeomCreateInfo.bo[render::Constants::IDX_EBO].desc.byteStride = sizeof(u32_t);
+  atlasGeomCreateInfo.bo[render::Constants::IDX_EBO].desc.capacity = 6;
+  atlasGeomCreateInfo.bo[render::Constants::IDX_EBO].data = shape->data()->getElements();
+
+  atlasGeomUid_ = subsystem->getGeomBuilder()
+                      ->create(geomIdx, atlasGeomCreateInfo, shape->getVertexAttribs(), textMtrl_->getEffect())
+                      .value();
+
   atlasGeom_ = subsystem->getGeomBuilder()->find(atlasGeomUid_);
 }
 
@@ -254,9 +240,6 @@ void Painter::drawText(f32_t x, f32_t y, f32_t w, f32_t h, math::col4f_t col, lp
 }
 
 void Painter::onUpdateBatchChunks() {
-  const auto wdt = font_->getAtlasSize().getW() / font_->maxSize_.getW();
-  const auto hdt = font_->getAtlasSize().getH() / font_->maxSize_.getH();
-
   auto nextRectIdx = 0;
   auto nextTextIdx = 0;
   auto nextDebugIdx = 0;
@@ -270,35 +253,30 @@ void Painter::onUpdateBatchChunks() {
         if (!inst) {
           std::cout << "[ERR]: Inst" << std::endl;
         } else {
-          inst->update(math::rect4f_t(chunk.rect.x, chunk.rect.y, chunk.rect.w, chunk.rect.h), chunk.rect.color);
+          inst->setPosDataAttrib(math::rect4f_t(chunk.rect.x, chunk.rect.y, chunk.rect.w, chunk.rect.h));
+          inst->setColDataAttrib(chunk.rect.color);
           nextRectIdx += 1;
         }
       }
     } else if (chunk.type == GeometryBatchChunkType::TEXT) {
       auto pos = math::point2f_t(chunk.text.x, chunk.text.y);
-      // auto size = math::size2f_t(chunk.text.w, chunk.text.h);
 
       for (auto i = 0; i < strlen(chunk.text.text); ++i) {
         auto info = font_->getCharInfo(chunk.text.text[i]);
         if (info.has_value()) {
-          // auto symidx = info.value().symidx;
-          // const auto x = symidx % wdt;
-          // const auto y = symidx / hdt;
+          auto size = math::size2f_t(
+              static_cast<f32_t>(info.value().size.getW()) / static_cast<f32_t>(font_->getAtlasSize().getW()),
+              static_cast<f32_t>(info.value().size.getH()) / static_cast<f32_t>(font_->getAtlasSize().getH()));
 
-          auto size = info.value().size;
-          auto tlTop = info.value().tl.getX() / static_cast<f32_t>(font_->getAtlasSize().getW());
-          auto tlLft = info.value().tl.getY() / static_cast<f32_t>(font_->getAtlasSize().getH());
           auto bearing = info.value().bearing;
           auto advance = info.value().advance;
 
-          auto msx = size.getW() / static_cast<f32_t>(font_->getAtlasSize().getW());
-          auto msy = size.getH() / static_cast<f32_t>(font_->getAtlasSize().getH());
-
           auto scale = 0.5F;
 
-          auto textPos = math::rect4f_t(pos.getX(), pos.getY(), pos.getX() + msx * scale,
+          auto textPos = math::rect4f_t(pos.getX(), pos.getY(), pos.getX() + size.getW() * scale,
               pos.getY() +
-                  (msy + (info.value().bearing.getY() / static_cast<f32_t>(font_->getAtlasSize().getH()))) * scale);
+                  (size.getH() + (info.value().bearing.getY() / static_cast<f32_t>(font_->getAtlasSize().getH()))) *
+                      scale);
 
           if (textGeom_) {
             auto inst = textGeom_->getDivisor()->at(nextTextIdx);
@@ -310,16 +288,11 @@ void Painter::onUpdateBatchChunks() {
 
               auto newRect = info.value().rect;
               auto mmx = font_->maxSize_.getW() / static_cast<f32_t>(font_->getAtlasSize().getW());
-              auto ttx = info.value().size.getW() / static_cast<f32_t>(font_->getAtlasSize().getW());
+              auto ttx = size.getW();
               auto mmy = font_->maxSize_.getH() / static_cast<f32_t>(font_->getAtlasSize().getH());
-              auto tty = info.value().size.getH() / static_cast<f32_t>(font_->getAtlasSize().getH());
+              auto tty = size.getH();
 
               auto bby = info.value().bearing.getY() / static_cast<f32_t>(font_->getAtlasSize().getH());
-
-              // std::cout << info.value().rect << " x "
-              //           << (info.value().size.getW() / static_cast<f32_t>(font_->getAtlasSize().getW())) << " "
-              //           << (info.value().size.getH() / static_cast<f32_t>(font_->getAtlasSize().getH())) <<
-              //           std::endl;
 
               newRect.setR(info.value().rect.getR() - (mmx - ttx));
               newRect.setB(info.value().rect.getB() - (mmy - tty));  // + (tty - bby));
@@ -337,20 +310,16 @@ void Painter::onUpdateBatchChunks() {
               inst->setPosDataAttrib(math::vec3f_t(textPos.getL(), textPos.getT(), 0.0F),
                   math::vec3f_t(textPos.getL(), textPos.getB(), 0.0F));
 
-              inst->setPosDataAttrib2(math::vec3f_t(textPos.getR(), textPos.getT(), 0.0F),
-                  math::vec3f_t(textPos.getR(), textPos.getB(), 0.0F));
+              // inst->setPosDataAttrib2(math::vec3f_t(textPos.getR(), textPos.getT(), 0.0F),
+              //     math::vec3f_t(textPos.getR(), textPos.getB(), 0.0F));
 
               inst->setColDataAttrib(COL4F_RED);
-
-              // inst2->setPosDataAttrib(math::vec3f_t(textPos.getL(), textPos.getB(), 0.0F),
-              //     math::vec3f_t(textPos.getR(), textPos.getB(), 0.0F));
-              // inst2->setColDataAttrib(COL4F_BLUE);
 
               nextDebugIdx += 1;
             }
           }
 
-          pos.setX(pos.getX() + msx * scale);
+          pos.setX(pos.getX() + size.getW() * scale);
         }
       }
     }

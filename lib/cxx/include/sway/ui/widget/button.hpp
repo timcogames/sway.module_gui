@@ -11,7 +11,7 @@ NAMESPACE_BEGIN(widget)
 
 class Button : public Widget {
 public:
-  Button(const std::string &text);
+  Button(Builder *builder, const std::string &text);
 
   virtual ~Button() = default;
 

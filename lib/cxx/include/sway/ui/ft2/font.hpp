@@ -59,7 +59,7 @@ struct FontStyle {
 
 class Font {
 public:
-  Font(std::shared_ptr<Face> face, math::size2i_t atlasSize);
+  Font(std::shared_ptr<Face> face, math::size2i_t atlasSize, math::size2i_t atlasMarginSize);
 
   ~Font() = default;
 
@@ -83,6 +83,7 @@ public:
 public:
   std::shared_ptr<Face> face_;
   math::size2i_t atlasSize_;
+  math::size2i_t atlasMarginSize_;
   std::map<s8_t, FontCharacter> chars_;
   gapi::TextureCreateInfo createInfo_;
 

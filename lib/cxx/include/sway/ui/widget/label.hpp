@@ -11,7 +11,7 @@ NAMESPACE_BEGIN(widget)
 
 class Label : public Widget {
 public:
-  Label(const std::string &text);
+  Label(Builder *builder, const std::string &text);
 
   virtual ~Label() = default;
 

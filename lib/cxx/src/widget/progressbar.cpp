@@ -1,3 +1,4 @@
+#include <sway/ui/builder.hpp>
 #include <sway/ui/widget/progressbar.hpp>
 
 #include <algorithm>
@@ -6,8 +7,9 @@ NAMESPACE_BEGIN(sway)
 NAMESPACE_BEGIN(ui)
 NAMESPACE_BEGIN(widget)
 
-ProgressBar::ProgressBar()
-    : current_(0.0F) {}
+ProgressBar::ProgressBar(Builder *builder)
+    : Widget(builder)
+    , current_(0.0F) {}
 
 void ProgressBar::update() {}
 

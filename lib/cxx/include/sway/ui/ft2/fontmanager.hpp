@@ -27,7 +27,7 @@ public:
   void load(std::function<void()> fn, std::shared_ptr<rms::FetcherQueue> fetcherQueue, const std::string &name,
       const std::string &filepath);
 
-  auto addFont(const std::string &name) -> std::shared_ptr<Font>;
+  auto addFont(const std::string &name, lpcstr_t symbols, int size, int marginSize) -> std::shared_ptr<Font>;
 
   auto find(const std::string &name) -> std::shared_ptr<Font>;
 

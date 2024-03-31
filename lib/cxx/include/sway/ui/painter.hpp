@@ -55,6 +55,11 @@ public:
       std::shared_ptr<render::MaterialManager> materialMngr, std::shared_ptr<rms::ImageResourceManager> imgResMngr,
       std::shared_ptr<rms::GLSLResourceManager> glslResMngr);
 
+  void createRectGeom(std::shared_ptr<render::RenderSubsystem> subsystem, u32_t geomIdx);
+  void createTextGeom(std::shared_ptr<render::RenderSubsystem> subsystem, u32_t geomIdx);
+  void createDebugGeom(std::shared_ptr<render::RenderSubsystem> subsystem, u32_t geomIdx);
+  void createAtlasGeom(std::shared_ptr<render::RenderSubsystem> subsystem, u32_t geomIdx);
+
   void drawRect(f32_t x, f32_t y, f32_t w, f32_t h, math::col4f_t col);
 
   void drawText(f32_t x, f32_t y, f32_t w, f32_t h, math::col4f_t col, lpcstr_t text);

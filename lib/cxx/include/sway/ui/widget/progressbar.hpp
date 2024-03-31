@@ -10,7 +10,7 @@ NAMESPACE_BEGIN(widget)
 
 class ProgressBar : public Widget {
 public:
-  ProgressBar();
+  ProgressBar(Builder *builder);
 
   virtual ~ProgressBar() = default;
 

@@ -5,10 +5,6 @@ NAMESPACE_BEGIN(sway)
 NAMESPACE_BEGIN(ui)
 NAMESPACE_BEGIN(ft2)
 
-lpcstr_t SymbolSet = "1234567890-=!@#$%^&*()_+\\|/><,.?~`';: "
-                     "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
-                     "abcdefghijklmnopqrstuvwxyz";
-
 FontManager::FontManager()
     : lib_(nullptr)
     , initialized_(false) {
@@ -45,15 +41,18 @@ void FontManager::load(std::function<void()> fn, std::shared_ptr<rms::FetcherQue
   fetcherQueue->add(loader);
 }
 
-auto FontManager::addFont(const std::string &name) -> std::shared_ptr<Font> {
+auto FontManager::addFont(
+    const std::string &name, lpcstr_t symbols, int size, int marginSize) -> std::shared_ptr<Font> {
   auto iter = cache_.find(name);
   if (iter == cache_.end()) {
     return nullptr;
   }
 
-  auto texAtlasSize = math::size2i_t(1080, 1080);
-  auto font = std::make_shared<Font>(iter->second, texAtlasSize);
-  font->create(SymbolSet, false, true);
+  auto texAtlasSize = math::size2i_t(size, size);
+  auto texAtlasMarginSize = math::size2i_t(marginSize, marginSize);
+
+  auto font = std::make_shared<Font>(iter->second, texAtlasSize, texAtlasMarginSize);
+  font->create(symbols, false, true);
 
   fonts_.insert(std::make_pair(name, font));
   return font;

@@ -1,11 +1,13 @@
+#include <sway/ui/builder.hpp>
 #include <sway/ui/widget/button.hpp>
 
 NAMESPACE_BEGIN(sway)
 NAMESPACE_BEGIN(ui)
 NAMESPACE_BEGIN(widget)
 
-Button::Button(const std::string &text) {
-  label_ = std::make_shared<Label>(text);
+Button::Button(Builder *builder, const std::string &text)
+    : Widget(builder) {
+  label_ = std::make_shared<Label>(builder, text);
   this->addChildNode(label_);
 }
 

@@ -7,9 +7,10 @@ NAMESPACE_BEGIN(sway)
 NAMESPACE_BEGIN(ui)
 NAMESPACE_BEGIN(ft2)
 
-Font::Font(std::shared_ptr<Face> face, math::size2i_t atlasSize)
+Font::Font(std::shared_ptr<Face> face, math::size2i_t atlasSize, math::size2i_t atlasMarginSize)
     : face_(face)
-    , atlasSize_(atlasSize) {}
+    , atlasSize_(atlasSize)
+    , atlasMarginSize_(atlasMarginSize) {}
 
 void Font::create(lpcstr_t charcodes, bool hinted, bool antialiased) {
   for (auto i = 0; i < strlen(charcodes); i++) {

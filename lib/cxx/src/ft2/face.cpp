@@ -13,9 +13,9 @@ Face::Face(FT_Library lib, lpcstr_t filepath, u32_t idx)
   }
 }
 
-Face::Face(FT_Library lib, lpcstr_t data, u32_t size, u32_t idx)
+Face::Face(FT_Library lib, lpcstr_t data, u32_t numBytes, u32_t idx)
     : face_(nullptr) {
-  auto success = CHECK_RESULT(FT_New_Memory_Face(lib, (FT_Byte *)data, size, idx, &face_));
+  auto success = CHECK_RESULT(FT_New_Memory_Face(lib, (FT_Byte *)data, numBytes, idx, &face_));
   if (!success) {
     // Empty
   }

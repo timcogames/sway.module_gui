@@ -8,11 +8,61 @@
 
 NAMESPACE_BEGIN(sway)
 NAMESPACE_BEGIN(ui)
+
+class Builder;
+
 NAMESPACE_BEGIN(widget)
+
+enum class WidgetEventType : u32_t { MOUSE_OVER = 50, MOUSE_OUT, POINTER_ENTER, POINTER_LEAVE };
+
+struct WidgetEventData : core::foundation::EventData {
+  std::string uid;
+
+  WidgetEventData() {}
+
+  // clang-format off
+  MTHD_OVERRIDE(auto serialize() const -> std::string) {  // clang-format on
+    return "";
+  }
+
+  MTHD_OVERRIDE(void deserialize(const std::string &jdata)) {}
+};
+
+class WidgetEvent : public core::foundation::Event {
+public:
+  DECLARE_CLASS_METADATA(WidgetEvent, core::foundation::Event)
+
+  WidgetEvent(u32_t type, core::foundation::EventData *data)
+      : id_(core::misc::newGuid<UUID_NBR_OF_GROUPS>(UUID_MAGIC))
+      , type_(type)
+      , data_(data) {}
+
+  ~WidgetEvent() = default;
+
+  // clang-format off
+  MTHD_OVERRIDE(auto id() const -> std::string) {  // clang-format on
+    return id_;
+  }
+
+  // clang-format off
+  MTHD_OVERRIDE(auto type() const -> u32_t) {  // clang-format on
+    return type_;
+  }
+
+  // clang-format off
+  MTHD_OVERRIDE(auto data() const -> core::foundation::EventData *) {  // clang-format on
+    return data_;
+  }
+
+private:
+  std::string id_;
+  u32_t type_;
+  core::foundation::EventData *data_;
+};
 
 class Widget : public core::container::Node {
 public:
-  Widget();
+  Widget(Builder *builder);
 
   virtual ~Widget() = default;
 
@@ -50,33 +100,14 @@ public:
   [[nodiscard]]
   auto hasVisible() const -> bool;
 
-  auto getChildAt(const math::point2f_t &point) -> Widget * {
-    for (auto node : this->getChildNodes()) {
-      auto child = std::static_pointer_cast<Widget>(node);
-      if (!child->hasVisible()) {
-        break;
-      }
+  auto getChildAt(const math::point2f_t &point) -> Widget *;
 
-      std::cout << child->getRect() << std::endl;
-
-      if (auto *const widget = child->getChildAt(point)) {
-        return widget;
-      } else if (child->getRect().contains(point)) {
-        child->setHover(true);
-        return child.get();
-      }
-
-      child->setHover(false);
-    }
-
-    return nullptr;
-  }
-
-  void setHover(bool val) { hovered_ = val; }
+  void setHover(bool val);
 
   auto hasHovered() -> bool { return hovered_; }
 
 protected:
+  Builder *builder_;
   math::rect4f_t rect_;
 
   Appearance appearance_;

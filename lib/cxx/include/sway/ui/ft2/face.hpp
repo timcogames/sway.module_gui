@@ -15,7 +15,7 @@ class Face {
 public:
   Face(FT_Library lib, lpcstr_t filepath, u32_t idx);
 
-  Face(FT_Library lib, lpcstr_t data, u32_t size, u32_t idx);
+  Face(FT_Library lib, lpcstr_t data, u32_t numBytes, u32_t idx);
 
   ~Face();
 
