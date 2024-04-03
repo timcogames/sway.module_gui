@@ -1,3 +1,6 @@
+#include <sway/ois/events/inputevent.hpp>
+#include <sway/ois/events/keyeventhandler.hpp>
+#include <sway/ois/events/mouseevent.hpp>
 #include <sway/ois/web/emsmouse.hpp>
 #include <sway/ui/builder.hpp>
 
@@ -21,7 +24,6 @@ struct WidgetEventHandler : public core::evts::EventHandler {
   }
 
   void onMouseEvent(ois::MouseEvent *event) {
-    auto *context = static_cast<Framework *>(state_->getContext());
     auto mouseEventData = event->getConcreteData<ois::MouseEventData>();
 
     if (mouseEventData.state == core::detail::toUnderlying(ois::InputActionState::PRESSED)) {
@@ -57,11 +59,12 @@ void Builder::initialize(std::shared_ptr<ft2::Font> font, std::shared_ptr<render
   painter_->initialize(font, renderSubsystem, materialMngr, imgResMngr, glslResMngr);
 
   subscriber_ = evtbus_->subscribe(new WidgetEventHandler(this));
-  // evtbus_->unsubscribe(subscriber_);
 
   // root_->setAbsolutePosition(0, 0);
   // root_->setSize(800, 600);
 }
+
+void Builder::deinit() { evtbus_->unsubscribe(subscriber_); }
 
 void Builder::update() {
   root_->update();

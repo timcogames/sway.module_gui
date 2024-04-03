@@ -63,10 +63,7 @@ void Painter::initialize(std::shared_ptr<ft2::Font> font, std::shared_ptr<render
     texSubdataDesc.type = core::ValueDataType::UBYTE;
     texSubdataDesc.pixels = bi.data;
 
-    // image->getTexture()->setPixelStorage(gapi::PixelStorageMode::UNPACK_ALIGNMENT, 1);
-    // image->getTexture()->setPixelStorage(gapi::PixelStorageMode::UNPACK_ROW_LENGTH, bi.pitch);
     image->getTexture()->updateSubdata(texSubdataDesc);
-    // image->getTexture()->setPixelStorage(gapi::PixelStorageMode::UNPACK_ROW_LENGTH, 0);
 
     // clang-format off
     font_->cache_[font_->glyphs_[i].code].rect = math::rect4f_t(
@@ -84,20 +81,16 @@ void Painter::initialize(std::shared_ptr<ft2::Font> font, std::shared_ptr<render
     }
   }
 
+  geomBuilder_ = subsystem->getGeomBuilder();
+
   createRectGeom(subsystem, 0);
   createTextGeom(subsystem, 1);
-  createDebugGeom(subsystem, 2);
-  createAtlasGeom(subsystem, 3);
 }
 
 void Painter::createRectGeom(std::shared_ptr<render::RenderSubsystem> subsystem, u32_t geomIdx) {
   rectGeomDataDivisor_ =
       new render::GeomInstanceDataDivisor<render::procedurals::prims::Quadrilateral<math::VertexColor>>(
-          {gapi::VertexSemantic::POS, gapi::VertexSemantic::COL}, render::Constants::MAX_NUM_INSTANCES);
-
-  rectGeomDataDivisor_->addInstanceData();
-  rectGeomDataDivisor_->addInstanceData();
-  rectGeomDataDivisor_->addInstanceData();
+          {gapi::VertexSemantic::POS, gapi::VertexSemantic::COL}, MAX_UI_RECT);
 
   render::GeometryCreateInfo rectGeomCreateInfo;
   rectGeomCreateInfo.indexed = true;
@@ -113,24 +106,14 @@ void Painter::createRectGeom(std::shared_ptr<render::RenderSubsystem> subsystem,
   rectGeomCreateInfo.bo[render::Constants::IDX_EBO].desc.capacity = rectIdxs.size();
   rectGeomCreateInfo.bo[render::Constants::IDX_EBO].data = rectIdxs.data();
 
-  subsystem->getGeomBuilder()->createInstance<render::procedurals::prims::Quadrilateral<math::VertexColor>>(
+  geomBuilder_->createInstance<render::procedurals::prims::Quadrilateral<math::VertexColor>>(
       geomIdx, rectGeomDataDivisor_, rectGeomCreateInfo, rectMtrl_->getEffect());
-
-  rectGeom_ = static_cast<render::GeomInstance<render::procedurals::prims::Quadrilateral<math::VertexColor>> *>(
-      subsystem->getGeomBuilder()->getGeometries()[geomIdx]);
 }
 
 void Painter::createTextGeom(std::shared_ptr<render::RenderSubsystem> subsystem, u32_t geomIdx) {
   textGeomDataDivisor_ =
       new render::GeomInstanceDataDivisor<render::procedurals::prims::Quadrilateral<math::VertexTexCoord>>(
-          {gapi::VertexSemantic::POS, gapi::VertexSemantic::COL, gapi::VertexSemantic::TEXCOORD_0},
-          render::Constants::MAX_NUM_INSTANCES);
-
-  textGeomDataDivisor_->addInstanceData();
-  textGeomDataDivisor_->addInstanceData();
-  textGeomDataDivisor_->addInstanceData();
-  textGeomDataDivisor_->addInstanceData();
-  textGeomDataDivisor_->addInstanceData();
+          {gapi::VertexSemantic::POS, gapi::VertexSemantic::COL, gapi::VertexSemantic::TEXCOORD_0}, MAX_UI_TEXT);
 
   render::GeometryCreateInfo textGeomCreateInfo;
   textGeomCreateInfo.indexed = true;
@@ -146,68 +129,15 @@ void Painter::createTextGeom(std::shared_ptr<render::RenderSubsystem> subsystem,
   textGeomCreateInfo.bo[render::Constants::IDX_EBO].desc.capacity = textIdxs.size();
   textGeomCreateInfo.bo[render::Constants::IDX_EBO].data = textIdxs.data();
 
-  textId_ = subsystem->getGeomBuilder()
+  textId_ = geomBuilder_
                 ->createInstance<render::procedurals::prims::Quadrilateral<math::VertexTexCoord>>(
                     geomIdx, textGeomDataDivisor_, textGeomCreateInfo, textMtrl_->getEffect())
                 .value();
-
-  textGeom_ = static_cast<render::GeomInstance<render::procedurals::prims::Quadrilateral<math::VertexTexCoord>> *>(
-      subsystem->getGeomBuilder()->getGeometries()[geomIdx]);
 }
 
-void Painter::createDebugGeom(std::shared_ptr<render::RenderSubsystem> subsystem, u32_t geomIdx) {
-  debugGeomDataDivisor_ = new render::GeomInstanceDataDivisor<render::procedurals::guides::Line<math::VertexColor>>(
-      {gapi::VertexSemantic::POS, gapi::VertexSemantic::COL}, render::Constants::MAX_NUM_INSTANCES);
-
-  debugGeomDataDivisor_->addInstanceData();
-  debugGeomDataDivisor_->addInstanceData();
-  debugGeomDataDivisor_->addInstanceData();
-  debugGeomDataDivisor_->addInstanceData();
-  debugGeomDataDivisor_->addInstanceData();
-
-  render::GeometryCreateInfo debugGeomCreateInfo;
-  debugGeomCreateInfo.indexed = false;
-  debugGeomCreateInfo.topology = gapi::TopologyType::LINE_LIST;
-  debugGeomCreateInfo.bo[render::Constants::IDX_VBO].desc.usage = gapi::BufferUsage::DYNAMIC;
-  debugGeomCreateInfo.bo[render::Constants::IDX_VBO].desc.byteStride = sizeof(math::VertexColor);
-  debugGeomCreateInfo.bo[render::Constants::IDX_VBO].desc.capacity = 5 * debugGeomDataDivisor_->getInstSize();
-  debugGeomCreateInfo.bo[render::Constants::IDX_VBO].data = nullptr;
-
-  subsystem->getGeomBuilder()->createInstance<render::procedurals::guides::Line<math::VertexColor>>(
-      geomIdx, debugGeomDataDivisor_, debugGeomCreateInfo, rectMtrl_->getEffect());
-
-  debugGeom_ = static_cast<render::GeomInstance<render::procedurals::guides::Line<math::VertexColor>> *>(
-      subsystem->getGeomBuilder()->getGeometries()[geomIdx]);
-}
-
-void Painter::createAtlasGeom(std::shared_ptr<render::RenderSubsystem> subsystem, u32_t geomIdx) {
-  auto shape = new render::procedurals::prims::Quadrilateral<math::VertexTexCoord>(
-      {gapi::VertexSemantic::POS, gapi::VertexSemantic::COL, gapi::VertexSemantic::TEXCOORD_0});
-
-  shape->setPosDataAttrib(math::rect4f_t(-0.3F, -0.3F, 0.3F, 0.3F));
-  shape->setColDataAttrib(COL4F_WHITE);
-  shape->setTexDataAttrib(math::rect4f_t(0.0F, 0.0F, 1.0F, 1.0F));
-
-  render::GeometryCreateInfo atlasGeomCreateInfo;
-  atlasGeomCreateInfo.indexed = true;
-  atlasGeomCreateInfo.topology = gapi::TopologyType::TRIANGLE_LIST;
-  atlasGeomCreateInfo.bo[render::Constants::IDX_VBO].desc.usage = gapi::BufferUsage::STATIC;
-  atlasGeomCreateInfo.bo[render::Constants::IDX_VBO].desc.byteStride = sizeof(math::VertexTexCoord);
-  atlasGeomCreateInfo.bo[render::Constants::IDX_VBO].desc.capacity = 4;
-  auto data = new f32_t[4 * sizeof(math::VertexTexCoord)];
-  shape->data()->getVertices(data, 0, 4);
-  atlasGeomCreateInfo.bo[render::Constants::IDX_VBO].data = data;
-
-  atlasGeomCreateInfo.bo[render::Constants::IDX_EBO].desc.usage = gapi::BufferUsage::STATIC;
-  atlasGeomCreateInfo.bo[render::Constants::IDX_EBO].desc.byteStride = sizeof(u32_t);
-  atlasGeomCreateInfo.bo[render::Constants::IDX_EBO].desc.capacity = 6;
-  atlasGeomCreateInfo.bo[render::Constants::IDX_EBO].data = shape->data()->getElements();
-
-  atlasGeomUid_ = subsystem->getGeomBuilder()
-                      ->create(geomIdx, atlasGeomCreateInfo, shape->getVertexAttribs(), textMtrl_->getEffect())
-                      .value();
-
-  atlasGeom_ = subsystem->getGeomBuilder()->find(atlasGeomUid_);
+void Painter::clear() {
+  // geomBuilder_->remove(1);
+  // geomBuilder_->remove(0);
 }
 
 void Painter::drawRect(f32_t x, f32_t y, f32_t w, f32_t h, math::col4f_t col) {
@@ -240,22 +170,23 @@ void Painter::drawText(f32_t x, f32_t y, f32_t w, f32_t h, math::col4f_t col, lp
 }
 
 void Painter::onUpdateBatchChunks() {
-  auto nextRectIdx = 0;
-  auto nextTextIdx = 0;
-  auto nextDebugIdx = 0;
+  nextRectIdx_ = 0;
+  nextTextIdx_ = 0;
 
   for (auto chunkIndex = 0; chunkIndex < geomBatchChunkSize_; ++chunkIndex) {
     const GeometryBatchChunk &chunk = geomBatchChunks_[chunkIndex];
 
     if (chunk.type == GeometryBatchChunkType::RECT) {
-      if (rectGeom_) {
-        auto inst = rectGeom_->getDivisor()->at(nextRectIdx);
+      if (rectGeom_ != nullptr) {
+        auto inst = rectGeom_->getDivisor()->at(nextRectIdx_);
         if (!inst) {
           std::cout << "[ERR]: Inst" << std::endl;
         } else {
+          inst->setRemap(true);
+
           inst->setPosDataAttrib(math::rect4f_t(chunk.rect.x, chunk.rect.y, chunk.rect.w, chunk.rect.h));
           inst->setColDataAttrib(chunk.rect.color);
-          nextRectIdx += 1;
+          nextRectIdx_ += 1;
         }
       }
     } else if (chunk.type == GeometryBatchChunkType::TEXT) {
@@ -278,11 +209,13 @@ void Painter::onUpdateBatchChunks() {
                   (size.getH() + (info.value().bearing.getY() / static_cast<f32_t>(font_->getAtlasSize().getH()))) *
                       scale);
 
-          if (textGeom_) {
-            auto inst = textGeom_->getDivisor()->at(nextTextIdx);
+          if (textGeom_ != nullptr) {
+            auto inst = textGeom_->getDivisor()->at(nextTextIdx_);
             if (!inst) {
               std::cout << "[ERR]: Inst" << std::endl;
             } else {
+              inst->setRemap(true);
+
               inst->setPosDataAttrib(textPos);
               inst->setColDataAttrib(chunk.text.color);
 
@@ -297,25 +230,7 @@ void Painter::onUpdateBatchChunks() {
               newRect.setR(info.value().rect.getR() - (mmx - ttx));
               newRect.setB(info.value().rect.getB() - (mmy - tty));  // + (tty - bby));
               inst->setTexDataAttrib(newRect);
-              nextTextIdx += 1;
-            }
-          }
-
-          if (debugGeom_) {
-            auto inst = debugGeom_->getDivisor()->at(nextDebugIdx);
-            // auto inst2 = debugGeom_->getDivisor()->at(nextDebugIdx + 1);
-            if (!inst) {
-              std::cout << "[ERR]: Inst" << std::endl;
-            } else {
-              inst->setPosDataAttrib(math::vec3f_t(textPos.getL(), textPos.getT(), 0.0F),
-                  math::vec3f_t(textPos.getL(), textPos.getB(), 0.0F));
-
-              // inst->setPosDataAttrib2(math::vec3f_t(textPos.getR(), textPos.getT(), 0.0F),
-              //     math::vec3f_t(textPos.getR(), textPos.getB(), 0.0F));
-
-              inst->setColDataAttrib(COL4F_RED);
-
-              nextDebugIdx += 1;
+              nextTextIdx_ += 1;
             }
           }
 
@@ -325,26 +240,28 @@ void Painter::onUpdateBatchChunks() {
     }
   }
 
-  if (rectGeom_) {
+  if (rectGeom_ != nullptr) {
     rectGeom_->remap();
   }
 
-  if (textGeom_) {
+  if (textGeom_ != nullptr) {
     textGeom_->remap();
-  }
-
-  if (debugGeom_) {
-    debugGeom_->remap();
   }
 }
 
 void Painter::onUpdate(math::mat4f_t tfrm, math::mat4f_t proj, math::mat4f_t view, f32_t dtime) {
+  rectGeom_ = static_cast<render::GeomInstance<render::procedurals::prims::Quadrilateral<math::VertexColor>> *>(
+      geomBuilder_->getGeometry(0));
+
+  textGeom_ = static_cast<render::GeomInstance<render::procedurals::prims::Quadrilateral<math::VertexTexCoord>> *>(
+      geomBuilder_->getGeometry(1));
+
   this->onUpdateBatchChunks();
 
   geomBatchChunkSize_ = 0;
 
   render::pipeline::ForwardRenderCommand textCmd;
-  if (textGeom_) {
+  if (textGeom_ != nullptr) {
     textCmd.stage = 0;
     textCmd.blendDesc.enabled = true;
     textCmd.blendDesc.src = gapi::BlendFn::SRC_ALPHA;
@@ -378,7 +295,7 @@ void Painter::onUpdate(math::mat4f_t tfrm, math::mat4f_t proj, math::mat4f_t vie
   }
 
   render::pipeline::ForwardRenderCommand rectCmd;
-  if (rectGeom_) {
+  if (rectGeom_ != nullptr) {
     rectCmd.stage = 0;
     rectCmd.blendDesc.enabled = false;
     rectCmd.blendDesc.src = gapi::BlendFn::SRC_ALPHA;
@@ -405,85 +322,35 @@ void Painter::onUpdate(math::mat4f_t tfrm, math::mat4f_t proj, math::mat4f_t vie
     rectCmd.material = rectMtrl_;
     rectCmd.tfrm = tfrm;
     rectCmd.proj = proj;
-    // rectCmd.proj.setData(math::Projection(
-    //     (struct math::ProjectionDescription){.rect = {{-0.5F /* L */, -0.5F /* T */, 0.5F /* R */, 0.5F /* B */}},
-    //         .fov = 0,
-    //         .aspect = f32_t(800 / 600),
-    //         .znear = -1.0F,
-    //         .zfar = 1.0F})
-    //                          .makeOrtho());
-
     rectCmd.view = math::mat4f_t();
 
     subqueue_->post(rectCmd);
   }
 
-  render::pipeline::ForwardRenderCommand debugCmd;
-  if (debugGeom_) {
-    debugCmd.stage = 0;
-    debugCmd.blendDesc.enabled = true;
-    debugCmd.blendDesc.src = gapi::BlendFn::SRC_ALPHA;
-    debugCmd.blendDesc.dst = gapi::BlendFn::ONE_MINUS_SRC_ALPHA;
-    debugCmd.blendDesc.mask = true;
-    debugCmd.rasterizerDesc.mode = gapi::CullFace::BACK;
-    debugCmd.rasterizerDesc.ccw = false;
-    debugCmd.depthDesc.enabled = true;
-    debugCmd.depthDesc.func = gapi::CompareFn::LESS;
-    debugCmd.depthDesc.mask = true;
-    debugCmd.depthDesc.near = 0;
-    debugCmd.depthDesc.far = 0;
-    debugCmd.stencilDesc.enabled = true;
-    debugCmd.stencilDesc.front.func = gapi::CompareFn::ALWAYS;
-    debugCmd.stencilDesc.front.fail = gapi::StencilOp::KEEP;
-    debugCmd.stencilDesc.front.depthFail = gapi::StencilOp::KEEP;
-    debugCmd.stencilDesc.front.depthPass = gapi::StencilOp::REPLACE;
-    debugCmd.stencilDesc.front.rmask = 0xFFFFFF;
-    debugCmd.stencilDesc.front.wmask = debugCmd.stencilDesc.front.rmask;
-    debugCmd.stencilDesc.front.reference = 1;
-    debugCmd.stencilDesc.back = debugCmd.stencilDesc.front;
-    // debugCmd.geometry = textGeom_;
-    debugCmd.geom = debugGeom_;
-    debugCmd.topology = gapi::TopologyType::LINE_LIST;
-    debugCmd.material = rectMtrl_;
-    debugCmd.tfrm = tfrm;
-    debugCmd.proj = rectCmd.proj;
-    debugCmd.view = math::mat4f_t();  // view;
+  this->finalUpdate();
+}
 
-    subqueue_->post(debugCmd);
+void Painter::finalUpdate() {
+  if (rectGeom_ != nullptr) {
+    for (auto i = 0; i < rectGeom_->getDivisor()->getInstSize(); i++) {
+      auto inst = rectGeom_->getDivisor()->at(i);
+      if (!inst) {
+        std::cout << "[ERR]: Inst" << std::endl;
+      } else {
+        inst->setRemap(false);
+      }
+    }
   }
 
-  render::pipeline::ForwardRenderCommand atlasCmd;
-  if (atlasGeom_) {
-    atlasCmd.stage = 0;
-    atlasCmd.blendDesc.enabled = true;
-    atlasCmd.blendDesc.src = gapi::BlendFn::SRC_ALPHA;
-    atlasCmd.blendDesc.dst = gapi::BlendFn::ONE_MINUS_SRC_ALPHA;
-    atlasCmd.blendDesc.mask = true;
-    atlasCmd.rasterizerDesc.mode = gapi::CullFace::BACK;
-    atlasCmd.rasterizerDesc.ccw = false;
-    atlasCmd.depthDesc.enabled = true;
-    atlasCmd.depthDesc.func = gapi::CompareFn::LESS;
-    atlasCmd.depthDesc.mask = true;
-    atlasCmd.depthDesc.near = 0;
-    atlasCmd.depthDesc.far = 0;
-    atlasCmd.stencilDesc.enabled = true;
-    atlasCmd.stencilDesc.front.func = gapi::CompareFn::ALWAYS;
-    atlasCmd.stencilDesc.front.fail = gapi::StencilOp::KEEP;
-    atlasCmd.stencilDesc.front.depthFail = gapi::StencilOp::KEEP;
-    atlasCmd.stencilDesc.front.depthPass = gapi::StencilOp::REPLACE;
-    atlasCmd.stencilDesc.front.rmask = 0xFFFFFF;
-    atlasCmd.stencilDesc.front.wmask = atlasCmd.stencilDesc.front.rmask;
-    atlasCmd.stencilDesc.front.reference = 1;
-    atlasCmd.stencilDesc.back = atlasCmd.stencilDesc.front;
-    // debugCmd.geometry = textGeom_;
-    atlasCmd.geom = atlasGeom_;
-    atlasCmd.topology = gapi::TopologyType::TRIANGLE_LIST;
-    atlasCmd.material = textMtrl_;
-    atlasCmd.tfrm = tfrm;
-    atlasCmd.proj = rectCmd.proj;
-    atlasCmd.view = math::mat4f_t();  // view;
-
-    subqueue_->post(atlasCmd);
+  if (textGeom_ != nullptr) {
+    for (auto i = 0; i < textGeom_->getDivisor()->getInstSize(); i++) {
+      auto inst = textGeom_->getDivisor()->at(i);
+      if (!inst) {
+        std::cout << "[ERR]: Inst" << std::endl;
+      } else {
+        inst->setRemap(false);
+      }
+    }
   }
 }
 

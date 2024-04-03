@@ -17,6 +17,8 @@ void Label::paintEvent(std::shared_ptr<Painter> painter) {
   painter->drawText(rect_.getL(), rect_.getT(), rect_.getR(), rect_.getB(), this->getForegroundColor(), text_.c_str());
 }
 
+void Label::setText(const std::string &text) { text_ = text; }
+
 NAMESPACE_END(widget)
 NAMESPACE_END(ui)
 NAMESPACE_END(sway)

@@ -4,6 +4,7 @@
 #include <sway/core.hpp>
 #include <sway/gapi.hpp>
 #include <sway/render.hpp>
+#include <sway/render/updatable.hpp>
 #include <sway/ui/ft2/font.hpp>
 
 #include <array>
@@ -11,8 +12,8 @@
 
 #define GEOMERTY_BATCH_CHUNK_SIZE 5000
 
-constexpr std::size_t MAX_UI_RECT = {3};
-constexpr std::size_t MAX_UI_TEXT = {5};
+constexpr std::size_t MAX_UI_RECT = {20};
+constexpr std::size_t MAX_UI_TEXT = {100};
 
 NAMESPACE_BEGIN(sway)
 NAMESPACE_BEGIN(ui)
@@ -43,7 +44,7 @@ struct GeometryBatchChunk {
   GeometryBatchChunkImage image;
 };
 
-class Painter : public render::RenderComponent {
+class Painter : public render::RenderComponent, public render::FinalUpdatable {
 public:
   DECLARE_CLASS_METADATA(Painter, RenderComponent)
 
@@ -56,9 +57,8 @@ public:
       std::shared_ptr<rms::GLSLResourceManager> glslResMngr);
 
   void createRectGeom(std::shared_ptr<render::RenderSubsystem> subsystem, u32_t geomIdx);
+
   void createTextGeom(std::shared_ptr<render::RenderSubsystem> subsystem, u32_t geomIdx);
-  void createDebugGeom(std::shared_ptr<render::RenderSubsystem> subsystem, u32_t geomIdx);
-  void createAtlasGeom(std::shared_ptr<render::RenderSubsystem> subsystem, u32_t geomIdx);
 
   void drawRect(f32_t x, f32_t y, f32_t w, f32_t h, math::col4f_t col);
 
@@ -68,17 +68,14 @@ public:
 
   MTHD_OVERRIDE(void onUpdate(math::mat4f_t tfrm, math::mat4f_t proj, math::mat4f_t view, f32_t dtime));
 
-  void clear() {
-    // geomBuilder_->remove(1);
-    // geomBuilder_->remove(0);
-  }
+  MTHD_OVERRIDE(void finalUpdate());
+
+  void clear();
 
 private:
   std::shared_ptr<render::RenderQueue> queue_;
   std::shared_ptr<render::RenderSubqueue> subqueue_;
-
-  std::string atlasGeomUid_;
-  render::Geom *atlasGeom_;
+  std::shared_ptr<render::GeomBuilder> geomBuilder_;
 
   std::shared_ptr<render::Material> rectMtrl_;
   render::GeomInstanceDataDivisor<render::procedurals::prims::Quadrilateral<math::VertexColor>> *rectGeomDataDivisor_;
@@ -90,13 +87,13 @@ private:
   render::GeomInstance<render::procedurals::prims::Quadrilateral<math::VertexTexCoord>> *textGeom_;
   std::string textId_;
 
-  render::GeomInstanceDataDivisor<render::procedurals::guides::Line<math::VertexColor>> *debugGeomDataDivisor_;
-  render::GeomInstance<render::procedurals::guides::Line<math::VertexColor>> *debugGeom_;
-
   std::shared_ptr<ft2::Font> font_;
 
   std::array<GeometryBatchChunk, GEOMERTY_BATCH_CHUNK_SIZE> geomBatchChunks_;
   u32_t geomBatchChunkSize_;
+
+  int nextRectIdx_;
+  int nextTextIdx_;
 };
 
 NAMESPACE_END(ui)
