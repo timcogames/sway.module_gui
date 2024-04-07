@@ -15,29 +15,29 @@ struct WidgetEventHandler : public core::evts::EventHandler {
   ~WidgetEventHandler() override = default;
 
   // clang-format off
-  MTHD_OVERRIDE(auto invoke(const std::unique_ptr<core::foundation::Event> &event) -> bool) final {  // clang-format on
-    if (ois::InputEventUtil::isMouseEvent(event)) {
-      onMouseEvent(ois::InputEventUtil::asMouseEvent(event));
+  MTHD_OVERRIDE(auto invoke(const std::unique_ptr<core::foundation::Event> &evt) -> bool) final {  // clang-format on
+    if (ois::InputEventUtil::isMouseEvent(evt)) {
+      auto mouseEvtData = evt->getConcreteData<ois::MouseEventData>();
+      if (evt->type() == core::detail::toUnderlying(ois::InputActionType::MOUSE_MOVED)) {
+        builder_->setCursorPoint(mouseEvtData.point);
+      }
+
+      auto cursor = builder_->getCursor();
+      auto target = builder_->getRootWidget()->getChildAtPoint(cursor.pnt);
+      if (!target) {
+        return false;
+      }
+
+      builder_->updateWidgetUnderPointer(target);
+
+      if (evt->type() == core::detail::toUnderlying(ois::InputActionType::MOUSE_BUTTON)) {
+        if (mouseEvtData.btnCode == core::detail::toUnderlying(ois::MouseButtonCode::LMB)) {
+          builder_->handleMouseClick();
+        }
+      }
     }
 
     return true;
-  }
-
-  void onMouseEvent(ois::MouseEvent *event) {
-    auto mouseEventData = event->getConcreteData<ois::MouseEventData>();
-
-    if (mouseEventData.state == core::detail::toUnderlying(ois::InputActionState::PRESSED)) {
-      if (mouseEventData.btnCode == core::detail::toUnderlying(ois::MouseButtonCode::LMB)) {
-        // Empty
-      }
-    }
-
-    if (event->type() == core::detail::toUnderlying(ois::InputActionType::MOUSE_MOVED)) {
-      if (builder_->getRootWidget()->getChildAt(
-              math::point2f_t(builder_->worldPoint_.getX(), builder_->worldPoint_.getY()))) {
-        // Empty
-      }
-    }
   }
 
 private:
@@ -46,6 +46,7 @@ private:
 
 Builder::Builder(core::foundation::Context *context, std::shared_ptr<Painter> painter)
     : core::foundation::Object(context)
+    , currWidgetUnderPointer_(nullptr)
     , painter_(painter) {
   root_ = std::make_shared<widget::Widget>(this);
 }
@@ -53,7 +54,6 @@ Builder::Builder(core::foundation::Context *context, std::shared_ptr<Painter> pa
 void Builder::initialize(std::shared_ptr<ft2::Font> font, std::shared_ptr<render::MaterialManager> materialMngr,
     std::shared_ptr<rms::ImageResourceManager> imgResMngr, std::shared_ptr<rms::GLSLResourceManager> glslResMngr) {
   auto ctx = this->getContext();
-
   auto renderSubsystem = ctx->getSubsystem<render::RenderSubsystem>("RenderSubsystem").value();
 
   painter_->initialize(font, renderSubsystem, materialMngr, imgResMngr, glslResMngr);
@@ -64,11 +64,37 @@ void Builder::initialize(std::shared_ptr<ft2::Font> font, std::shared_ptr<render
   // root_->setSize(800, 600);
 }
 
-void Builder::deinit() { evtbus_->unsubscribe(subscriber_); }
+void Builder::deinit() {
+  evtbus_->unsubscribe(subscriber_);
+  currWidgetUnderPointer_ = nullptr;
+}
 
 void Builder::update() {
   root_->update();
   root_->paintEvent(painter_);
+}
+
+void Builder::updateWidgetUnderPointer(widget::Widget *target) {
+  if (currWidgetUnderPointer_ == target) {
+    return;
+  }
+
+  auto prevWidgetUnderPointer = currWidgetUnderPointer_;
+  currWidgetUnderPointer_ = target;
+
+  if (prevWidgetUnderPointer) {
+    prevWidgetUnderPointer->onCursorPointerLeave();
+  }
+
+  if (currWidgetUnderPointer_) {
+    currWidgetUnderPointer_->onCursorPointerEnter();
+  }
+}
+
+void Builder::handleMouseClick() {
+  if (currWidgetUnderPointer_) {
+    currWidgetUnderPointer_->onMouseClick();
+  }
 }
 
 NAMESPACE_END(ui)

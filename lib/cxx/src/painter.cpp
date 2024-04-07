@@ -183,7 +183,6 @@ void Painter::onUpdateBatchChunks() {
           std::cout << "[ERR]: Inst" << std::endl;
         } else {
           inst->setRemap(true);
-
           inst->setPosDataAttrib(math::rect4f_t(chunk.rect.x, chunk.rect.y, chunk.rect.w, chunk.rect.h));
           inst->setColDataAttrib(chunk.rect.color);
           nextRectIdx_ += 1;
@@ -204,10 +203,11 @@ void Painter::onUpdateBatchChunks() {
 
           auto scale = 0.5F;
 
-          auto textPos = math::rect4f_t(pos.getX(), pos.getY(), pos.getX() + size.getW() * scale,
-              pos.getY() +
-                  (size.getH() + (info.value().bearing.getY() / static_cast<f32_t>(font_->getAtlasSize().getH()))) *
-                      scale);
+          auto textPos =
+              math::rect4f_t(pos.getX(), pos.getY(), pos.getX() + static_cast<f32_t>(info.value().size.getW()) * scale,
+                  pos.getY() + (static_cast<f32_t>(info.value().size.getH()) +
+                                   (info.value().bearing.getY() / static_cast<f32_t>(font_->getAtlasSize().getH()))) *
+                                   scale);
 
           if (textGeom_ != nullptr) {
             auto inst = textGeom_->getDivisor()->at(nextTextIdx_);
@@ -228,13 +228,14 @@ void Painter::onUpdateBatchChunks() {
               auto bby = info.value().bearing.getY() / static_cast<f32_t>(font_->getAtlasSize().getH());
 
               newRect.setR(info.value().rect.getR() - (mmx - ttx));
-              newRect.setB(info.value().rect.getB() - (mmy - tty));  // + (tty - bby));
+              newRect.setT(info.value().rect.getT() - (mmy - tty));  // + (tty - bby));
+
               inst->setTexDataAttrib(newRect);
               nextTextIdx_ += 1;
             }
           }
 
-          pos.setX(pos.getX() + size.getW() * scale);
+          pos.setX(pos.getX() + static_cast<f32_t>(info.value().size.getW()) * scale);
         }
       }
     }
@@ -287,9 +288,22 @@ void Painter::onUpdate(math::mat4f_t tfrm, math::mat4f_t proj, math::mat4f_t vie
     textCmd.geom = textGeom_;
     textCmd.topology = gapi::TopologyType::TRIANGLE_LIST;
     textCmd.material = textMtrl_;
-    textCmd.tfrm = tfrm;
-    textCmd.proj = proj;
-    textCmd.view = math::mat4f_t();  // view;
+    // textCmd.tfrm = tfrm;
+    textCmd.tfrm = math::mat4f_t();
+
+    // textCmd.proj = proj;
+
+    textCmd.proj.setData(math::Projection(
+        (struct math::ProjectionDescription){.rect = {{
+                                                 -1.0F /* L */, -1.0F /* B */, 1.0F /* R */, 1.0F /* T */
+                                             }},
+            .fov = 0,
+            .aspect = f32_t(800 / 600),
+            .znear = 1.0F,
+            .zfar = 10.0F})
+                             .makeOrtho());
+
+    textCmd.view = math::Transform<f32_t>::translate(textCmd.view, -1.0F, -1.0F, 0.0F);
 
     subqueue_->post(textCmd);
   }
@@ -320,9 +334,10 @@ void Painter::onUpdate(math::mat4f_t tfrm, math::mat4f_t proj, math::mat4f_t vie
     rectCmd.topology = gapi::TopologyType::TRIANGLE_LIST;
     rectCmd.geom = rectGeom_;
     rectCmd.material = rectMtrl_;
-    rectCmd.tfrm = tfrm;
-    rectCmd.proj = proj;
-    rectCmd.view = math::mat4f_t();
+    rectCmd.tfrm = math::mat4f_t();
+    // rectCmd.tfrm = math::Transform<f32_t>::scale(textCmd.tfrm, 790.0F, 590.0F, 1.0F);
+    rectCmd.proj = textCmd.proj;
+    rectCmd.view = textCmd.view;
 
     subqueue_->post(rectCmd);
   }

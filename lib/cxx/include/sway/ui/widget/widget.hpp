@@ -21,9 +21,7 @@ struct WidgetEventData : core::foundation::EventData {
   WidgetEventData() {}
 
   // clang-format off
-  MTHD_OVERRIDE(auto serialize() const -> std::string) {  // clang-format on
-    return "";
-  }
+  MTHD_OVERRIDE(auto serialize() const -> std::string) { return ""; }  // clang-format on
 
   MTHD_OVERRIDE(void deserialize(const std::string &jdata)) {}
 };
@@ -60,11 +58,42 @@ private:
   core::foundation::EventData *data_;
 };
 
+struct PointerEnterEventData : public core::foundation::EventData {
+  // clang-format off
+  MTHD_OVERRIDE(auto serialize() const -> std::string) { return ""; }  // clang-format on
+
+  MTHD_OVERRIDE(void deserialize(const std::string &jdata)) {}
+};
+
+struct PointerLeaveEventData : public core::foundation::EventData {
+  // clang-format off
+  MTHD_OVERRIDE(auto serialize() const -> std::string) { return ""; }  // clang-format on
+
+  MTHD_OVERRIDE(void deserialize(const std::string &jdata)) {}
+};
+
+struct MouseClickEventData : public core::foundation::EventData {
+  // clang-format off
+  MTHD_OVERRIDE(auto serialize() const -> std::string) { return ""; }  // clang-format on
+
+  MTHD_OVERRIDE(void deserialize(const std::string &jdata)) {}
+};
+
 class Widget : public core::container::Node {
 public:
+  DECLARE_EVENT(EVT_POINTER_ENTER, PointerEnter)
+  DECLARE_EVENT(EVT_POINTER_LEAVE, PointerLeave)
+  DECLARE_EVENT(EVT_MOUSE_CLICKED, MouseClicked)
+
   Widget(Builder *builder);
 
   virtual ~Widget() = default;
+
+  MTHD_VIRTUAL(void onCursorPointerEnter());
+
+  MTHD_VIRTUAL(void onCursorPointerLeave());
+
+  MTHD_VIRTUAL(void onMouseClick());
 
   MTHD_VIRTUAL(void update());
 
@@ -95,12 +124,7 @@ public:
   [[nodiscard]]
   auto getForegroundColor() const -> math::col4f_t;
 
-  void setVisible(bool val);
-
-  [[nodiscard]]
-  auto hasVisible() const -> bool;
-
-  auto getChildAt(const math::point2f_t &point) -> Widget *;
+  auto getChildAtPoint(const math::point2f_t &point) -> Widget *;
 
   void setHover(bool val);
 
@@ -112,7 +136,7 @@ protected:
 
   Appearance appearance_;
 
-  bool visibled_;
+  bool containsPointer_;
   bool hovered_;
 };
 

@@ -8,13 +8,35 @@ NAMESPACE_BEGIN(widget)
 Widget::Widget(Builder *builder)
     : builder_(builder)
     , rect_(math::rect4f_t(0.0F, 0.0F, 0.0F, 0.0F))
-    , visibled_(true)
+    , containsPointer_(false)
     , hovered_(false) {
-  appearance_.background[core::detail::toUnderlying(WidgetColorGroup::INACTIVE)]
-                        [core::detail::toUnderlying(WidgetColorState::NORM)] = COL4F_WHITE;
+  setBackgroundColor(COL4F_WHITE);
+  setForegroundColor(COL4F_BLACK);
+}
 
-  appearance_.text[core::detail::toUnderlying(WidgetColorGroup::INACTIVE)]
-                  [core::detail::toUnderlying(WidgetColorState::NORM)] = COL4F_BLACK;
+void Widget::onCursorPointerEnter() {
+  containsPointer_ = true;
+
+  auto *evtData = new PointerEnterEventData();
+  auto *evt = new PointerEnterEvent(0, evtData);
+
+  emit(EVT_POINTER_ENTER, evt, [&](core::foundation::EventHandler *) { return true; });
+}
+
+void Widget::onCursorPointerLeave() {
+  containsPointer_ = false;
+
+  auto *evtData = new PointerLeaveEventData();
+  auto *evt = new PointerLeaveEvent(0, evtData);
+
+  emit(EVT_POINTER_LEAVE, evt, [&](core::foundation::EventHandler *) { return true; });
+}
+
+void Widget::onMouseClick() {
+  auto *evtData = new MouseClickEventData();
+  auto *evt = new MouseClickedEvent(0, evtData);
+
+  emit(EVT_MOUSE_CLICKED, evt, [&](core::foundation::EventHandler *) { return true; });
 }
 
 void Widget::update() {
@@ -24,7 +46,7 @@ void Widget::update() {
 }
 
 void Widget::paintEvent(std::shared_ptr<Painter> painter) {
-  if (!this->hasVisible()) {
+  if (!this->isVisible()) {
     return;
   }
 
@@ -49,7 +71,7 @@ auto Widget::hasRelated() -> bool {
 
 void Widget::setPosition(const math::vec2f_t &pos) {
   rect_.setL(pos.getX());
-  rect_.setT(pos.getY());
+  rect_.setB(pos.getY());
 
   if (this->hasRelated()) {
     auto parentOpt = this->getParentNode();
@@ -66,7 +88,7 @@ auto Widget::getPosition() const -> math::point2f_t { return rect_.position(); }
 
 void Widget::setSize(const math::size2f_t &size) {
   rect_.setR(rect_.getL() + size.getW());
-  rect_.setB(rect_.getT() + size.getH());
+  rect_.setT(rect_.getB() + size.getH());
 }
 
 void Widget::setBackgroundColor(const math::col4f_t &col) {
@@ -89,45 +111,38 @@ auto Widget::getForegroundColor() const -> math::col4f_t {
       .text[core::detail::toUnderlying(WidgetColorGroup::INACTIVE)][core::detail::toUnderlying(WidgetColorState::NORM)];
 }
 
-void Widget::setVisible(bool val) { visibled_ = val; }
-
-auto Widget::hasVisible() const -> bool { return visibled_; }
-
-auto Widget::getChildAt(const math::point2f_t &point) -> Widget * {
+auto Widget::getChildAtPoint(const math::point2f_t &point) -> Widget * {
   for (auto node : this->getChildNodes()) {
     auto child = std::static_pointer_cast<Widget>(node);
-    if (!child->hasVisible()) {
+    if (!child->isVisible()) {
       break;
     }
 
-    if (auto *const widget = child->getChildAt(point)) {
+    if (auto *const widget = child->getChildAtPoint(point)) {
       return widget;
     } else if (child->getRect().contains(point)) {
-      child->setHover(true);
       return child.get();
     }
-
-    child->setHover(false);
   }
 
   return nullptr;
 }
 
 void Widget::setHover(bool val) {
-  if (hovered_ == val) {
-    return;
-  }
+  // if (hovered_ == val) {
+  //   return;
+  // }
 
-  hovered_ = val;
+  // hovered_ = val;
 
-  auto *eventdata = new WidgetEventData();
-  eventdata->uid = this->getNodeIdx().toStr();
-  // clang-format off
-    auto event = std::make_unique<WidgetEvent>(core::detail::toUnderlying(hovered_ 
-        ? WidgetEventType::POINTER_ENTER
-        : WidgetEventType::POINTER_LEAVE), eventdata);
-  // clang-format on
-  this->builder_->getEventBus()->addToQueue(std::move(event));
+  // auto *eventdata = new WidgetEventData();
+  // eventdata->uid = this->getNodeIdx().toStr();
+  // // clang-format off
+  // auto event = std::make_unique<WidgetEvent>(core::detail::toUnderlying(hovered_
+  //     ? WidgetEventType::POINTER_ENTER
+  //     : WidgetEventType::POINTER_LEAVE), eventdata);
+  // // clang-format on
+  // this->builder_->getEventBus()->addToQueue(std::move(event));
 }
 
 NAMESPACE_END(widget)

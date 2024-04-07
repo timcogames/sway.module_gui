@@ -14,7 +14,7 @@ ProgressBar::ProgressBar(Builder *builder)
 void ProgressBar::update() {}
 
 void ProgressBar::paintEvent(std::shared_ptr<Painter> painter) {
-  auto margin = 0.002F;
+  auto margin = 1.5F;
   auto rectWithBorder = rect_;
   rectWithBorder.reduce(math::Border<f32_t>(margin));
 

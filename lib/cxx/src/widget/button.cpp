@@ -22,10 +22,10 @@ void Button::update() {
 }
 
 void Button::paintEvent(std::shared_ptr<Painter> painter) {
-  label_->setPosition(math::vec2f_t(rect_.getL(), rect_.getT()));
+  label_->setPosition(math::vec2f_t(rect_.getL(), rect_.getB()));
   label_->paintEvent(painter);
 
-  painter->drawRect(rect_.getL(), rect_.getT(), rect_.getR(), rect_.getB(), this->getBackgroundColor());
+  painter->drawRect(rect_.getL(), rect_.getB(), rect_.getR(), rect_.getT(), this->getBackgroundColor());
 }
 
 NAMESPACE_END(widget)
