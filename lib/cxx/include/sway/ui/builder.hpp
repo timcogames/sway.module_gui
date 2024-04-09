@@ -2,16 +2,13 @@
 #define SWAY_UI_BUILDER_HPP
 
 #include <sway/core.hpp>
+#include <sway/ui/cursor.hpp>
 #include <sway/ui/ft2/fontmanager.hpp>
 #include <sway/ui/painter.hpp>
 #include <sway/ui/widget/widget.hpp>
 
 NAMESPACE_BEGIN(sway)
 NAMESPACE_BEGIN(ui)
-
-struct Cursor {
-  math::point2f_t pnt;
-};
 
 class Builder : public core::foundation::Object {
   DECLARE_CLASS_METADATA(Builder, core::foundation::Object)
@@ -43,6 +40,8 @@ public:
   auto getCursor() const -> Cursor { return cursor_; }
 
   void updateWidgetUnderPointer(widget::Widget *target);
+
+  auto getWidgetUnderPointer() -> widget::Widget * { return currWidgetUnderPointer_; }
 
   void handleMouseClick();
 

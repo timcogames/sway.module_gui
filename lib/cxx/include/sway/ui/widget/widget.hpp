@@ -126,10 +126,6 @@ public:
 
   auto getChildAtPoint(const math::point2f_t &point) -> Widget *;
 
-  void setHover(bool val);
-
-  auto hasHovered() -> bool { return hovered_; }
-
 protected:
   Builder *builder_;
   math::rect4f_t rect_;
@@ -137,7 +133,6 @@ protected:
   Appearance appearance_;
 
   bool containsPointer_;
-  bool hovered_;
 };
 
 NAMESPACE_END(widget)

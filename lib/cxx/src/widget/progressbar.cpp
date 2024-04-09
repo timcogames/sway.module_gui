@@ -20,8 +20,8 @@ void ProgressBar::paintEvent(std::shared_ptr<Painter> painter) {
 
   auto barLen = rectWithBorder.getR() * current_;
 
-  painter->drawRect(rectWithBorder.getL(), rectWithBorder.getT(), barLen, rectWithBorder.getB(), COL4F_BLACK);
-  painter->drawRect(rect_.getL(), rect_.getT(), rect_.getR(), rect_.getB(), COL4F_WHITE);
+  painter->drawRect(rectWithBorder.getL(), rectWithBorder.getB(), barLen, rectWithBorder.getT(), COL4F_BLACK);
+  painter->drawRect(rect_.getL(), rect_.getB(), rect_.getR(), rect_.getT(), COL4F_WHITE);
 }
 
 void ProgressBar::setProgress(f32_t val) {

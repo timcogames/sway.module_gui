@@ -8,8 +8,7 @@ NAMESPACE_BEGIN(widget)
 Widget::Widget(Builder *builder)
     : builder_(builder)
     , rect_(math::rect4f_t(0.0F, 0.0F, 0.0F, 0.0F))
-    , containsPointer_(false)
-    , hovered_(false) {
+    , containsPointer_(false) {
   setBackgroundColor(COL4F_WHITE);
   setForegroundColor(COL4F_BLACK);
 }
@@ -128,22 +127,22 @@ auto Widget::getChildAtPoint(const math::point2f_t &point) -> Widget * {
   return nullptr;
 }
 
-void Widget::setHover(bool val) {
-  // if (hovered_ == val) {
-  //   return;
-  // }
+// void Widget::setHover(bool val) {
+//   // if (hovered_ == val) {
+//   //   return;
+//   // }
 
-  // hovered_ = val;
+//   // hovered_ = val;
 
-  // auto *eventdata = new WidgetEventData();
-  // eventdata->uid = this->getNodeIdx().toStr();
-  // // clang-format off
-  // auto event = std::make_unique<WidgetEvent>(core::detail::toUnderlying(hovered_
-  //     ? WidgetEventType::POINTER_ENTER
-  //     : WidgetEventType::POINTER_LEAVE), eventdata);
-  // // clang-format on
-  // this->builder_->getEventBus()->addToQueue(std::move(event));
-}
+//   // auto *eventdata = new WidgetEventData();
+//   // eventdata->uid = this->getNodeIdx().toStr();
+//   // // clang-format off
+//   // auto event = std::make_unique<WidgetEvent>(core::detail::toUnderlying(hovered_
+//   //     ? WidgetEventType::POINTER_ENTER
+//   //     : WidgetEventType::POINTER_LEAVE), eventdata);
+//   // // clang-format on
+//   // this->builder_->getEventBus()->addToQueue(std::move(event));
+// }
 
 NAMESPACE_END(widget)
 NAMESPACE_END(ui)

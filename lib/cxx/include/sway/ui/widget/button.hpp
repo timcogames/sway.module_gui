@@ -21,6 +21,7 @@ public:
 
 private:
   std::shared_ptr<Label> label_;
+  bool hovering_;
 };
 
 NAMESPACE_END(widget)

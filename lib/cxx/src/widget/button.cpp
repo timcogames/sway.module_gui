@@ -6,13 +6,20 @@ NAMESPACE_BEGIN(ui)
 NAMESPACE_BEGIN(widget)
 
 Button::Button(Builder *builder, const std::string &text)
-    : Widget(builder) {
+    : Widget(builder)
+    , hovering_(false) {
   label_ = std::make_shared<Label>(builder, text);
   this->addChildNode(label_);
 }
 
 void Button::update() {
-  if (this->hasHovered()) {
+  const auto oldState = hovering_;
+  hovering_ = this->builder_->getWidgetUnderPointer()->getNodeIdx().equal(this->getNodeIdx());
+  if (oldState == hovering_) {
+    return;
+  }
+
+  if (hovering_) {
     label_->setForegroundColor(COL4F_BLACK);
     this->setBackgroundColor(COL4F_WHITE);
   } else {

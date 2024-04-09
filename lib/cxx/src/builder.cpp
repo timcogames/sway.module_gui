@@ -24,9 +24,6 @@ struct WidgetEventHandler : public core::evts::EventHandler {
 
       auto cursor = builder_->getCursor();
       auto target = builder_->getRootWidget()->getChildAtPoint(cursor.pnt);
-      if (!target) {
-        return false;
-      }
 
       builder_->updateWidgetUnderPointer(target);
 
