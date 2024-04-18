@@ -7,14 +7,17 @@ NAMESPACE_BEGIN(widget)
 
 Widget::Widget(Builder *builder)
     : builder_(builder)
+    , mouseFilter_(ois::MouseFilter::STOP)
     , rect_(math::rect4f_t(0.0F, 0.0F, 0.0F, 0.0F))
+    , margin_(math::Margin<f32_t>(0.0F))
     , containsPointer_(false) {
-  setBackgroundColor(COL4F_WHITE);
-  setForegroundColor(COL4F_BLACK);
+  setBackgroundColor(COL4F_GRAY1);
+  setForegroundColor(COL4F_BEIGE);
 }
 
 void Widget::onCursorPointerEnter() {
   containsPointer_ = true;
+  this->update();
 
   auto *evtData = new PointerEnterEventData();
   auto *evt = new PointerEnterEvent(0, evtData);
@@ -24,6 +27,7 @@ void Widget::onCursorPointerEnter() {
 
 void Widget::onCursorPointerLeave() {
   containsPointer_ = false;
+  this->update();
 
   auto *evtData = new PointerLeaveEventData();
   auto *evt = new PointerLeaveEvent(0, evtData);
@@ -32,6 +36,8 @@ void Widget::onCursorPointerLeave() {
 }
 
 void Widget::onMouseClick() {
+  this->update();
+
   auto *evtData = new MouseClickEventData();
   auto *evt = new MouseClickedEvent(0, evtData);
 
@@ -69,8 +75,7 @@ auto Widget::hasRelated() -> bool {
 }
 
 void Widget::setPosition(const math::vec2f_t &pos) {
-  rect_.setL(pos.getX());
-  rect_.setB(pos.getY());
+  rect_.set(pos.getX(), pos.getY(), this->getSize());
 
   if (this->hasRelated()) {
     auto parentOpt = this->getParentNode();
@@ -87,8 +92,14 @@ auto Widget::getPosition() const -> math::point2f_t { return rect_.position(); }
 
 void Widget::setSize(const math::size2f_t &size) {
   rect_.setR(rect_.getL() + size.getW());
-  rect_.setT(rect_.getB() + size.getH());
+  rect_.setB(rect_.getT() + size.getH());
 }
+
+auto Widget::getSize() const -> math::size2f_t { return rect_.size(); }
+
+void Widget::setMargin(const math::Margin<f32_t> &margin) { margin_ = margin; }
+
+auto Widget::getMargin() const -> math::Margin<f32_t> { return margin_; }
 
 void Widget::setBackgroundColor(const math::col4f_t &col) {
   appearance_.background[core::detail::toUnderlying(WidgetColorGroup::INACTIVE)]
@@ -119,7 +130,7 @@ auto Widget::getChildAtPoint(const math::point2f_t &point) -> Widget * {
 
     if (auto *const widget = child->getChildAtPoint(point)) {
       return widget;
-    } else if (child->getRect().contains(point)) {
+    } else if (child->getRect().contains(point) && child->getMouseFilter() != ois::MouseFilter::IGNORE) {
       return child.get();
     }
   }

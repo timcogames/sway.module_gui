@@ -4,9 +4,8 @@ NAMESPACE_BEGIN(sway)
 NAMESPACE_BEGIN(ui)
 NAMESPACE_BEGIN(ft2)
 
-FaceLoader::FaceLoader(FT_Library lib, const std::string &url)
-    : rms::Fetcher(url)
-    , lib_(lib) {}
+FaceLoader::FaceLoader(const std::string &url)
+    : rms::Fetcher(url) {}
 
 void FaceLoader::fetch() {
 #if EMSCRIPTEN_PLATFORM

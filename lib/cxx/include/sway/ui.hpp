@@ -10,6 +10,7 @@
 #include <sway/ui/painter.hpp>
 #include <sway/ui/widget/button.hpp>
 #include <sway/ui/widget/label.hpp>
+#include <sway/ui/widget/layout.hpp>
 #include <sway/ui/widget/progressbar.hpp>
 #include <sway/ui/widget/widget.hpp>
 

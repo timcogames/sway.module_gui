@@ -67,7 +67,7 @@ void Builder::deinit() {
 }
 
 void Builder::update() {
-  root_->update();
+  // root_->update();
   root_->paintEvent(painter_);
 }
 

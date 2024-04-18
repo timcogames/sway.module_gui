@@ -15,6 +15,7 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fvisibility=hidden -fPIE")
 #---------------------------------------------------------------------------------
 
 include_directories("${GLOB_FT2_ROOT_DIR}/include/freetype2")
+include_directories("${GLOB_THIRD_PARTY_DIR}/json/include")
 include_directories("${MODULE_UI_LIST_DIR}/lib/cxx/include")
 include_directories("${MODULE_UI_LIST_DIR}/submodules/sway.module_gapi/api/cxx/include")
 include_directories("${MODULE_UI_LIST_DIR}/submodules/sway.module_core/lib/cxx/include")

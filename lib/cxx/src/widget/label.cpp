@@ -7,14 +7,17 @@ NAMESPACE_BEGIN(widget)
 
 Label::Label(Builder *builder, const std::string &text)
     : Widget(builder)
+    , alignment_(math::Alignment::LEFT_TOP)
     , text_(text)
     , font_("")
-    , fontSize_(12) {}
+    , fontSize_(12) {
+  setMouseFilter(ois::MouseFilter::IGNORE);
+}
 
 void Label::update() {}
 
 void Label::paintEvent(std::shared_ptr<Painter> painter) {
-  painter->drawText(rect_.getL(), rect_.getB(), rect_.getR(), rect_.getT(), this->getForegroundColor(), text_.c_str());
+  painter->drawText(rect_.getL(), rect_.getT(), rect_.getR(), rect_.getB(), this->getForegroundColor(), text_.c_str());
 }
 
 void Label::setText(const std::string &text) { text_ = text; }

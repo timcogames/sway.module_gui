@@ -192,51 +192,42 @@ void Painter::onUpdateBatchChunks() {
       auto pos = math::point2f_t(chunk.text.x, chunk.text.y);
 
       for (auto i = 0; i < strlen(chunk.text.text); ++i) {
-        auto info = font_->getCharInfo(chunk.text.text[i]);
-        if (info.has_value()) {
-          auto size = math::size2f_t(
-              static_cast<f32_t>(info.value().size.getW()) / static_cast<f32_t>(font_->getAtlasSize().getW()),
-              static_cast<f32_t>(info.value().size.getH()) / static_cast<f32_t>(font_->getAtlasSize().getH()));
-
-          auto bearing = info.value().bearing;
-          auto advance = info.value().advance;
-
-          auto scale = 0.5F;
-
-          auto textPos =
-              math::rect4f_t(pos.getX(), pos.getY(), pos.getX() + static_cast<f32_t>(info.value().size.getW()) * scale,
-                  pos.getY() + (static_cast<f32_t>(info.value().size.getH()) +
-                                   (info.value().bearing.getY() / static_cast<f32_t>(font_->getAtlasSize().getH()))) *
-                                   scale);
-
-          if (textGeom_ != nullptr) {
-            auto inst = textGeom_->getDivisor()->at(nextTextIdx_);
-            if (!inst) {
-              std::cout << "[ERR]: Inst" << std::endl;
-            } else {
-              inst->setRemap(true);
-
-              inst->setPosDataAttrib(textPos);
-              inst->setColDataAttrib(chunk.text.color);
-
-              auto newRect = info.value().rect;
-              auto mmx = font_->maxSize_.getW() / static_cast<f32_t>(font_->getAtlasSize().getW());
-              auto ttx = size.getW();
-              auto mmy = font_->maxSize_.getH() / static_cast<f32_t>(font_->getAtlasSize().getH());
-              auto tty = size.getH();
-
-              auto bby = info.value().bearing.getY() / static_cast<f32_t>(font_->getAtlasSize().getH());
-
-              newRect.setR(info.value().rect.getR() - (mmx - ttx));
-              newRect.setT(info.value().rect.getT() - (mmy - tty));  // + (tty - bby));
-
-              inst->setTexDataAttrib(newRect);
-              nextTextIdx_ += 1;
-            }
-          }
-
-          pos.setX(pos.getX() + static_cast<f32_t>(info.value().size.getW()) * scale);
+        auto charInfo = font_->getCharInfo(chunk.text.text[i]);
+        if (!charInfo.has_value()) {
+          return;
         }
+
+        auto charSize = charInfo.value().size;
+        auto charVertBearing = charInfo.value().vertBearing;
+        auto tl = charInfo.value().tl;
+
+        f32_t xpos = pos.getX() + tl.getX();
+        f32_t ypos = pos.getY() - (static_cast<f32_t>(charSize.getH()) - tl.getY());
+        f32_t w = xpos + static_cast<f32_t>(charSize.getW());
+        f32_t h = ypos + static_cast<f32_t>(charSize.getH());
+
+        auto textPos = math::rect4f_t(xpos, ypos, w, h);
+
+        // auto textPos = math::rect4f_t(pos.getX() + charVertBearing.getX(), pos.getY() + charVertBearing.getY(),
+        // pos.getX() + static_cast<f32_t>(charSize.getW()),
+        // pos.getY() + charVertBearing.getY() + static_cast<f32_t>(charSize.getH()));
+
+        if (textGeom_ != nullptr) {
+          auto inst = textGeom_->getDivisor()->at(nextTextIdx_);
+          if (!inst) {
+            std::cout << "[ERR]: Inst" << std::endl;
+          } else {
+            inst->setRemap(true);
+
+            inst->setPosDataAttrib(textPos);
+            inst->setColDataAttrib(chunk.text.color);
+            inst->setTexDataAttrib(charInfo.value().rect);
+            nextTextIdx_ += 1;
+          }
+        }
+
+        // pos.setX(pos.getX() + static_cast<f32_t>(charSize.getW()));
+        pos.setX(pos.getX() + static_cast<f32_t>(charInfo.value().advance));
       }
     }
   }

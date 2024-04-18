@@ -29,7 +29,7 @@ void FontManager::freeLibrary() { FT_Done_FreeType(lib_); }
 
 void FontManager::load(std::function<void()> fn, std::shared_ptr<rms::FetcherQueue> fetcherQueue,
     const std::string &name, const std::string &filepath) {
-  auto loader = std::make_shared<FaceLoader>(lib_, filepath.c_str());
+  auto loader = std::make_shared<FaceLoader>(filepath.c_str());
   loader->setCallback([this, fn, name](rms::FetchResponse *resp) -> void {
     auto *response = static_cast<ObjectFetchResponse *>(resp);
     auto object = response->serialize(lib_);
@@ -52,6 +52,7 @@ auto FontManager::addFont(
   auto texAtlasMarginSize = math::size2i_t(marginSize, marginSize);
 
   auto font = std::make_shared<Font>(iter->second, texAtlasSize, texAtlasMarginSize);
+  font->setHeight(64);
   font->create(symbols, false, true);
 
   fonts_.insert(std::make_pair(name, font));

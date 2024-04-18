@@ -26,9 +26,17 @@ public:
   void setFontSize(int size);
 
 private:
+  math::Alignment alignment_;
+
   std::string text_;
   std::string font_;
+
   int fontSize_;
+  math::col4f_t fontColor_;
+
+  // int lineSpacing_;
+  // math::col4f_t fontShadowColor_;
+  // bool uppercase_;
 };
 
 NAMESPACE_END(widget)

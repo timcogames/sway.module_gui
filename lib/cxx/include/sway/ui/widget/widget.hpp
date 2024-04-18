@@ -3,11 +3,19 @@
 
 #include <sway/core.hpp>
 #include <sway/math.hpp>
+#include <sway/ois.hpp>
 #include <sway/ui/painter.hpp>
 #include <sway/ui/widget/appearance.hpp>
 
 NAMESPACE_BEGIN(sway)
 NAMESPACE_BEGIN(ui)
+
+#define COL4F_RED math::col4f_t(0.85F, 0.33F, 0.17F, 1.0F)
+#define COL4F_GREEN math::col4f_t(0.5F, 0.6F, 0.43F, 1.0F)
+#define COL4F_BLUE math::col4f_t(0.4F, 0.53F, 0.56F, 1.0F)
+#define COL4F_BEIGE math::col4f_t(0.81F, 0.75F, 0.68F, 1.0F)
+#define COL4F_GRAY1 math::col4f_t(0.1F, 0.1F, 0.1F, 1.0F)
+#define COL4F_GRAY2 math::col4f_t(0.18F, 0.17F, 0.16F, 1.0F)
 
 class Builder;
 
@@ -114,6 +122,14 @@ public:
 
   void setSize(const math::size2f_t &size);
 
+  [[nodiscard]]
+  auto getSize() const -> math::size2f_t;
+
+  void setMargin(const math::Margin<f32_t> &margin);
+
+  [[nodiscard]]
+  auto getMargin() const -> math::Margin<f32_t>;
+
   void setBackgroundColor(const math::col4f_t &col);
 
   [[nodiscard]]
@@ -126,9 +142,30 @@ public:
 
   auto getChildAtPoint(const math::point2f_t &point) -> Widget *;
 
+  // wdt/hgt, margin, border, padding
+  auto getOuterSize() const -> math::size2f_t {
+    const auto size = this->getSize();
+    const auto outerWdt = size.getW() + margin_.getLR();
+    const auto outerHgt = size.getH() + margin_.getTB();
+
+    return math::size2f_t(outerWdt, outerHgt);
+  }
+
+  void setMouseFilter(ois::MouseFilter filter) { mouseFilter_ = filter; }
+
+  [[nodiscard]]
+  auto getMouseFilter() const -> ois::MouseFilter {
+    return mouseFilter_;
+  }
+
 protected:
   Builder *builder_;
+  ois::MouseFilter mouseFilter_;
   math::rect4f_t rect_;
+  // math::rect4f_t innerRect_;  // wdt/hgt, padding
+  // math::rect4f_t outerRect_;  // wdt/hgt, margin, border, padding
+  math::Margin<f32_t> margin_;
+  // math::Margin<f32_t> padd_;
 
   Appearance appearance_;
 

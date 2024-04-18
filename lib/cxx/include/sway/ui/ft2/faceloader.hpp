@@ -23,14 +23,13 @@ struct ObjectFetchResponse : public rms::FetchResponse {
 
 class FaceLoader : public rms::Fetcher {
 public:
-  FaceLoader(FT_Library lib, const std::string &url);
+  FaceLoader(const std::string &url);
 
   virtual ~FaceLoader() = default;
 
   MTHD_OVERRIDE(void fetch());
 
 private:
-  FT_Library lib_;
   // std::shared_ptr<Face> faceResponse_;
 };
 

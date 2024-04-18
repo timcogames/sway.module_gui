@@ -12,6 +12,24 @@ Font::Font(std::shared_ptr<Face> face, math::size2i_t atlasSize, math::size2i_t 
     , atlasSize_(atlasSize)
     , atlasMarginSize_(atlasMarginSize) {}
 
+void Font::setHeight(u32_t height) {
+  FT_Size_RequestRec req;
+  req.type = FT_SIZE_REQUEST_TYPE_REAL_DIM;
+  req.width = 0;
+  req.height = (FT_Long)std::round(height << 6);
+  req.horiResolution = 0;
+  req.vertResolution = 0;
+  FT_Request_Size(face_->data(), &req);
+
+  const auto &metrics = face_->data()->size->metrics;
+  info_.height = req.height;
+  info_.descender = metrics.descender >> 6;
+  info_.ascender = metrics.ascender >> 6;
+  info_.lineSpacing = metrics.height >> 6;
+  info_.lineGap = (metrics.height - metrics.ascender + metrics.descender) >> 6;
+  info_.maxAdvanceWidth = metrics.max_advance >> 6;
+}
+
 void Font::create(lpcstr_t charcodes, bool hinted, bool antialiased) {
   for (auto i = 0; i < strlen(charcodes); i++) {
     if (hasCharInfo(charcodes[i])) {
@@ -27,7 +45,7 @@ void Font::create(lpcstr_t charcodes, bool hinted, bool antialiased) {
     }
 
     auto info = getCharMetrics(slot.value());
-    info.symidx = glyphId.idx;
+    // info.symidx = glyphId.idx;
 
     FT_Glyph glyph;
     FT_Get_Glyph(slot.value(), &glyph);
@@ -112,14 +130,14 @@ auto Font::hasCharInfo(s8_t code) const -> bool {
 }
 
 auto Font::getCharMetrics(FT_GlyphSlot slot) -> CharInfo {
-  auto metrics = slot->metrics;
+  const auto &metrics = slot->metrics;
 
   CharInfo info;
   info.size = math::size2i_t(metrics.width, metrics.height) / 64;
-  info.bearing = math::vec2i_t(metrics.horiBearingX >> 6, metrics.horiBearingY >> 6);
+  info.horzBearing = math::vec2i_t(metrics.horiBearingX >> 6, metrics.horiBearingY >> 6);
+  info.vertBearing = math::vec2i_t(metrics.vertBearingX >> 6, metrics.vertBearingY >> 6);
   info.advance = metrics.horiAdvance >> 6;
-  // auto advanceX = slot->advance.x >> 6;
-  // auto advanceY = slot->advance.y >> 6;
+  info.offset = math::vec2i_t(info.vertBearing.getX(), -info.vertBearing.getY() + metrics.vertAdvance >> 6);
 
   return info;
 }

@@ -20,19 +20,21 @@ void Button::update() {
   }
 
   if (hovering_) {
-    label_->setForegroundColor(COL4F_BLACK);
-    this->setBackgroundColor(COL4F_WHITE);
-  } else {
     label_->setForegroundColor(COL4F_WHITE);
-    this->setBackgroundColor(COL4F_BLUE);
+    this->setBackgroundColor(COL4F_GRAY2);
+  } else {
+    label_->setForegroundColor(COL4F_BEIGE);
+    this->setBackgroundColor(COL4F_GRAY1);
   }
 }
 
 void Button::paintEvent(std::shared_ptr<Painter> painter) {
-  label_->setPosition(math::vec2f_t(rect_.getL(), rect_.getB()));
-  label_->paintEvent(painter);
+  label_->setPosition(math::vec2f_t(rect_.getL(), rect_.getT()));
+  label_->setSize(rect_.size());
 
-  painter->drawRect(rect_.getL(), rect_.getB(), rect_.getR(), rect_.getT(), this->getBackgroundColor());
+  painter->drawRect(rect_.getL(), rect_.getT(), rect_.getR(), rect_.getB(), this->getBackgroundColor());
+
+  Widget::paintEvent(painter);
 }
 
 NAMESPACE_END(widget)
