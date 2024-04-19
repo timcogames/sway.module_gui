@@ -52,7 +52,7 @@ auto FontManager::addFont(
   auto texAtlasMarginSize = math::size2i_t(marginSize, marginSize);
 
   auto font = std::make_shared<Font>(iter->second, texAtlasSize, texAtlasMarginSize);
-  font->setHeight(64);
+  font->setHeight(32);
   font->create(symbols, false, true);
 
   fonts_.insert(std::make_pair(name, font));

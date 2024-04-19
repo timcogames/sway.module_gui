@@ -22,7 +22,7 @@ void Font::setHeight(u32_t height) {
   FT_Request_Size(face_->data(), &req);
 
   const auto &metrics = face_->data()->size->metrics;
-  info_.height = req.height;
+  info_.height = height;
   info_.descender = metrics.descender >> 6;
   info_.ascender = metrics.ascender >> 6;
   info_.lineSpacing = metrics.height >> 6;
@@ -70,6 +70,22 @@ auto Font::computeMaxSize_(FT_Bitmap *bitmap, math::size2i_t size) -> math::size
   };  // clang-format on
 }
 
+void Font::drawBitmap(FT_Bitmap *bitmap, u8_t *image, const math::rect4i_t &rect) {
+  for (auto y = 0; y < rect.getH(); y++) {
+    for (auto x = 0; x < rect.getW(); x++) {
+      auto idx = 2 * (y * rect.getW() + x);
+
+      image[idx] = 255;
+
+      if (x < 0 || y < 0 || x >= bitmap->width || y >= bitmap->rows) {
+        image[idx + 1] = 0;
+      } else {
+        image[idx + 1] = bitmap->buffer[bitmap->pitch * y + x];
+      }
+    }
+  }
+}
+
 auto Font::getBitmapData(FontGlyphId sym) -> BitmapInfo {
   auto slot = FontGlyph::load(face_->data(), sym);
   if (!slot.has_value()) {
@@ -83,32 +99,17 @@ auto Font::getBitmapData(FontGlyphId sym) -> BitmapInfo {
   FT_BitmapGlyph bitmapGlyph = (FT_BitmapGlyph)glyph;
   FT_Bitmap *bitmap = &(bitmapGlyph)->bitmap;
 
-  const auto texWdt = math::util::powerOf2(bitmap->width);
-  const auto texHgt = math::util::powerOf2(bitmap->rows);
+  math::rect4i_t texRect;
+  texRect.set(0, 0, maxSize_);
 
-  const auto texPitch = bitmap->pitch;
-  const auto texAreaSize = texWdt * texHgt;
-  const auto texPixelComponents = 2;
+  auto *texData = (u8_t *)malloc(maxSize_.area() * sizeof(u8_t) * 2);
 
-  auto *texData = (u8_t *)malloc(texAreaSize * texPixelComponents * sizeof(u8_t));
-  for (auto y = 0; y < texHgt; y++) {
-    for (auto x = 0; x < texWdt; x++) {
-      auto texPixelIdx = texPixelComponents * (x + texWdt * y);
-
-      texData[texPixelIdx] = 255;
-
-      if (x >= bitmap->width || y >= bitmap->rows) {
-        texData[texPixelIdx + 1] = 0;
-      } else {
-        texData[texPixelIdx + 1] = bitmap->buffer[x + bitmap->pitch * y];
-      }
-    }
-  }
+  drawBitmap(bitmap, texData, texRect);
 
   BitmapInfo bi;
-  bi.pitch = texPitch;
-  bi.data = texData;  // bitmap->buffer
-  bi.size = math::size2i_t(texWdt, texHgt);
+  bi.pitch = bitmap->pitch;
+  bi.data = texData;
+  bi.size = math::size2i_t(bitmap->width, bitmap->rows);
   bi.tl = math::vec2i_t(bitmapGlyph->left, bitmapGlyph->top);
 
   free(texData);

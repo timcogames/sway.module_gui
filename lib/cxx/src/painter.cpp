@@ -48,7 +48,10 @@ void Painter::initialize(std::shared_ptr<ft2::Font> font, std::shared_ptr<render
   for (auto i = 0; i < font_->glyphs_.size(); i++) {
     auto bi = font_->getBitmapData(font_->glyphs_[i]);
 
-    if (font_->maxSize_.getW() + pos.getX() > font_->getAtlasSize().getW()) {
+    auto halfGlyphX = (font_->maxSize_.getW() - bi.size.getW()) / 2;
+    auto halfGlyphY = (font_->maxSize_.getH() - bi.size.getH()) / 2;
+
+    if (pos.getX() + font_->maxSize_.getW() > font_->getAtlasSize().getW()) {
       int newLineY = pos.getY() + maxCharTall;
 
       pos.set(0, newLineY);
@@ -58,7 +61,9 @@ void Painter::initialize(std::shared_ptr<ft2::Font> font, std::shared_ptr<render
     gapi::TextureSubdataDescriptor texSubdataDesc;
     texSubdataDesc.level = 0;
     texSubdataDesc.offset = pos;
-    texSubdataDesc.size = bi.size;
+    texSubdataDesc.offset.setX(texSubdataDesc.offset.getX() + halfGlyphX);
+    texSubdataDesc.offset.setY(texSubdataDesc.offset.getY() + halfGlyphY);
+    texSubdataDesc.size = font_->maxSize_;
     texSubdataDesc.format = gapi::PixelFormat::LUMINANCE_ALPHA;
     texSubdataDesc.type = core::ValueDataType::UBYTE;
     texSubdataDesc.pixels = bi.data;
@@ -67,14 +72,13 @@ void Painter::initialize(std::shared_ptr<ft2::Font> font, std::shared_ptr<render
 
     // clang-format off
     font_->cache_[font_->glyphs_[i].code].rect = math::rect4f_t(
-         pos.getX() / (f32_t)font_->getAtlasSize().getW(),
-         pos.getY() / (f32_t)font_->getAtlasSize().getH(),
-        (pos.getX() + font_->maxSize_.getW()) / (f32_t)font_->getAtlasSize().getW(),
-        (pos.getY() + font_->maxSize_.getH()) / (f32_t)font_->getAtlasSize().getH());
+       texSubdataDesc.offset.getX() / (f32_t)font_->getAtlasSize().getW(),
+       texSubdataDesc.offset.getY() / (f32_t)font_->getAtlasSize().getH(),
+      (texSubdataDesc.offset.getX() + bi.size.getW()) / (f32_t)font_->getAtlasSize().getW(),
+      (texSubdataDesc.offset.getY() + bi.size.getH()) / (f32_t)font_->getAtlasSize().getH());
     // clang-format on
 
-    auto posx = pos.getX() + font_->maxSize_.getW();
-    pos.setX(posx);
+    pos.setX(pos.getX() + font_->maxSize_.getW());
 
     if (font_->maxSize_.getH() > maxCharTall) {
       maxCharTall = font_->maxSize_.getH();
@@ -198,19 +202,15 @@ void Painter::onUpdateBatchChunks() {
         }
 
         auto charSize = charInfo.value().size;
-        auto charVertBearing = charInfo.value().vertBearing;
         auto tl = charInfo.value().tl;
 
         f32_t xpos = pos.getX() + tl.getX();
-        f32_t ypos = pos.getY() - (static_cast<f32_t>(charSize.getH()) - tl.getY());
+        f32_t ypos = pos.getY() - tl.getY();
         f32_t w = xpos + static_cast<f32_t>(charSize.getW());
         f32_t h = ypos + static_cast<f32_t>(charSize.getH());
 
         auto textPos = math::rect4f_t(xpos, ypos, w, h);
-
-        // auto textPos = math::rect4f_t(pos.getX() + charVertBearing.getX(), pos.getY() + charVertBearing.getY(),
-        // pos.getX() + static_cast<f32_t>(charSize.getW()),
-        // pos.getY() + charVertBearing.getY() + static_cast<f32_t>(charSize.getH()));
+        textPos.offset(0, font_->info_.height / 2);
 
         if (textGeom_ != nullptr) {
           auto inst = textGeom_->getDivisor()->at(nextTextIdx_);
@@ -226,7 +226,6 @@ void Painter::onUpdateBatchChunks() {
           }
         }
 
-        // pos.setX(pos.getX() + static_cast<f32_t>(charSize.getW()));
         pos.setX(pos.getX() + static_cast<f32_t>(charInfo.value().advance));
       }
     }

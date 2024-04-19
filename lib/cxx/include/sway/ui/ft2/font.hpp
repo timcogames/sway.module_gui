@@ -29,6 +29,9 @@ struct BitmapInfo {
   u8_t *data;
   math::size2i_t size;
   math::vec2i_t tl;
+
+  math::vec2i_t advance;
+  math::vec2i_t offset;
 };
 
 struct CharInfo {
@@ -107,6 +110,8 @@ public:
   auto getAtlasSize() const -> math::size2i_t { return atlasSize_; }
 
   auto getBitmapData(FontGlyphId sym) -> BitmapInfo;
+
+  void drawBitmap(FT_Bitmap *bitmap, u8_t *image, const math::rect4i_t &rect);
 
   auto getCharInfo(s8_t code) const -> std::optional<CharInfo>;
 
