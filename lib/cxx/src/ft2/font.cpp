@@ -45,7 +45,6 @@ void Font::create(lpcstr_t charcodes, bool hinted, bool antialiased) {
     }
 
     auto info = getCharMetrics(slot.value());
-    // info.symidx = glyphId.idx;
 
     FT_Glyph glyph;
     FT_Get_Glyph(slot.value(), &glyph);
@@ -54,8 +53,7 @@ void Font::create(lpcstr_t charcodes, bool hinted, bool antialiased) {
     FT_BitmapGlyph bitmapGlyph = (FT_BitmapGlyph)glyph;
     FT_Bitmap *bitmap = &(bitmapGlyph)->bitmap;
 
-    info.tl = math::vec2i_t(bitmapGlyph->left, bitmapGlyph->top);
-
+    info.bitmapGlyphOffset = math::vec2i_t(bitmapGlyph->left, bitmapGlyph->top);
     cache_[glyphId.code] = info;
 
     maxSize_ = this->computeMaxSize_(bitmap, maxSize_);
@@ -70,17 +68,13 @@ auto Font::computeMaxSize_(FT_Bitmap *bitmap, math::size2i_t size) -> math::size
   };  // clang-format on
 }
 
-void Font::drawBitmap(FT_Bitmap *bitmap, u8_t *image, const math::rect4i_t &rect) {
-  for (auto y = 0; y < rect.getH(); y++) {
-    for (auto x = 0; x < rect.getW(); x++) {
-      auto idx = 2 * (y * rect.getW() + x);
-
-      image[idx] = 255;
-
+void Font::drawBitmap(FT_Bitmap *bitmap, Greymap data) {
+  for (auto y = 0; y < maxSize_.getH(); y++) {
+    for (auto x = 0; x < maxSize_.getW(); x++) {
       if (x < 0 || y < 0 || x >= bitmap->width || y >= bitmap->rows) {
-        image[idx + 1] = 0;
+        data.at(x, y, 1) = 0;
       } else {
-        image[idx + 1] = bitmap->buffer[bitmap->pitch * y + x];
+        data.at(x, y, 1) = bitmap->buffer[bitmap->pitch * y + x];
       }
     }
   }
@@ -99,20 +93,10 @@ auto Font::getBitmapData(FontGlyphId sym) -> BitmapInfo {
   FT_BitmapGlyph bitmapGlyph = (FT_BitmapGlyph)glyph;
   FT_Bitmap *bitmap = &(bitmapGlyph)->bitmap;
 
-  math::rect4i_t texRect;
-  texRect.set(0, 0, maxSize_);
+  BitmapInfo bi(maxSize_);
+  bi.bitmapSize = math::size2i_t(bitmap->width, bitmap->rows);
+  drawBitmap(bitmap, bi.data);
 
-  auto *texData = (u8_t *)malloc(maxSize_.area() * sizeof(u8_t) * 2);
-
-  drawBitmap(bitmap, texData, texRect);
-
-  BitmapInfo bi;
-  bi.pitch = bitmap->pitch;
-  bi.data = texData;
-  bi.size = math::size2i_t(bitmap->width, bitmap->rows);
-  bi.tl = math::vec2i_t(bitmapGlyph->left, bitmapGlyph->top);
-
-  free(texData);
   return bi;
 }
 
@@ -135,10 +119,7 @@ auto Font::getCharMetrics(FT_GlyphSlot slot) -> CharInfo {
 
   CharInfo info;
   info.size = math::size2i_t(metrics.width, metrics.height) / 64;
-  info.horzBearing = math::vec2i_t(metrics.horiBearingX >> 6, metrics.horiBearingY >> 6);
-  info.vertBearing = math::vec2i_t(metrics.vertBearingX >> 6, metrics.vertBearingY >> 6);
   info.advance = metrics.horiAdvance >> 6;
-  info.offset = math::vec2i_t(info.vertBearing.getX(), -info.vertBearing.getY() + metrics.vertAdvance >> 6);
 
   return info;
 }

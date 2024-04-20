@@ -16,43 +16,68 @@ NAMESPACE_BEGIN(sway)
 NAMESPACE_BEGIN(ui)
 NAMESPACE_BEGIN(ft2)
 
-struct GlyphInfo {
-  u32_t texID;
-  math::vec2i_t size;
-  math::vec2i_t bearing;
-  math::vec2i_t advance;
-  std::shared_ptr<render::Image> image;
+#define NUM_GREYMAP_CMPTS 2
+
+class Greymap {
+public:
+  static auto initial(const math::size2i_t &size) {
+    Greymap data(size);
+    for (auto y = 0; y < size.getH(); y++) {
+      for (auto x = 0; x < size.getW(); x++) {
+        data.at(x, y, 0) = 255;
+      }
+    }
+
+    return data;
+  }
+
+  Greymap(const math::size2i_t &size)
+      : stride_(size.getW())
+      , pixels_((u8_t *)malloc(NUM_GREYMAP_CMPTS * size.area() * sizeof(u8_t))) {}
+
+  ~Greymap() { free(pixels_); }
+
+  auto at(u32_t x, u32_t y, u32_t cmpt) -> u8_t & {
+    const auto idx = NUM_GREYMAP_CMPTS * (y * stride_ + x);
+    return pixels_[idx + cmpt];
+  }
+
+  auto get() -> u8_t * { return pixels_; }
+
+private:
+  u8_t *pixels_;
+  u32_t stride_;
 };
 
-struct BitmapInfo {
-  s32_t pitch;
-  u8_t *data;
-  math::size2i_t size;
-  math::vec2i_t tl;
+// struct GlyphInfo {
+//   u32_t texID;
+//   math::vec2i_t size;
+//   math::vec2i_t bearing;
+//   math::vec2i_t advance;
+//   std::shared_ptr<render::Image> image;
+// };
 
-  math::vec2i_t advance;
-  math::vec2i_t offset;
+struct BitmapInfo {
+  Greymap data;
+  math::size2i_t bitmapSize;
+
+  BitmapInfo(const math::size2i_t &size)
+      : data(Greymap::initial(size)) {}
 };
 
 struct CharInfo {
-  // u32_t symidx;
   math::size2i_t size;
-  math::vec2i_t horzBearing;
-  math::vec2i_t vertBearing;
-  // math::vec2i_t advance;
   s32_t advance;
-  // s8_t *data;
-  math::vec2i_t tl;
+  math::vec2i_t bitmapGlyphOffset;
   math::rect4f_t rect;
-  math::vec2i_t offset;
 };
 
-struct FontCharacter {
-  math::vec2i_t size;
-  math::vec2i_t bearing;
-  uint32_t advance;
-  std::array<math::vec2f_t, 4> uvs;
-};
+// struct FontCharacter {
+//   math::vec2i_t size;
+//   math::vec2i_t bearing;
+//   uint32_t advance;
+//   std::array<math::vec2f_t, 4> uvs;
+// };
 
 // struct TextLayout {
 //   math::vec2i_t size;
@@ -111,7 +136,7 @@ public:
 
   auto getBitmapData(FontGlyphId sym) -> BitmapInfo;
 
-  void drawBitmap(FT_Bitmap *bitmap, u8_t *image, const math::rect4i_t &rect);
+  void drawBitmap(FT_Bitmap *bitmap, Greymap data);
 
   auto getCharInfo(s8_t code) const -> std::optional<CharInfo>;
 
@@ -121,14 +146,12 @@ public:
 
   auto getFace() -> FT_Face { return face_->data(); }
 
-  // auto computeMetrics_(FT_GlyphSlot slot, math::size2i_t size) -> math::size2i_t;
   auto computeMaxSize_(FT_Bitmap *bitmap, math::size2i_t size) -> math::size2i_t;
 
 public:
   std::shared_ptr<Face> face_;
   math::size2i_t atlasSize_;
   math::size2i_t atlasMarginSize_;
-  std::map<s8_t, FontCharacter> chars_;
 
   FontInfo info_;
   // TextLayout data_;

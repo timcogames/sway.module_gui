@@ -48,8 +48,8 @@ void Painter::initialize(std::shared_ptr<ft2::Font> font, std::shared_ptr<render
   for (auto i = 0; i < font_->glyphs_.size(); i++) {
     auto bi = font_->getBitmapData(font_->glyphs_[i]);
 
-    auto halfGlyphX = (font_->maxSize_.getW() - bi.size.getW()) / 2;
-    auto halfGlyphY = (font_->maxSize_.getH() - bi.size.getH()) / 2;
+    auto halfGlyphX = (font_->maxSize_.getW() - bi.bitmapSize.getW()) / 2;
+    auto halfGlyphY = (font_->maxSize_.getH() - bi.bitmapSize.getH()) / 2;
 
     if (pos.getX() + font_->maxSize_.getW() > font_->getAtlasSize().getW()) {
       int newLineY = pos.getY() + maxCharTall;
@@ -66,7 +66,7 @@ void Painter::initialize(std::shared_ptr<ft2::Font> font, std::shared_ptr<render
     texSubdataDesc.size = font_->maxSize_;
     texSubdataDesc.format = gapi::PixelFormat::LUMINANCE_ALPHA;
     texSubdataDesc.type = core::ValueDataType::UBYTE;
-    texSubdataDesc.pixels = bi.data;
+    texSubdataDesc.pixels = bi.data.get();
 
     image->getTexture()->updateSubdata(texSubdataDesc);
 
@@ -74,8 +74,8 @@ void Painter::initialize(std::shared_ptr<ft2::Font> font, std::shared_ptr<render
     font_->cache_[font_->glyphs_[i].code].rect = math::rect4f_t(
        texSubdataDesc.offset.getX() / (f32_t)font_->getAtlasSize().getW(),
        texSubdataDesc.offset.getY() / (f32_t)font_->getAtlasSize().getH(),
-      (texSubdataDesc.offset.getX() + bi.size.getW()) / (f32_t)font_->getAtlasSize().getW(),
-      (texSubdataDesc.offset.getY() + bi.size.getH()) / (f32_t)font_->getAtlasSize().getH());
+      (texSubdataDesc.offset.getX() + bi.bitmapSize.getW()) / (f32_t)font_->getAtlasSize().getW(),
+      (texSubdataDesc.offset.getY() + bi.bitmapSize.getH()) / (f32_t)font_->getAtlasSize().getH());
     // clang-format on
 
     pos.setX(pos.getX() + font_->maxSize_.getW());
@@ -202,10 +202,10 @@ void Painter::onUpdateBatchChunks() {
         }
 
         auto charSize = charInfo.value().size;
-        auto tl = charInfo.value().tl;
+        auto charOffset = charInfo.value().bitmapGlyphOffset;
 
-        f32_t xpos = pos.getX() + tl.getX();
-        f32_t ypos = pos.getY() - tl.getY();
+        f32_t xpos = pos.getX() + charOffset.getX();
+        f32_t ypos = pos.getY() - charOffset.getY();
         f32_t w = xpos + static_cast<f32_t>(charSize.getW());
         f32_t h = ypos + static_cast<f32_t>(charSize.getH());
 
