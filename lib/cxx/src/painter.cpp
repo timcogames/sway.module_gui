@@ -221,7 +221,7 @@ void Painter::onUpdateBatchChunks() {
 
             inst->setPosDataAttrib(textPos);
             inst->setColDataAttrib(chunk.text.color);
-            inst->setTexDataAttrib(charInfo.value().rect);
+            inst->setTexDataAttrib(charInfo.value().rect, true);
             nextTextIdx_ += 1;
           }
         }
@@ -274,26 +274,20 @@ void Painter::onUpdate(math::mat4f_t tfrm, math::mat4f_t proj, math::mat4f_t vie
     textCmd.stencilDesc.front.wmask = textCmd.stencilDesc.front.rmask;
     textCmd.stencilDesc.front.reference = 1;
     textCmd.stencilDesc.back = textCmd.stencilDesc.front;
-    // textCmd.geometry = textGeom_;
     textCmd.geom = textGeom_;
     textCmd.topology = gapi::TopologyType::TRIANGLE_LIST;
     textCmd.material = textMtrl_;
-    // textCmd.tfrm = tfrm;
     textCmd.tfrm = math::mat4f_t();
-
-    // textCmd.proj = proj;
-
-    textCmd.proj.setData(math::Projection(
-        (struct math::ProjectionDescription){.rect = {{
-                                                 -1.0F /* L */, -1.0F /* B */, 1.0F /* R */, 1.0F /* T */
-                                             }},
-            .fov = 0,
-            .aspect = f32_t(800 / 600),
-            .znear = 1.0F,
-            .zfar = 10.0F})
-                             .makeOrtho());
-
+    // clang-format off
+    textCmd.proj.setData(math::Projection((struct math::ProjectionDescription) {
+      .rect = {{ -1.0F /* L */, -1.0F /* B */, 1.0F /* R */, 1.0F /* T */ }},
+      .fov = 0,
+      .aspect = f32_t(800 / 600),
+      .znear = 1.0F,
+      .zfar = 10.0F
+    }).makeOrtho());
     textCmd.view = math::Transform<f32_t>::translate(textCmd.view, -1.0F, -1.0F, 0.0F);
+    // clang-format on
 
     subqueue_->post(textCmd);
   }
@@ -325,7 +319,6 @@ void Painter::onUpdate(math::mat4f_t tfrm, math::mat4f_t proj, math::mat4f_t vie
     rectCmd.geom = rectGeom_;
     rectCmd.material = rectMtrl_;
     rectCmd.tfrm = math::mat4f_t();
-    // rectCmd.tfrm = math::Transform<f32_t>::scale(textCmd.tfrm, 790.0F, 590.0F, 1.0F);
     rectCmd.proj = textCmd.proj;
     rectCmd.view = textCmd.view;
 
