@@ -221,7 +221,7 @@ void Painter::onUpdateBatchChunks() {
 
             inst->setPosDataAttrib(textPos);
             inst->setColDataAttrib(chunk.text.color);
-            inst->setTexDataAttrib(charInfo.value().rect, true);
+            inst->setTexDataAttrib(charInfo.value().rect);
             nextTextIdx_ += 1;
           }
         }
