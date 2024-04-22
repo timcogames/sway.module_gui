@@ -133,10 +133,8 @@ void Painter::createTextGeom(std::shared_ptr<render::RenderSubsystem> subsystem,
   textGeomCreateInfo.bo[render::Constants::IDX_EBO].desc.capacity = textIdxs.size();
   textGeomCreateInfo.bo[render::Constants::IDX_EBO].data = textIdxs.data();
 
-  textId_ = geomBuilder_
-                ->createInstance<render::procedurals::prims::Quadrilateral<math::VertexTexCoord>>(
-                    geomIdx, textGeomDataDivisor_, textGeomCreateInfo, textMtrl_->getEffect())
-                .value();
+  textId_ = geomBuilder_->createInstance<render::procedurals::prims::Quadrilateral<math::VertexTexCoord>>(
+      geomIdx, textGeomDataDivisor_, textGeomCreateInfo, textMtrl_->getEffect());
 }
 
 void Painter::clear() {

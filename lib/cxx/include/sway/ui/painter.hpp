@@ -85,7 +85,7 @@ private:
   render::GeomInstanceDataDivisor<render::procedurals::prims::Quadrilateral<math::VertexTexCoord>>
       *textGeomDataDivisor_;
   render::GeomInstance<render::procedurals::prims::Quadrilateral<math::VertexTexCoord>> *textGeom_;
-  std::string textId_;
+  u32_t textId_;
 
   std::shared_ptr<ft2::Font> font_;
 
