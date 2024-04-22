@@ -10,6 +10,7 @@ Widget::Widget(Builder *builder)
     , mouseFilter_(ois::MouseFilter::STOP)
     , rect_(math::rect4f_t(0.0F, 0.0F, 0.0F, 0.0F))
     , margin_(math::Margin<f32_t>(0.0F))
+    , alignment_(math::Alignment::LEFT_TOP)
     , containsPointer_(false) {
   setBackgroundColor(COL4F_GRAY1);
   setForegroundColor(COL4F_BEIGE);
@@ -84,7 +85,27 @@ void Widget::setPosition(const math::vec2f_t &pos) {
     }
 
     auto parent = std::static_pointer_cast<Widget>(parentOpt.value());
+    auto parentSize = parent->getSize();
     rect_.offset(parent->getPosition());
+
+    auto x = 0.0F;
+    auto y = 0.0F;
+
+    if (core::detail::toUnderlying<math::Alignment>(alignment_) & math::ConvFromXAlign<math::HorzAlign::CENTER>()) {
+      x = (parentSize.getW() - this->getSize().getW()) / 2;
+    } else if (core::detail::toUnderlying<math::Alignment>(alignment_) &
+               math::ConvFromXAlign<math::HorzAlign::RIGHT>()) {
+      x = (parentSize.getW() - this->getSize().getW());
+    }
+
+    if (core::detail::toUnderlying<math::Alignment>(alignment_) & math::ConvFromXAlign<math::VertAlign::CENTER>()) {
+      y = (parentSize.getH() - this->getSize().getH()) / 2;
+    } else if (core::detail::toUnderlying<math::Alignment>(alignment_) &
+               math::ConvFromXAlign<math::VertAlign::BOTTOM>()) {
+      y = (parentSize.getH() - this->getSize().getH());
+    }
+
+    rect_.offset(x, y);
   }
 }
 

@@ -7,7 +7,6 @@ NAMESPACE_BEGIN(widget)
 
 Label::Label(Builder *builder, const std::string &text)
     : Widget(builder)
-    , alignment_(math::Alignment::LEFT_TOP)
     , text_(text)
     , font_("")
     , fontSize_(12) {

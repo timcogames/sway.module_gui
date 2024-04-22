@@ -27,13 +27,9 @@ public:
 
   auto getRootWidget() -> std::shared_ptr<widget::Widget> { return root_; }
 
-  void setWorldPointVec3F(math::vec3f_t pnt) { worldPoint_ = pnt; }
-
   void setEventBus(std::shared_ptr<core::evts::EventBus> evtbus) { evtbus_ = evtbus; }
 
   auto getEventBus() -> std::shared_ptr<core::evts::EventBus> { return evtbus_; }
-
-  math::vec3f_t worldPoint_;
 
   void setCursorPoint(const math::point2f_t &pnt) { cursor_.pnt = pnt; }
 

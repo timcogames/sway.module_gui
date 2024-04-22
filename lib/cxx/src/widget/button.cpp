@@ -29,6 +29,7 @@ void Button::update() {
 }
 
 void Button::paintEvent(std::shared_ptr<Painter> painter) {
+  label_->setAlignment(math::Alignment::CENTER);
   label_->setPosition(math::vec2f_t(rect_.getL(), rect_.getT()));
   label_->setSize(rect_.size());
 

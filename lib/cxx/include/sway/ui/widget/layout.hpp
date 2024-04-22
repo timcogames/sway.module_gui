@@ -3,6 +3,7 @@
 
 #include <sway/core.hpp>
 #include <sway/ui/painter.hpp>
+#include <sway/ui/widget/linearlayoutorientations.hpp>
 #include <sway/ui/widget/widget.hpp>
 
 NAMESPACE_BEGIN(sway)
@@ -14,20 +15,6 @@ public:
   Layout(Builder *builder);
 
   virtual ~Layout() = default;
-};
-
-enum class LinearLayoutOrientation : u32_t { HORZ, VERT };
-
-class LinearLayout : public Layout {
-public:
-  LinearLayout(Builder *builder, LinearLayoutOrientation orientation);
-
-  virtual ~LinearLayout() = default;
-
-  void build();
-
-private:
-  LinearLayoutOrientation orientation_;
 };
 
 NAMESPACE_END(widget)

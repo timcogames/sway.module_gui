@@ -17,10 +17,10 @@ void ProgressBar::paintEvent(std::shared_ptr<Painter> painter) {
   auto rectWithMargin = rect_;
   rectWithMargin.reduce(math::Margin<f32_t>(1.5F));
 
-  auto barLen = rectWithMargin.getR() * current_;
+  auto barLen = rectWithMargin.getL() + rectWithMargin.getW() * current_;
 
-  painter->drawRect(rectWithMargin.getL(), rectWithMargin.getT(), barLen, rectWithMargin.getB(), COL4F_BLACK);
-  painter->drawRect(rect_.getL(), rect_.getT(), rect_.getR(), rect_.getB(), COL4F_WHITE);
+  painter->drawRect(rectWithMargin.getL(), rectWithMargin.getT(), barLen, rectWithMargin.getB(), COL4F_BEIGE);
+  painter->drawRect(rect_.getL(), rect_.getT(), rect_.getR(), rect_.getB(), COL4F_GRAY1);
 }
 
 void ProgressBar::setProgress(f32_t val) {

@@ -26,8 +26,6 @@ public:
   void setFontSize(int size);
 
 private:
-  math::Alignment alignment_;
-
   std::string text_;
   std::string font_;
 

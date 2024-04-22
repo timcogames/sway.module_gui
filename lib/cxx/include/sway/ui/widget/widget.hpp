@@ -158,6 +158,8 @@ public:
     return mouseFilter_;
   }
 
+  void setAlignment(math::Alignment alignment) { alignment_ = alignment; }
+
 protected:
   Builder *builder_;
   ois::MouseFilter mouseFilter_;
@@ -166,7 +168,7 @@ protected:
   // math::rect4f_t outerRect_;  // wdt/hgt, margin, border, padding
   math::Margin<f32_t> margin_;
   // math::Margin<f32_t> padd_;
-
+  math::Alignment alignment_;
   Appearance appearance_;
 
   bool containsPointer_;
