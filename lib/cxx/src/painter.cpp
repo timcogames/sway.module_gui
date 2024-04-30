@@ -185,7 +185,12 @@ void Painter::onUpdateBatchChunks() {
           std::cout << "[ERR]: Inst" << std::endl;
         } else {
           inst->setRemap(true);
-          inst->setPosDataAttrib(math::rect4f_t(chunk.rect.x, chunk.rect.y, chunk.rect.w, chunk.rect.h));
+
+          f32_t dX = 1.0F / ((f32_t)800 / 2.0F);
+          f32_t dY = 1.0F / ((f32_t)600 / 2.0F);
+
+          inst->setPosDataAttrib(
+              math::rect4f_t(chunk.rect.x * dX, chunk.rect.y * dY, chunk.rect.w * dX, chunk.rect.h * dY));
           inst->setColDataAttrib(chunk.rect.color);
           nextRectIdx_ += 1;
         }
@@ -217,7 +222,11 @@ void Painter::onUpdateBatchChunks() {
           } else {
             inst->setRemap(true);
 
-            inst->setPosDataAttrib(textPos);
+            f32_t dX = 1.0F / ((f32_t)800 / 2.0F);
+            f32_t dY = 1.0F / ((f32_t)600 / 2.0F);
+
+            inst->setPosDataAttrib(
+                math::rect4f_t(textPos.getL() * dX, textPos.getT() * dY, textPos.getR() * dX, textPos.getB() * dY));
             inst->setColDataAttrib(chunk.text.color);
             inst->setTexDataAttrib(charInfo.value().rect);
             nextTextIdx_ += 1;
@@ -278,7 +287,7 @@ void Painter::onUpdate(math::mat4f_t tfrm, math::mat4f_t proj, math::mat4f_t vie
     textCmd.tfrm = math::mat4f_t();
     // clang-format off
     textCmd.proj.setData(math::Projection((struct math::ProjectionDescription) {
-      .rect = {{ -1.0F /* L */, -1.0F /* B */, 1.0F /* R */, 1.0F /* T */ }},
+      .rect = {{ -1.0F /* L */, 1.0F /* B->T */, 1.0F /* R */, -1.0F /* T->B */ }},
       .fov = 0,
       .aspect = f32_t(800 / 600),
       .znear = 1.0F,
