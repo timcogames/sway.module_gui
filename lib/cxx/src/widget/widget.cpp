@@ -40,7 +40,9 @@ void Widget::onMouseClick() {
   this->update();
 
   auto *evtData = new MouseClickEventData();
-  auto *evt = new MouseClickedEvent(0, evtData);
+  evtData->uid = this->getNodeIdx().toStr();
+
+  auto *evt = new MouseClickedEvent(0, std::move(evtData));
 
   emit(EVT_MOUSE_CLICKED, evt, [&](core::foundation::EventHandler *) { return true; });
 }

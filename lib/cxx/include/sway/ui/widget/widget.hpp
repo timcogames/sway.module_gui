@@ -23,17 +23,6 @@ NAMESPACE_BEGIN(widget)
 
 enum class WidgetEventType : u32_t { MOUSE_OVER = 50, MOUSE_OUT, POINTER_ENTER, POINTER_LEAVE };
 
-struct WidgetEventData : core::foundation::EventData {
-  std::string uid;
-
-  WidgetEventData() {}
-
-  // clang-format off
-  MTHD_OVERRIDE(auto serialize() const -> std::string) { return ""; }  // clang-format on
-
-  MTHD_OVERRIDE(void deserialize(const std::string &jdata)) {}
-};
-
 class WidgetEvent : public core::foundation::Event {
 public:
   DECLARE_CLASS_METADATA(WidgetEvent, core::foundation::Event)
@@ -81,6 +70,8 @@ struct PointerLeaveEventData : public core::foundation::EventData {
 };
 
 struct MouseClickEventData : public core::foundation::EventData {
+  std::string uid;
+
   // clang-format off
   MTHD_OVERRIDE(auto serialize() const -> std::string) { return ""; }  // clang-format on
 
