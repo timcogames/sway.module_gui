@@ -16,37 +16,6 @@ Widget::Widget(Builder *builder)
   setForegroundColor(COL4F_BEIGE);
 }
 
-void Widget::onCursorPointerEnter() {
-  containsPointer_ = true;
-  this->update();
-
-  auto *evtData = new PointerEnterEventData();
-  auto *evt = new PointerEnterEvent(0, evtData);
-
-  emit(EVT_POINTER_ENTER, evt, [&](core::foundation::EventHandler *) { return true; });
-}
-
-void Widget::onCursorPointerLeave() {
-  containsPointer_ = false;
-  this->update();
-
-  auto *evtData = new PointerLeaveEventData();
-  auto *evt = new PointerLeaveEvent(0, evtData);
-
-  emit(EVT_POINTER_LEAVE, evt, [&](core::foundation::EventHandler *) { return true; });
-}
-
-void Widget::onMouseClick() {
-  this->update();
-
-  auto *evtData = new MouseClickEventData();
-  evtData->uid = this->getNodeIdx().toStr();
-
-  auto *evt = new MouseClickedEvent(0, std::move(evtData));
-
-  emit(EVT_MOUSE_CLICKED, evt, [&](core::foundation::EventHandler *) { return true; });
-}
-
 void Widget::update() {
   for (auto const &child : this->getChildNodes()) {
     std::static_pointer_cast<Widget>(child)->update();
@@ -61,6 +30,36 @@ void Widget::paintEvent(std::shared_ptr<Painter> painter) {
   for (auto const &child : this->getChildNodes()) {
     std::static_pointer_cast<Widget>(child)->paintEvent(painter);
   }
+}
+
+void Widget::onCursorPointerEnter() {
+  containsPointer_ = true;
+  this->update();
+
+  auto *evtdata = new PointerEnterEventData();
+  auto *evt = new PointerEnterEvent(0, evtdata);
+
+  emit(EVT_POINTER_ENTER, evt, [&](core::foundation::EventHandler *) { return true; });
+}
+
+void Widget::onCursorPointerLeave() {
+  containsPointer_ = false;
+  this->update();
+
+  auto *evtdata = new PointerLeaveEventData();
+  auto *evt = new PointerLeaveEvent(0, evtdata);
+
+  emit(EVT_POINTER_LEAVE, evt, [&](core::foundation::EventHandler *) { return true; });
+}
+
+void Widget::onMouseClick() {
+  this->update();
+
+  auto *evtdata = new MouseClickEventData();
+  evtdata->nodeidx = this->getNodeIdx();
+  auto *evt = new MouseClickedEvent(0, std::move(evtdata));
+
+  emit(EVT_MOUSE_CLICKED, evt, [&](core::foundation::EventHandler *) { return true; });
 }
 
 void Widget::setRect(const math::rect4f_t &rect) { rect_ = rect; }

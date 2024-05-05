@@ -18,5 +18,7 @@
 #include <sway/ui/widget/radiobuttongroup.hpp>
 #include <sway/ui/widget/togglebutton.hpp>
 #include <sway/ui/widget/widget.hpp>
+#include <sway/ui/widget/widgetevent.hpp>
+#include <sway/ui/widget/widgeteventtypes.hpp>
 
 #endif  // SWAY_UI_HPP
