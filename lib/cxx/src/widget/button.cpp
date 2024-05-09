@@ -31,7 +31,7 @@ void Button::update() {
 void Button::paintEvent(std::shared_ptr<Painter> painter) {
   label_->setAlignment(math::Alignment::CENTER);
   label_->setPosition(math::vec2f_t(rect_.getL(), rect_.getT()));
-  label_->setSize(rect_.size());
+  label_->setSize(rect_.asSize());
 
   painter->drawRect(rect_.getL(), rect_.getT(), rect_.getR(), rect_.getB(), this->getBackgroundColor());
 

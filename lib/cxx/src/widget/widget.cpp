@@ -110,14 +110,14 @@ void Widget::setPosition(const math::vec2f_t &pos) {
   }
 }
 
-auto Widget::getPosition() const -> math::point2f_t { return rect_.position(); }
+auto Widget::getPosition() const -> math::point2f_t { return rect_.asPoint(); }
 
 void Widget::setSize(const math::size2f_t &size) {
   rect_.setR(rect_.getL() + size.getW());
   rect_.setB(rect_.getT() + size.getH());
 }
 
-auto Widget::getSize() const -> math::size2f_t { return rect_.size(); }
+auto Widget::getSize() const -> math::size2f_t { return rect_.asSize(); }
 
 void Widget::setMargin(const math::Margin<f32_t> &margin) { margin_ = margin; }
 
