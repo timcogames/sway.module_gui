@@ -32,8 +32,8 @@ public:
   }
 
   Greymap(const math::size2i_t &size)
-      : stride_(size.getW())
-      , pixels_((u8_t *)malloc(NUM_GREYMAP_CMPTS * size.area() * sizeof(u8_t))) {}
+      : pixels_((u8_t *)malloc(NUM_GREYMAP_CMPTS * size.area() * sizeof(u8_t)))
+      , stride_(size.getW()) {}
 
   ~Greymap() { free(pixels_); }
 

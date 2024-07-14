@@ -27,12 +27,30 @@ void Painter::initialize(std::shared_ptr<ft2::Font> font, std::shared_ptr<render
   subqueue_ = subsystem->getQueueByPriority(core::detail::toUnderlying(core::intrusive::Priority::VERY_HIGH))
                   ->getSubqueues(render::RenderSubqueueGroup::OPAQUE)[0];
 
+  const std::unordered_map<gapi::ShaderType, std::string> shaderSources = {
+      {gapi::ShaderType::VERT, "layout (location = 0) in vec3 attrib_pos;"
+                               "layout (location = 1) in vec4 attrib_col;"
+                               "uniform mat4 mat_view_proj;"
+                               "uniform mat4 mat_model;"
+                               "out vec4 vtx_col;"
+                               "void main() {"
+                               "    gl_Position = mat_view_proj * mat_model * vec4(attrib_pos, 1.0);"
+                               "    gl_Position.y = -gl_Position.y;"
+                               "    vtx_col = attrib_col;"
+                               "}"},
+      {gapi::ShaderType::FRAG, "in vec4 vtx_col;"
+                               "out vec4 out_col;"
+                               "void main() {"
+                               "    out_col = vtx_col;"
+                               "}"}};
+
   rectMtrl_ = std::make_shared<render::Material>("material_ui_rect", imgResMngr, glslResMngr);
-  rectMtrl_->addEffect({"ui_rect_vs", "ui_rect_fs"});
+  rectMtrl_->addEffect(shaderSources);
+  // rectMtrl_->addEffect({"ui_rect_vs", "ui_rect_fs"});
   materialMngr->addMaterial(rectMtrl_);
 
   textMtrl_ = std::make_shared<render::Material>("material_ui_text", imgResMngr, glslResMngr);
-  textMtrl_->addEffect({"ui_text_vs", "ui_text_fs"});
+  textMtrl_->addEffect((std::array<std::string, 2>){"ui_text_vs", "ui_text_fs"});
   materialMngr->addMaterial(textMtrl_);
 
   gapi::TextureCreateInfo texCreateInfo;
@@ -186,8 +204,8 @@ void Painter::onUpdateBatchChunks() {
         } else {
           inst->setRemap(true);
 
-          f32_t dX = 1.0F / ((f32_t)800 / 2.0F);
-          f32_t dY = 1.0F / ((f32_t)600 / 2.0F);
+          auto dX = 1.0F / ((f32_t)800 / 2.0F);
+          auto dY = 1.0F / ((f32_t)600 / 2.0F);
 
           inst->setPosDataAttrib(
               math::rect4f_t(chunk.rect.x * dX, chunk.rect.y * dY, chunk.rect.w * dX, chunk.rect.h * dY));
@@ -258,6 +276,47 @@ void Painter::onUpdate(math::mat4f_t tfrm, math::mat4f_t proj, math::mat4f_t vie
 
   geomBatchChunkSize_ = 0;
 
+  render::pipeline::ForwardRenderCommand rectCmd;
+  if (rectGeom_ != nullptr) {
+    rectCmd.stage = 0;
+    rectCmd.blendDesc.enabled = false;
+    rectCmd.blendDesc.src = gapi::BlendFn::SRC_ALPHA;
+    rectCmd.blendDesc.dst = gapi::BlendFn::ONE_MINUS_SRC_ALPHA;
+    rectCmd.blendDesc.mask = true;
+    rectCmd.rasterizerDesc.mode = gapi::CullFace::BACK;
+    rectCmd.rasterizerDesc.ccw = false;
+    rectCmd.depthDesc.enabled = true;
+    rectCmd.depthDesc.func = gapi::CompareFn::LESS;
+    rectCmd.depthDesc.mask = true;
+    rectCmd.depthDesc.near = 0;
+    rectCmd.depthDesc.far = 0;
+    rectCmd.stencilDesc.enabled = true;
+    rectCmd.stencilDesc.front.func = gapi::CompareFn::ALWAYS;
+    rectCmd.stencilDesc.front.fail = gapi::StencilOp::KEEP;
+    rectCmd.stencilDesc.front.depthFail = gapi::StencilOp::KEEP;
+    rectCmd.stencilDesc.front.depthPass = gapi::StencilOp::REPLACE;
+    rectCmd.stencilDesc.front.rmask = 0xFFFFFF;
+    rectCmd.stencilDesc.front.wmask = rectCmd.stencilDesc.front.rmask;
+    rectCmd.stencilDesc.front.reference = 1;
+    rectCmd.stencilDesc.back = rectCmd.stencilDesc.front;
+    rectCmd.topology = gapi::TopologyType::TRIANGLE_LIST;
+    rectCmd.geom = rectGeom_;
+    rectCmd.material = rectMtrl_;
+    rectCmd.tfrm = math::mat4f_t();
+    // clang-format off
+    rectCmd.proj.setData(math::Projection((struct math::ProjectionDescription) {
+      .rect = {{ -1.0F /* L */, 1.0F /* B->T */, 1.0F /* R */, -1.0F /* T->B */ }},
+      .fov = 0,
+      .aspect = f32_t(800 / 600),
+      .znear = 1.0F,
+      .zfar = 10.0F
+    }).makeOrtho());
+    rectCmd.view = math::Transform<f32_t>::translate(rectCmd.view, -1.0F, -1.0F, 0.0F);
+    // clang-format on
+
+    subqueue_->post(rectCmd);
+  }
+
   render::pipeline::ForwardRenderCommand textCmd;
   if (textGeom_ != nullptr) {
     textCmd.stage = 0;
@@ -297,39 +356,6 @@ void Painter::onUpdate(math::mat4f_t tfrm, math::mat4f_t proj, math::mat4f_t vie
     // clang-format on
 
     subqueue_->post(textCmd);
-  }
-
-  render::pipeline::ForwardRenderCommand rectCmd;
-  if (rectGeom_ != nullptr) {
-    rectCmd.stage = 0;
-    rectCmd.blendDesc.enabled = false;
-    rectCmd.blendDesc.src = gapi::BlendFn::SRC_ALPHA;
-    rectCmd.blendDesc.dst = gapi::BlendFn::ONE_MINUS_SRC_ALPHA;
-    rectCmd.blendDesc.mask = true;
-    rectCmd.rasterizerDesc.mode = gapi::CullFace::BACK;
-    rectCmd.rasterizerDesc.ccw = false;
-    rectCmd.depthDesc.enabled = true;
-    rectCmd.depthDesc.func = gapi::CompareFn::LESS;
-    rectCmd.depthDesc.mask = true;
-    rectCmd.depthDesc.near = 0;
-    rectCmd.depthDesc.far = 0;
-    rectCmd.stencilDesc.enabled = true;
-    rectCmd.stencilDesc.front.func = gapi::CompareFn::ALWAYS;
-    rectCmd.stencilDesc.front.fail = gapi::StencilOp::KEEP;
-    rectCmd.stencilDesc.front.depthFail = gapi::StencilOp::KEEP;
-    rectCmd.stencilDesc.front.depthPass = gapi::StencilOp::REPLACE;
-    rectCmd.stencilDesc.front.rmask = 0xFFFFFF;
-    rectCmd.stencilDesc.front.wmask = rectCmd.stencilDesc.front.rmask;
-    rectCmd.stencilDesc.front.reference = 1;
-    rectCmd.stencilDesc.back = rectCmd.stencilDesc.front;
-    rectCmd.topology = gapi::TopologyType::TRIANGLE_LIST;
-    rectCmd.geom = rectGeom_;
-    rectCmd.material = rectMtrl_;
-    rectCmd.tfrm = math::mat4f_t();
-    rectCmd.proj = textCmd.proj;
-    rectCmd.view = textCmd.view;
-
-    subqueue_->post(rectCmd);
   }
 
   this->finalUpdate();

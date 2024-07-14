@@ -18,16 +18,6 @@ public:
   MTHD_VIRTUAL(void update());
 
   MTHD_VIRTUAL(void paintEvent(std::shared_ptr<Painter> painter));
-
-  [[nodiscard]]
-  auto isChecked() const -> bool {
-    return checked_;
-  }
-
-  void setChecked(bool val) { checked_ = val; }
-
-private:
-  bool checked_;
 };
 
 NAMESPACE_END(widget)

@@ -19,6 +19,8 @@ public:
 
   MTHD_VIRTUAL(void paintEvent(std::shared_ptr<Painter> painter));
 
+  auto getLabel() const -> std::shared_ptr<Label> { return label_; }
+
 private:
   std::shared_ptr<Label> label_;
   bool hovering_;

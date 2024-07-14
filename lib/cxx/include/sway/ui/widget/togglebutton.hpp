@@ -26,7 +26,7 @@ public:
 
   void setChecked(bool val) { checked_ = val; }
 
-private:
+protected:
   bool checked_;
 };
 

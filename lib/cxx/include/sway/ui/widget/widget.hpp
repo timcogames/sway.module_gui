@@ -9,6 +9,9 @@
 #include <sway/ui/widget/widgetevent.hpp>
 #include <sway/ui/widget/widgeteventtypes.hpp>
 
+#include <array>
+#include <optional>
+
 NAMESPACE_BEGIN(sway)
 NAMESPACE_BEGIN(ui)
 
@@ -22,6 +25,68 @@ NAMESPACE_BEGIN(ui)
 class Builder;
 
 NAMESPACE_BEGIN(widget)
+
+#define NUM_AREAS 3  // MARGIN, BORDER, PADDING
+#define NUM_EDGES 4
+
+enum class ElementBoxAreaType : u32_t { AUTO, MARGIN, BORDER, PADDING, CONTENT, Latest };
+
+class ElementBox {
+public:
+  struct Area {
+    ElementBoxAreaType type;
+    std::array<f32_t, core::detail::toUnderlying(math::RectEdge::Latest)> edges;
+  };
+
+  ElementBox(const math::sizef_t &content)
+      : content_(content) {}
+
+  ~ElementBox() = default;
+
+  auto getArea(ElementBoxAreaType type) const -> std::optional<Area> {
+    std::optional<Area> area = std::nullopt;
+    for (const auto item : areas_) {
+      if (item.has_value() && item.value().type == type) {
+        area = item;
+      }
+    }
+
+    return area;
+  }
+
+  auto getPosition(ElementBoxAreaType type) const -> math::vec2f_t {
+    auto result = math::vec2f_zero;
+
+    auto mgn = this->getArea(ElementBoxAreaType::MARGIN);
+    if (!mgn.has_value()) {
+    } else {
+      result = math::vec2f_t(-std::get<core::detail::toUnderlying(math::RectEdge::IDX_L)>(mgn.value().edges),
+          -std::get<core::detail::toUnderlying(math::RectEdge::IDX_T)>(mgn.value().edges));
+    }
+
+    auto brd = this->getArea(ElementBoxAreaType::BORDER);
+    if (!brd.has_value()) {
+    } else {
+      result =
+          math::vec2f_t(result.getX() + std::get<core::detail::toUnderlying(math::RectEdge::IDX_L)>(brd.value().edges),
+              result.getY() + std::get<core::detail::toUnderlying(math::RectEdge::IDX_T)>(brd.value().edges));
+    }
+
+    auto pad = this->getArea(ElementBoxAreaType::PADDING);
+    if (!pad.has_value()) {
+    } else {
+      result =
+          math::vec2f_t(result.getX() + std::get<core::detail::toUnderlying(math::RectEdge::IDX_L)>(pad.value().edges),
+              result.getY() + std::get<core::detail::toUnderlying(math::RectEdge::IDX_T)>(pad.value().edges));
+    }
+
+    return result;
+  }
+
+private:
+  math::sizef_t content_;
+  std::array<std::optional<Area>, NUM_AREAS> areas_;
+};
 
 class Widget : public core::container::Node {
 public:

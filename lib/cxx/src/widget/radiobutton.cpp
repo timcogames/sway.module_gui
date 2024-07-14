@@ -6,8 +6,7 @@ NAMESPACE_BEGIN(ui)
 NAMESPACE_BEGIN(widget)
 
 RadioButton::RadioButton(Builder *builder, const std::string &text)
-    : ToggleButton(builder, text)
-    , checked_(false) {}
+    : ToggleButton(builder, text) {}
 
 void RadioButton::update() { ToggleButton::update(); }
 
