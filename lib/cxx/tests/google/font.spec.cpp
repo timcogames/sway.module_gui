@@ -1,5 +1,8 @@
 #include <sway/ui.hpp>
 
+#undef Bool
+#undef None
+
 #include <gtest/gtest.h>
 
 #include <memory>

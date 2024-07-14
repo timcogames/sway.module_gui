@@ -86,10 +86,14 @@ add_submodule("module_ois" submodules/sway.module_ois)
 
 set_output_dir(${MODULE_UI_BIN_DIR})
 
+set(SYSTEM_X11_INCLUDE_DIRS "/opt/X11/include")
+set(SYSTEM_X11_LIBRARY_DIRS "/opt/X11/lib")
+
 #---------------------------------------------------------------------------------
 # Includes
 #---------------------------------------------------------------------------------
 
+include_directories("${SYSTEM_X11_INCLUDE_DIRS}")
 include_directories("${GLOB_THIRD_PARTY_DIR}/json/include")
 include_directories("${MODULE_UI_LIST_DIR}/lib/cxx/include")
 include_directories("${MODULE_UI_LIST_DIR}/submodules/sway.module_gapi/api/cxx/include")
@@ -111,7 +115,11 @@ add_subdirectory(lib/cxx)
 #---------------------------------------------------------------------------------
 
 if(MODULE_UI_ENABLE_TESTS)
-  message(STATUS "Tests have been enabled")
-
-  add_subdirectory(lib/cxx/tests)
+  if(${MODULE_UI_LIB_TYPE} MATCHES "static")
+    message(STATUS "[${MODULE_UI_PROJ_NAME}]: Tests have been enabled")
+    add_subdirectory(lib/cxx/tests/google)
+  else()
+    message(STATUS "[${MODULE_UI_PROJ_NAME}]: Tests are only allowed with a static lib")
+  endif()
 endif()
+

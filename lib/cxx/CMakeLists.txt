@@ -5,22 +5,36 @@
 cmake_minimum_required(VERSION 3.25.0 FATAL_ERROR)
 
 #---------------------------------------------------------------------------------
+# [EMSCRIPTEN]: Setup
+#---------------------------------------------------------------------------------
+
+if(GLOB_EMSCRIPTEN_PLATFORM)
+  emscripten_setup()
+endif()
+
+#---------------------------------------------------------------------------------
 # 
 #---------------------------------------------------------------------------------
 
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fvisibility=hidden -fPIE")
 
+set(SYSTEM_X11_INCLUDE_DIRS "/opt/X11/include")
+set(SYSTEM_X11_LIBRARY_DIRS "/opt/X11/lib")
+
 #---------------------------------------------------------------------------------
 # 
 #---------------------------------------------------------------------------------
 
-include_directories("${GLOB_FT2_ROOT_DIR}/include/freetype2")
+include_directories("${SYSTEM_X11_INCLUDE_DIRS}")
 include_directories("${GLOB_THIRD_PARTY_DIR}/json/include")
+include_directories("${GLOB_FT2_ROOT_DIR}/include/freetype2")
 include_directories("${MODULE_UI_LIST_DIR}/lib/cxx/include")
 include_directories("${MODULE_UI_LIST_DIR}/submodules/sway.module_gapi/api/cxx/include")
 include_directories("${MODULE_UI_LIST_DIR}/submodules/sway.module_core/lib/cxx/include")
 include_directories("${MODULE_UI_LIST_DIR}/submodules/sway.module_math/lib/cxx/include")
 include_directories("${MODULE_UI_LIST_DIR}/submodules/sway.module_rms/lib/cxx/include")
+
+link_directories("${SYSTEM_X11_LIBRARY_DIRS}")
 
 #---------------------------------------------------------------------------------
 # Build object library
