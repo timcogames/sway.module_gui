@@ -10,13 +10,13 @@ NAMESPACE_BEGIN(widget)
 
 class ProgressBar : public Widget {
 public:
-  ProgressBar(Builder *builder);
+  ProgressBar(Builder::Ptr_t builder);
 
   virtual ~ProgressBar() = default;
 
   MTHD_VIRTUAL(void update());
 
-  MTHD_VIRTUAL(void paintEvent(std::shared_ptr<Painter> painter));
+  MTHD_VIRTUAL(void paintEvent(Painter::SharedPtr_t painter));
 
   void setProgress(f32_t val);
 

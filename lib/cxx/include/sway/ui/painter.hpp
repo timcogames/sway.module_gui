@@ -45,8 +45,11 @@ struct GeometryBatchChunk {
 };
 
 class Painter : public render::RenderComponent, public render::FinalUpdatable {
-public:
   DECLARE_CLASS_METADATA(Painter, RenderComponent)
+
+public:
+  using Ptr_t = Painter *;
+  using SharedPtr_t = std::shared_ptr<Painter>;
 
   Painter();
 

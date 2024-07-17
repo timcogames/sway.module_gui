@@ -5,7 +5,7 @@ NAMESPACE_BEGIN(sway)
 NAMESPACE_BEGIN(ui)
 NAMESPACE_BEGIN(widget)
 
-Label::Label(Builder *builder, const std::string &text)
+Label::Label(Builder::Ptr_t builder, const std::string &text)
     : Widget(builder)
     , text_(text)
     , font_("")
@@ -15,7 +15,7 @@ Label::Label(Builder *builder, const std::string &text)
 
 void Label::update() {}
 
-void Label::paintEvent(std::shared_ptr<Painter> painter) {
+void Label::paintEvent(Painter::SharedPtr_t painter) {
   painter->drawText(rect_.getL(), rect_.getT(), rect_.getR(), rect_.getB(), this->getForegroundColor(), text_.c_str());
 }
 

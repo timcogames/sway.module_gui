@@ -11,13 +11,13 @@ NAMESPACE_BEGIN(widget)
 
 class Button : public Widget {
 public:
-  Button(Builder *builder, const std::string &text);
+  Button(Builder::Ptr_t builder, const std::string &text);
 
   virtual ~Button() = default;
 
   MTHD_VIRTUAL(void update());
 
-  MTHD_VIRTUAL(void paintEvent(std::shared_ptr<Painter> painter));
+  MTHD_VIRTUAL(void paintEvent(Painter::SharedPtr_t painter));
 
   auto getLabel() const -> std::shared_ptr<Label> { return label_; }
 

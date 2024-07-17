@@ -11,13 +11,13 @@ NAMESPACE_BEGIN(widget)
 
 class ToggleButton : public Button {
 public:
-  ToggleButton(Builder *builder, const std::string &text);
+  ToggleButton(Builder::Ptr_t builder, const std::string &text);
 
   virtual ~ToggleButton() = default;
 
   MTHD_VIRTUAL(void update());
 
-  MTHD_VIRTUAL(void paintEvent(std::shared_ptr<Painter> painter));
+  MTHD_VIRTUAL(void paintEvent(Painter::SharedPtr_t painter));
 
   [[nodiscard]]
   auto isChecked() const -> bool {

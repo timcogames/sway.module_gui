@@ -10,16 +10,16 @@ NAMESPACE_BEGIN(sway)
 NAMESPACE_BEGIN(ui)
 NAMESPACE_BEGIN(widget)
 
-enum class WidgetColorGroup : u32_t { INACTIVE, ACTIVE, DISABLED };
-enum class WidgetColorState : u32_t { NORM, HOVERED, FOCUSED };
-
-using col4f_stats_t = std::array<math::col4f_t, 3>;
-using col4f_group_t = std::array<col4f_stats_t, 3>;
+enum class WidgetColorState : u32_t { NONE = 0, NORM, HOVERED, FOCUSED, Latest };
+enum class WidgetColorGroup : u32_t { NONE = 0, INACTIVE, ACTIVE, DISABLED, Latest };
 
 struct Appearance {
-  col4f_group_t text;
-  col4f_group_t background;
-  col4f_group_t border;
+  using Stats_t = std::array<math::col4f_t, core::detail::toUnderlying(WidgetColorState::Latest)>;
+  using Group_t = std::array<Stats_t, core::detail::toUnderlying(WidgetColorGroup::Latest)>;
+
+  Group_t text;
+  Group_t background;
+  Group_t border;
 };
 
 NAMESPACE_END(widget)

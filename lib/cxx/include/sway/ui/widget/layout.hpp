@@ -12,7 +12,7 @@ NAMESPACE_BEGIN(widget)
 
 class Layout : public Widget {
 public:
-  Layout(Builder *builder);
+  Layout(Builder::Ptr_t builder);
 
   virtual ~Layout() = default;
 };

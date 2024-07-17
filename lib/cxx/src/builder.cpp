@@ -8,7 +8,7 @@ NAMESPACE_BEGIN(sway)
 NAMESPACE_BEGIN(ui)
 
 struct WidgetEventHandler : public core::evts::EventHandler {
-  WidgetEventHandler(Builder *builder)
+  WidgetEventHandler(Builder::Ptr_t builder)
       : core::evts::EventHandler()
       , builder_(builder) {}
 
@@ -38,10 +38,10 @@ struct WidgetEventHandler : public core::evts::EventHandler {
   }
 
 private:
-  Builder *builder_;
+  Builder::Ptr_t builder_;
 };
 
-Builder::Builder(core::foundation::Context *context, std::shared_ptr<Painter> painter)
+Builder::Builder(core::foundation::Context *context, Painter::SharedPtr_t painter)
     : core::foundation::Object(context)
     , currWidgetUnderPointer_(nullptr)
     , painter_(painter) {
@@ -68,7 +68,7 @@ void Builder::deinit() {
 
 void Builder::update() { root_->paintEvent(painter_); }
 
-void Builder::updateWidgetUnderPointer(widget::Widget *target) {
+void Builder::updateWidgetUnderPointer(widget::Widget::Ptr_t target) {
   if (currWidgetUnderPointer_ == target) {
     return;
   }

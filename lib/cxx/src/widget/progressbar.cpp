@@ -7,13 +7,13 @@ NAMESPACE_BEGIN(sway)
 NAMESPACE_BEGIN(ui)
 NAMESPACE_BEGIN(widget)
 
-ProgressBar::ProgressBar(Builder *builder)
+ProgressBar::ProgressBar(Builder::Ptr_t builder)
     : Widget(builder)
     , current_(0.0F) {}
 
 void ProgressBar::update() {}
 
-void ProgressBar::paintEvent(std::shared_ptr<Painter> painter) {
+void ProgressBar::paintEvent(Painter::SharedPtr_t painter) {
   auto rectWithMargin = rect_;
   rectWithMargin.reduce(math::Margin<f32_t>(1.5F));
 

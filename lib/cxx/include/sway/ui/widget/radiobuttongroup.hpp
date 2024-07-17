@@ -23,7 +23,7 @@ class RadioButtonGroup : public LinearLayout {
 public:
   DECLARE_EVENT(EVT_CHANGED, RadioButtonGroupChanged)
 
-  RadioButtonGroup(Builder *builder, LinearLayoutOrientation orientation);
+  RadioButtonGroup(Builder::Ptr_t builder, LinearLayoutOrientation orientation);
 
   virtual ~RadioButtonGroup() = default;
 

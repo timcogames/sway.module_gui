@@ -12,7 +12,7 @@ NAMESPACE_BEGIN(widget)
 
 class LinearLayout : public Layout {
 public:
-  LinearLayout(Builder *builder, LinearLayoutOrientation orientation);
+  LinearLayout(Builder::Ptr_t builder, LinearLayoutOrientation orientation);
 
   virtual ~LinearLayout() = default;
 

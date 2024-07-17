@@ -11,13 +11,13 @@ NAMESPACE_BEGIN(widget)
 
 class Label : public Widget {
 public:
-  Label(Builder *builder, const std::string &text);
+  Label(Builder::Ptr_t builder, const std::string &text);
 
   virtual ~Label() = default;
 
   MTHD_VIRTUAL(void update());
 
-  MTHD_VIRTUAL(void paintEvent(std::shared_ptr<Painter> painter));
+  MTHD_VIRTUAL(void paintEvent(Painter::SharedPtr_t painter));
 
   void setText(const std::string &text);
 

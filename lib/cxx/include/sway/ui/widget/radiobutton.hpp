@@ -11,13 +11,13 @@ NAMESPACE_BEGIN(widget)
 
 class RadioButton : public ToggleButton {
 public:
-  RadioButton(Builder *builder, const std::string &text);
+  RadioButton(Builder::Ptr_t builder, const std::string &text);
 
   virtual ~RadioButton() = default;
 
   MTHD_VIRTUAL(void update());
 
-  MTHD_VIRTUAL(void paintEvent(std::shared_ptr<Painter> painter));
+  MTHD_VIRTUAL(void paintEvent(Painter::SharedPtr_t painter));
 };
 
 NAMESPACE_END(widget)

@@ -7,6 +7,8 @@
 #include <sway/ui/painter.hpp>
 #include <sway/ui/widget/widget.hpp>
 
+#include <memory>
+
 NAMESPACE_BEGIN(sway)
 NAMESPACE_BEGIN(ui)
 
@@ -14,7 +16,10 @@ class Builder : public core::foundation::Object {
   DECLARE_CLASS_METADATA(Builder, core::foundation::Object)
 
 public:
-  Builder(core::foundation::Context *context, std::shared_ptr<Painter> painter);
+  using Ptr_t = Builder *;
+  using SharedPtr_t = std::shared_ptr<Builder>;
+
+  Builder(core::foundation::Context *context, Painter::SharedPtr_t painter);
 
   virtual ~Builder() = default;
 
@@ -25,7 +30,7 @@ public:
 
   void update();
 
-  auto getRootWidget() -> std::shared_ptr<widget::Widget> { return root_; }
+  auto getRootWidget() -> widget::Widget::SharedPtr_t { return root_; }
 
   void setEventBus(std::shared_ptr<core::evts::EventBus> evtbus) { evtbus_ = evtbus; }
 
@@ -35,20 +40,19 @@ public:
 
   auto getCursor() const -> Cursor { return cursor_; }
 
-  void updateWidgetUnderPointer(widget::Widget *target);
+  void updateWidgetUnderPointer(widget::Widget::Ptr_t target);
 
-  auto getWidgetUnderPointer() -> widget::Widget * { return currWidgetUnderPointer_; }
+  auto getWidgetUnderPointer() -> widget::Widget::Ptr_t { return currWidgetUnderPointer_; }
 
   void handleMouseClick();
 
 private:
   std::shared_ptr<core::evts::EventBus> evtbus_;
   core::evts::EventBus::Subscriber subscriber_;
-  std::shared_ptr<Painter> painter_;
+  Painter::SharedPtr_t painter_;
   std::shared_ptr<ft2::FontManager> fontMngr_;
-  std::shared_ptr<widget::Widget> root_;
-
-  widget::Widget *currWidgetUnderPointer_;
+  widget::Widget::SharedPtr_t root_;
+  widget::Widget::Ptr_t currWidgetUnderPointer_;
   Cursor cursor_;
 };
 

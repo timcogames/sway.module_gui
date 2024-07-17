@@ -5,7 +5,7 @@ NAMESPACE_BEGIN(sway)
 NAMESPACE_BEGIN(ui)
 NAMESPACE_BEGIN(widget)
 
-LinearLayout::LinearLayout(Builder *builder, LinearLayoutOrientation orientation)
+LinearLayout::LinearLayout(Builder::Ptr_t builder, LinearLayoutOrientation orientation)
     : Layout(builder)
     , orientation_(orientation) {}
 

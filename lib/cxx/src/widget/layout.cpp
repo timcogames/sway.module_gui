@@ -5,7 +5,7 @@ NAMESPACE_BEGIN(sway)
 NAMESPACE_BEGIN(ui)
 NAMESPACE_BEGIN(widget)
 
-Layout::Layout(Builder *builder)
+Layout::Layout(Builder::Ptr_t builder)
     : Widget(builder) {
   setMouseFilter(ois::MouseFilter::PASS);
 }

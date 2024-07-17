@@ -5,7 +5,7 @@ NAMESPACE_BEGIN(sway)
 NAMESPACE_BEGIN(ui)
 NAMESPACE_BEGIN(widget)
 
-Widget::Widget(Builder *builder)
+Widget::Widget(Builder::Ptr_t builder)
     : builder_(builder)
     , mouseFilter_(ois::MouseFilter::STOP)
     , rect_(math::rect4f_t(0.0F, 0.0F, 0.0F, 0.0F))
@@ -22,7 +22,7 @@ void Widget::update() {
   }
 }
 
-void Widget::paintEvent(std::shared_ptr<Painter> painter) {
+void Widget::paintEvent(Painter::SharedPtr_t painter) {
   if (!this->isVisible()) {
     return;
   }
@@ -110,12 +110,16 @@ void Widget::setPosition(const math::vec2f_t &pos) {
   }
 }
 
+void Widget::setPosition(f32_t x, f32_t y) { setPosition({x, y}); }
+
 auto Widget::getPosition() const -> math::point2f_t { return rect_.asPoint(); }
 
 void Widget::setSize(const math::size2f_t &size) {
   rect_.setR(rect_.getL() + size.getW());
   rect_.setB(rect_.getT() + size.getH());
 }
+
+void Widget::setSize(f32_t wdt, f32_t hgt) { setSize({wdt, hgt}); }
 
 auto Widget::getSize() const -> math::size2f_t { return rect_.asSize(); }
 

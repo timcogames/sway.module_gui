@@ -9,8 +9,7 @@
 #include <sway/ui/widget/widgetevent.hpp>
 #include <sway/ui/widget/widgeteventtypes.hpp>
 
-#include <array>
-#include <optional>
+#include <memory>
 
 NAMESPACE_BEGIN(sway)
 NAMESPACE_BEGIN(ui)
@@ -22,74 +21,17 @@ NAMESPACE_BEGIN(ui)
 #define COL4F_GRAY1 math::col4f_t(0.1F, 0.1F, 0.1F, 1.0F)
 #define COL4F_GRAY2 math::col4f_t(0.18F, 0.17F, 0.16F, 1.0F)
 
+#define COL4F_PURPLE 0x9900FFFF
+
 class Builder;
 
 NAMESPACE_BEGIN(widget)
 
-#define NUM_AREAS 3  // MARGIN, BORDER, PADDING
-#define NUM_EDGES 4
-
-enum class ElementBoxAreaType : u32_t { AUTO, MARGIN, BORDER, PADDING, CONTENT, Latest };
-
-class ElementBox {
-public:
-  struct Area {
-    ElementBoxAreaType type;
-    std::array<f32_t, core::detail::toUnderlying(math::RectEdge::Latest)> edges;
-  };
-
-  ElementBox(const math::sizef_t &content)
-      : content_(content) {}
-
-  ~ElementBox() = default;
-
-  auto getArea(ElementBoxAreaType type) const -> std::optional<Area> {
-    std::optional<Area> area = std::nullopt;
-    for (const auto item : areas_) {
-      if (item.has_value() && item.value().type == type) {
-        area = item;
-      }
-    }
-
-    return area;
-  }
-
-  auto getPosition(ElementBoxAreaType type) const -> math::vec2f_t {
-    auto result = math::vec2f_zero;
-
-    auto mgn = this->getArea(ElementBoxAreaType::MARGIN);
-    if (!mgn.has_value()) {
-    } else {
-      result = math::vec2f_t(-std::get<core::detail::toUnderlying(math::RectEdge::IDX_L)>(mgn.value().edges),
-          -std::get<core::detail::toUnderlying(math::RectEdge::IDX_T)>(mgn.value().edges));
-    }
-
-    auto brd = this->getArea(ElementBoxAreaType::BORDER);
-    if (!brd.has_value()) {
-    } else {
-      result =
-          math::vec2f_t(result.getX() + std::get<core::detail::toUnderlying(math::RectEdge::IDX_L)>(brd.value().edges),
-              result.getY() + std::get<core::detail::toUnderlying(math::RectEdge::IDX_T)>(brd.value().edges));
-    }
-
-    auto pad = this->getArea(ElementBoxAreaType::PADDING);
-    if (!pad.has_value()) {
-    } else {
-      result =
-          math::vec2f_t(result.getX() + std::get<core::detail::toUnderlying(math::RectEdge::IDX_L)>(pad.value().edges),
-              result.getY() + std::get<core::detail::toUnderlying(math::RectEdge::IDX_T)>(pad.value().edges));
-    }
-
-    return result;
-  }
-
-private:
-  math::sizef_t content_;
-  std::array<std::optional<Area>, NUM_AREAS> areas_;
-};
-
 class Widget : public core::container::Node {
 public:
+  using Ptr_t = Widget *;
+  using SharedPtr_t = std::shared_ptr<Widget>;
+
   DECLARE_EVENT(EVT_POINTER_ENTER, PointerEnter)
   DECLARE_EVENT(EVT_POINTER_LEAVE, PointerLeave)
   DECLARE_EVENT(EVT_MOUSE_CLICKED, MouseClicked)
@@ -101,13 +43,17 @@ public:
   // DECLARE_EVENT(EVT_LEAVE, Leave)
   // DECLARE_EVENT(EVT_ACTIVATE, Activate)
 
+#pragma region "Ctors/Dtor"
+
   Widget(Builder *builder);
 
   virtual ~Widget() = default;
 
+#pragma endregion
+
   MTHD_VIRTUAL(void update());
 
-  MTHD_VIRTUAL(void paintEvent(std::shared_ptr<Painter> painter));
+  MTHD_VIRTUAL(void paintEvent(Painter::SharedPtr_t painter));
 
   MTHD_VIRTUAL(void onCursorPointerEnter());
 
@@ -125,10 +71,14 @@ public:
 
   void setPosition(const math::vec2f_t &pos);
 
+  void setPosition(f32_t x, f32_t y);
+
   [[nodiscard]]
   auto getPosition() const -> math::point2f_t;
 
   void setSize(const math::size2f_t &size);
+
+  void setSize(f32_t wdt, f32_t hgt);
 
   [[nodiscard]]
   auto getSize() const -> math::size2f_t;
