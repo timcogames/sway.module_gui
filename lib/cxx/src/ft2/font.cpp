@@ -63,8 +63,8 @@ void Font::create(lpcstr_t charcodes, bool hinted, bool antialiased) {
 auto Font::computeMaxSize_(FT_Bitmap *bitmap, math::size2i_t size) -> math::size2i_t {
   // clang-format off
   return {
-    std::max<s32_t>(size.getW(), math::util::powerOf2(bitmap->width)),
-    std::max<s32_t>(size.getH(), math::util::powerOf2(bitmap->rows))
+    std::max<i32_t>(size.getW(), math::util::powerOf2(bitmap->width)),
+    std::max<i32_t>(size.getH(), math::util::powerOf2(bitmap->rows))
   };  // clang-format on
 }
 

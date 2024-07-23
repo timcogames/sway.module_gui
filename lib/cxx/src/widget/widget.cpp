@@ -92,17 +92,15 @@ void Widget::setPosition(const math::vec2f_t &pos) {
     auto x = 0.0F;
     auto y = 0.0F;
 
-    if (core::detail::toUnderlying<math::Alignment>(alignment_) & math::ConvFromXAlign<math::HorzAlign::CENTER>()) {
+    if (core::detail::toBase<math::Alignment>(alignment_) & math::ConvFromXAlign<math::HorzAlign::CENTER>()) {
       x = (parentSize.getW() - this->getSize().getW()) / 2;
-    } else if (core::detail::toUnderlying<math::Alignment>(alignment_) &
-               math::ConvFromXAlign<math::HorzAlign::RIGHT>()) {
+    } else if (core::detail::toBase<math::Alignment>(alignment_) & math::ConvFromXAlign<math::HorzAlign::RIGHT>()) {
       x = (parentSize.getW() - this->getSize().getW());
     }
 
-    if (core::detail::toUnderlying<math::Alignment>(alignment_) & math::ConvFromXAlign<math::VertAlign::CENTER>()) {
+    if (core::detail::toBase<math::Alignment>(alignment_) & math::ConvFromXAlign<math::VertAlign::CENTER>()) {
       y = (parentSize.getH() - this->getSize().getH()) / 2;
-    } else if (core::detail::toUnderlying<math::Alignment>(alignment_) &
-               math::ConvFromXAlign<math::VertAlign::BOTTOM>()) {
+    } else if (core::detail::toBase<math::Alignment>(alignment_) & math::ConvFromXAlign<math::VertAlign::BOTTOM>()) {
       y = (parentSize.getH() - this->getSize().getH());
     }
 
@@ -128,23 +126,23 @@ void Widget::setMargin(const math::Margin<f32_t> &margin) { margin_ = margin; }
 auto Widget::getMargin() const -> math::Margin<f32_t> { return margin_; }
 
 void Widget::setBackgroundColor(const math::col4f_t &col) {
-  appearance_.background[core::detail::toUnderlying(WidgetColorGroup::INACTIVE)]
-                        [core::detail::toUnderlying(WidgetColorState::NORM)] = col;
+  appearance_
+      .background[core::detail::toBase(WidgetColorGroup::INACTIVE)][core::detail::toBase(WidgetColorState::NORM)] = col;
 }
 
 auto Widget::getBackgroundColor() const -> math::col4f_t {
-  return appearance_.background[core::detail::toUnderlying(WidgetColorGroup::INACTIVE)]
-                               [core::detail::toUnderlying(WidgetColorState::NORM)];
+  return appearance_
+      .background[core::detail::toBase(WidgetColorGroup::INACTIVE)][core::detail::toBase(WidgetColorState::NORM)];
 }
 
 void Widget::setForegroundColor(const math::col4f_t &col) {
-  appearance_.text[core::detail::toUnderlying(WidgetColorGroup::INACTIVE)]
-                  [core::detail::toUnderlying(WidgetColorState::NORM)] = col;
+  appearance_.text[core::detail::toBase(WidgetColorGroup::INACTIVE)][core::detail::toBase(WidgetColorState::NORM)] =
+      col;
 }
 
 auto Widget::getForegroundColor() const -> math::col4f_t {
   return appearance_
-      .text[core::detail::toUnderlying(WidgetColorGroup::INACTIVE)][core::detail::toUnderlying(WidgetColorState::NORM)];
+      .text[core::detail::toBase(WidgetColorGroup::INACTIVE)][core::detail::toBase(WidgetColorState::NORM)];
 }
 
 auto Widget::getChildAtPoint(const math::point2f_t &point) -> Widget * {
@@ -174,7 +172,7 @@ auto Widget::getChildAtPoint(const math::point2f_t &point) -> Widget * {
 //   // auto *eventdata = new WidgetEventData();
 //   // eventdata->uid = this->getNodeIdx().toStr();
 //   // // clang-format off
-//   // auto event = std::make_unique<WidgetEvent>(core::detail::toUnderlying(hovered_
+//   // auto event = std::make_unique<WidgetEvent>(core::detail::toBase(hovered_
 //   //     ? WidgetEventType::POINTER_ENTER
 //   //     : WidgetEventType::POINTER_LEAVE), eventdata);
 //   // // clang-format on

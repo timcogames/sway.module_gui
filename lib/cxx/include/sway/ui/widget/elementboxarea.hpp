@@ -13,7 +13,7 @@ NAMESPACE_BEGIN(widget)
 
 struct ElementBoxArea {
   ElementBoxAreaType type;
-  std::array<f32_t, core::detail::toUnderlying(math::RectEdge::Latest)> edges;
+  std::array<f32_t, core::detail::toBase(math::RectEdge::Latest)> edges;
 };
 
 NAMESPACE_END(widget)

@@ -14,8 +14,8 @@ enum class WidgetColorState : u32_t { NONE = 0, NORM, HOVERED, FOCUSED, Latest }
 enum class WidgetColorGroup : u32_t { NONE = 0, INACTIVE, ACTIVE, DISABLED, Latest };
 
 struct Appearance {
-  using Stats_t = std::array<math::col4f_t, core::detail::toUnderlying(WidgetColorState::Latest)>;
-  using Group_t = std::array<Stats_t, core::detail::toUnderlying(WidgetColorGroup::Latest)>;
+  using Stats_t = std::array<math::col4f_t, core::detail::toBase(WidgetColorState::Latest)>;
+  using Group_t = std::array<Stats_t, core::detail::toBase(WidgetColorGroup::Latest)>;
 
   Group_t text;
   Group_t background;

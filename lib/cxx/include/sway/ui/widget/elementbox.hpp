@@ -43,24 +43,22 @@ public:
     auto mgn = this->getArea(ElementBoxAreaType::MARGIN);
     if (!mgn.has_value()) {
     } else {
-      result = math::vec2f_t(-std::get<core::detail::toUnderlying(math::RectEdge::IDX_L)>(mgn.value().edges),
-          -std::get<core::detail::toUnderlying(math::RectEdge::IDX_T)>(mgn.value().edges));
+      result = math::vec2f_t(-std::get<core::detail::toBase(math::RectEdge::IDX_L)>(mgn.value().edges),
+          -std::get<core::detail::toBase(math::RectEdge::IDX_T)>(mgn.value().edges));
     }
 
     auto brd = this->getArea(ElementBoxAreaType::BORDER);
     if (!brd.has_value()) {
     } else {
-      result =
-          math::vec2f_t(result.getX() + std::get<core::detail::toUnderlying(math::RectEdge::IDX_L)>(brd.value().edges),
-              result.getY() + std::get<core::detail::toUnderlying(math::RectEdge::IDX_T)>(brd.value().edges));
+      result = math::vec2f_t(result.getX() + std::get<core::detail::toBase(math::RectEdge::IDX_L)>(brd.value().edges),
+          result.getY() + std::get<core::detail::toBase(math::RectEdge::IDX_T)>(brd.value().edges));
     }
 
     auto pad = this->getArea(ElementBoxAreaType::PADDING);
     if (!pad.has_value()) {
     } else {
-      result =
-          math::vec2f_t(result.getX() + std::get<core::detail::toUnderlying(math::RectEdge::IDX_L)>(pad.value().edges),
-              result.getY() + std::get<core::detail::toUnderlying(math::RectEdge::IDX_T)>(pad.value().edges));
+      result = math::vec2f_t(result.getX() + std::get<core::detail::toBase(math::RectEdge::IDX_L)>(pad.value().edges),
+          result.getY() + std::get<core::detail::toBase(math::RectEdge::IDX_T)>(pad.value().edges));
     }
 
     return result;

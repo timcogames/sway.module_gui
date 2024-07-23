@@ -67,7 +67,7 @@ struct BitmapInfo {
 
 struct CharInfo {
   math::size2i_t size;
-  s32_t advance;
+  i32_t advance;
   math::vec2i_t bitmapGlyphOffset;
   math::rect4f_t rect;
 };
@@ -101,8 +101,8 @@ struct FontGlyphDescriptor {
   s8_t *data = nullptr;
   f32_t x = -1, y = -1;
   u32_t advance;
-  s32_t top;
-  s32_t left;
+  i32_t top;
+  i32_t left;
   u32_t rows;
   u32_t width;
 };

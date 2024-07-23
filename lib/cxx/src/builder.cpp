@@ -18,7 +18,7 @@ struct WidgetEventHandler : public core::evts::EventHandler {
   MTHD_OVERRIDE(auto invoke(const std::unique_ptr<core::foundation::Event> &evt) -> bool) final {  // clang-format on
     if (ois::InputEventUtil::isMouseEvent(evt)) {
       auto mouseEvtData = evt->getConcreteData<ois::MouseEventData>();
-      if (evt->type() == core::detail::toUnderlying(ois::InputActionType::MOUSE_MOVED)) {
+      if (evt->type() == core::detail::toBase(ois::InputActionType::MOUSE_MOVED)) {
         builder_->setCursorPoint(mouseEvtData.point);
       }
 
@@ -27,8 +27,8 @@ struct WidgetEventHandler : public core::evts::EventHandler {
 
       builder_->updateWidgetUnderPointer(target);
 
-      if (evt->type() == core::detail::toUnderlying(ois::InputActionType::MOUSE_BUTTON)) {
-        if (mouseEvtData.btnCode == core::detail::toUnderlying(ois::MouseButtonCode::LMB)) {
+      if (evt->type() == core::detail::toBase(ois::InputActionType::MOUSE_BUTTON)) {
+        if (mouseEvtData.btnCode == core::detail::toBase(ois::MouseButtonCode::LMB)) {
           builder_->handleMouseClick();
         }
       }

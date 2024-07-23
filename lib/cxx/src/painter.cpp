@@ -21,10 +21,10 @@ void Painter::initialize(std::shared_ptr<ft2::Font> font, std::shared_ptr<render
   subqueue_ = std::make_shared<render::RenderSubqueue>();
   subqueue_->initialize();
 
-  queue_ = subsystem->createQueue(core::detail::toUnderlying(core::intrusive::Priority::VERY_HIGH));
+  queue_ = subsystem->createQueue(core::detail::toBase(core::intrusive::Priority::VERY_HIGH));
   queue_->addSubqueue(subqueue_);
 
-  subqueue_ = subsystem->getQueueByPriority(core::detail::toUnderlying(core::intrusive::Priority::VERY_HIGH))
+  subqueue_ = subsystem->getQueueByPriority(core::detail::toBase(core::intrusive::Priority::VERY_HIGH))
                   ->getSubqueues(render::RenderSubqueueGroup::OPAQUE)[0];
 
   const std::unordered_map<gapi::ShaderType, std::string> shaderSources = {
