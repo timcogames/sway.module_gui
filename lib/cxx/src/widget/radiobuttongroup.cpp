@@ -19,7 +19,7 @@ void RadioButtonGroup::deselect() {
 }
 
 void RadioButtonGroup::handleAddNode(core::foundation::Event *evt) {
-  auto self = sharedFrom<RadioButtonGroup>(this);
+  auto self = getSharedFrom<RadioButtonGroup>(this);
 
   auto parentNodeIdx = self->getNodeIdx();
   auto childNodeIdx = static_cast<core::container::NodeEventData *>(evt->data())->nodeidx;

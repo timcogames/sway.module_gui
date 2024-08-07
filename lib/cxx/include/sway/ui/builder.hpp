@@ -47,8 +47,8 @@ public:
   void handleMouseClick();
 
 private:
-  std::shared_ptr<core::evts::EventBus> evtbus_;
-  core::evts::EventBus::Subscriber subscriber_;
+  core::evts::EventBus::SharedPtr_t evtbus_;
+  core::evts::EventBus::Subscriber_t subscriber_;
   Painter::SharedPtr_t painter_;
   std::shared_ptr<ft2::FontManager> fontMngr_;
   widget::Widget::SharedPtr_t root_;

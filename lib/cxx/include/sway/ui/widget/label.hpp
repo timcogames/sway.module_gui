@@ -5,19 +5,29 @@
 #include <sway/ui/painter.hpp>
 #include <sway/ui/widget/widget.hpp>
 
+#include <string>
+
 NAMESPACE_BEGIN(sway)
 NAMESPACE_BEGIN(ui)
 NAMESPACE_BEGIN(widget)
 
 class Label : public Widget {
 public:
+#pragma region "Ctors/Dtor"
+
   Label(Builder::Ptr_t builder, const std::string &text);
 
   virtual ~Label() = default;
 
+#pragma endregion
+
+#pragma region "Override Widget methods"
+
   MTHD_VIRTUAL(void update());
 
   MTHD_VIRTUAL(void paintEvent(Painter::SharedPtr_t painter));
+
+#pragma endregion
 
   void setText(const std::string &text);
 
