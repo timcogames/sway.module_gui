@@ -19,11 +19,15 @@ public:
   using Ptr_t = Builder *;
   using SharedPtr_t = std::shared_ptr<Builder>;
 
+#pragma region "Ctors/Dtor"
+
   Builder(core::foundation::Context *context, Painter::SharedPtr_t painter);
 
   virtual ~Builder() = default;
 
-  void initialize(std::shared_ptr<ft2::Font> font, std::shared_ptr<render::MaterialManager> materialMngr,
+#pragma endregion
+
+  void initialize(ft2::Font::SharedPtr_t font, std::shared_ptr<render::MaterialManager> materialMngr,
       std::shared_ptr<rms::ImageResourceManager> imgResMngr, std::shared_ptr<rms::GLSLResourceManager> glslResMngr);
 
   void deinit();
@@ -32,9 +36,9 @@ public:
 
   auto getRootWidget() -> widget::Widget::SharedPtr_t { return root_; }
 
-  void setEventBus(std::shared_ptr<core::evts::EventBus> evtbus) { evtbus_ = evtbus; }
+  void setEventBus(core::evts::EventBus::SharedPtr_t evtbus) { evtbus_ = evtbus; }
 
-  auto getEventBus() -> std::shared_ptr<core::evts::EventBus> { return evtbus_; }
+  auto getEventBus() -> core::evts::EventBus::SharedPtr_t { return evtbus_; }
 
   void setCursorPoint(const math::point2f_t &pnt) { cursor_.pnt = pnt; }
 
@@ -46,11 +50,13 @@ public:
 
   void handleMouseClick();
 
+  auto getPainter() -> Painter::SharedPtr_t { return painter_; }
+
 private:
   core::evts::EventBus::SharedPtr_t evtbus_;
   core::evts::EventBus::Subscriber_t subscriber_;
+  ft2::FontManager::SharedPtr_t fontMngr_;
   Painter::SharedPtr_t painter_;
-  std::shared_ptr<ft2::FontManager> fontMngr_;
   widget::Widget::SharedPtr_t root_;
   widget::Widget::Ptr_t currWidgetUnderPointer_;
   Cursor cursor_;

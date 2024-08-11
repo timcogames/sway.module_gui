@@ -7,6 +7,7 @@
 
 #include <freetype/ftstroke.h>
 #include <ft2build.h>
+#include <memory>
 #include <string>
 #include <unordered_map>
 
@@ -16,9 +17,16 @@ NAMESPACE_BEGIN(ft2)
 
 class FontManager {
 public:
+  using Ptr_t = FontManager *;
+  using SharedPtr_t = std::shared_ptr<FontManager>;
+
+#pragma region "Ctors/Dtor"
+
   FontManager();
 
   ~FontManager();
+
+#pragma endregion
 
   void initLibrary();
 
@@ -27,9 +35,9 @@ public:
   void load(std::function<void()> fn, std::shared_ptr<rms::FetcherQueue> fetcherQueue, const std::string &name,
       const std::string &filepath);
 
-  auto addFont(const std::string &name, lpcstr_t symbols, int size, int marginSize) -> std::shared_ptr<Font>;
+  auto addFont(const std::string &name, lpcstr_t symbols, int size, int marginSize) -> Font::SharedPtr_t;
 
-  auto find(const std::string &name) -> std::shared_ptr<Font>;
+  auto find(const std::string &name) -> Font::SharedPtr_t;
 
   void removeFont();
 
@@ -38,7 +46,7 @@ private:
   bool initialized_;
 
   std::unordered_map<std::string, std::shared_ptr<Face>> cache_;
-  std::unordered_map<std::string, std::shared_ptr<Font>> fonts_;
+  std::unordered_map<std::string, Font::SharedPtr_t> fonts_;
 };
 
 NAMESPACE_END(ft2)

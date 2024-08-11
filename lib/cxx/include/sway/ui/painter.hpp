@@ -51,11 +51,15 @@ public:
   using Ptr_t = Painter *;
   using SharedPtr_t = std::shared_ptr<Painter>;
 
+#pragma region "Ctors/Dtor"
+
   Painter();
 
   ~Painter();
 
-  void initialize(std::shared_ptr<ft2::Font> font, std::shared_ptr<render::RenderSubsystem> subsystem,
+#pragma endregion
+
+  void initialize(ft2::Font::SharedPtr_t font, std::shared_ptr<render::RenderSubsystem> subsystem,
       std::shared_ptr<render::MaterialManager> materialMngr, std::shared_ptr<rms::ImageResourceManager> imgResMngr,
       std::shared_ptr<rms::GLSLResourceManager> glslResMngr);
 
@@ -69,11 +73,21 @@ public:
 
   void onUpdateBatchChunks();
 
+#pragma region "Override RenderComponent methods"
+
   MTHD_OVERRIDE(void onUpdate(math::mat4f_t tfrm, math::mat4f_t proj, math::mat4f_t view, f32_t dtime));
+
+#pragma endregion
+
+#pragma region "Override FinalUpdatable methods"
 
   MTHD_OVERRIDE(void finalUpdate());
 
+#pragma endregion
+
   void clear();
+
+  auto getDefaultFont() -> ft2::Font::SharedPtr_t { return font_; }
 
 private:
   std::shared_ptr<render::RenderQueue> queue_;
@@ -90,7 +104,7 @@ private:
   render::GeomInstance<render::procedurals::prims::Quadrilateral<math::VertexTexCoord>> *textGeom_;
   u32_t textId_;
 
-  std::shared_ptr<ft2::Font> font_;
+  ft2::Font::SharedPtr_t font_;
 
   std::array<GeometryBatchChunk, GEOMERTY_BATCH_CHUNK_SIZE> geomBatchChunks_;
   u32_t geomBatchChunkSize_;

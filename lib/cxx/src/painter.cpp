@@ -12,7 +12,7 @@ Painter::Painter()
 
 Painter::~Painter() {}
 
-void Painter::initialize(std::shared_ptr<ft2::Font> font, std::shared_ptr<render::RenderSubsystem> subsystem,
+void Painter::initialize(ft2::Font::SharedPtr_t font, std::shared_ptr<render::RenderSubsystem> subsystem,
     std::shared_ptr<render::MaterialManager> materialMngr, std::shared_ptr<rms::ImageResourceManager> imgResMngr,
     std::shared_ptr<rms::GLSLResourceManager> glslResMngr) {
 
@@ -183,8 +183,8 @@ void Painter::drawText(f32_t x, f32_t y, f32_t w, f32_t h, math::col4f_t col, lp
   chunk.type = GeometryBatchChunkType::TEXT;
   chunk.text.x = x;
   chunk.text.y = y;
-  chunk.text.w = w;
-  chunk.text.h = h;
+  // chunk.text.w = w;
+  // chunk.text.h = h;
   chunk.text.color = col;
   chunk.text.text = text;
 }
@@ -225,10 +225,10 @@ void Painter::onUpdateBatchChunks() {
         auto charSize = charInfo.value().size;
         auto charOffset = charInfo.value().bitmapGlyphOffset;
 
-        f32_t xpos = pos.getX() + charOffset.getX();
-        f32_t ypos = pos.getY() - charOffset.getY();
-        f32_t w = xpos + static_cast<f32_t>(charSize.getW());
-        f32_t h = ypos + static_cast<f32_t>(charSize.getH());
+        auto xpos = pos.getX() + charOffset.getX();
+        auto ypos = pos.getY() - charOffset.getY();
+        auto w = xpos + static_cast<f32_t>(charSize.getW());
+        auto h = ypos + static_cast<f32_t>(charSize.getH());
 
         auto textPos = math::rect4f_t(xpos, ypos, w, h);
         textPos.offset(0, font_->info_.height / 2);
@@ -240,8 +240,8 @@ void Painter::onUpdateBatchChunks() {
           } else {
             inst->setRemap(true);
 
-            f32_t dX = 1.0F / ((f32_t)800 / 2.0F);
-            f32_t dY = 1.0F / ((f32_t)600 / 2.0F);
+            auto dX = 1.0F / ((f32_t)800 / 2.0F);
+            auto dY = 1.0F / ((f32_t)600 / 2.0F);
 
             inst->setPosDataAttrib(
                 math::rect4f_t(textPos.getL() * dX, textPos.getT() * dY, textPos.getR() * dX, textPos.getB() * dY));
@@ -311,7 +311,7 @@ void Painter::onUpdate(math::mat4f_t tfrm, math::mat4f_t proj, math::mat4f_t vie
       .znear = 1.0F,
       .zfar = 10.0F
     }).makeOrtho());
-    rectCmd.view = math::Transform<f32_t>::translate(rectCmd.view, -1.0F, -1.0F, 0.0F);
+    rectCmd.view = math::xform3f_t::translate(rectCmd.view, -1.0F, -1.0F, 0.0F);
     // clang-format on
 
     subqueue_->post(rectCmd);
@@ -352,7 +352,7 @@ void Painter::onUpdate(math::mat4f_t tfrm, math::mat4f_t proj, math::mat4f_t vie
       .znear = 1.0F,
       .zfar = 10.0F
     }).makeOrtho());
-    textCmd.view = math::Transform<f32_t>::translate(textCmd.view, -1.0F, -1.0F, 0.0F);
+    textCmd.view = math::xform3f_t::translate(textCmd.view, -1.0F, -1.0F, 0.0F);
     // clang-format on
 
     subqueue_->post(textCmd);

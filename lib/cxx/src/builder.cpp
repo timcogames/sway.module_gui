@@ -14,8 +14,7 @@ struct WidgetEventHandler : public core::evts::EventHandler {
 
   ~WidgetEventHandler() override = default;
 
-  // clang-format off
-  MTHD_OVERRIDE(auto invoke(const std::unique_ptr<core::foundation::Event> &evt) -> bool) final {  // clang-format on
+  MTHD_OVERRIDE(auto invoke(const core::foundation::Event::UniquePtr_t &evt)->bool) final {
     if (ois::InputEventUtil::isMouseEvent(evt)) {
       auto mouseEvtData = evt->getConcreteData<ois::MouseEventData>();
       if (evt->type() == core::detail::toBase(ois::InputActionType::MOUSE_MOVED)) {
@@ -48,7 +47,7 @@ Builder::Builder(core::foundation::Context *context, Painter::SharedPtr_t painte
   root_ = std::make_shared<widget::Widget>(this);
 }
 
-void Builder::initialize(std::shared_ptr<ft2::Font> font, std::shared_ptr<render::MaterialManager> materialMngr,
+void Builder::initialize(ft2::Font::SharedPtr_t font, std::shared_ptr<render::MaterialManager> materialMngr,
     std::shared_ptr<rms::ImageResourceManager> imgResMngr, std::shared_ptr<rms::GLSLResourceManager> glslResMngr) {
   auto ctx = this->getContext();
   auto renderSubsystem = ctx->getSubsystem<render::RenderSubsystem>("RenderSubsystem").value();

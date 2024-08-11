@@ -29,6 +29,8 @@ public:
 
 #pragma endregion
 
+  void resize();
+
   void setText(const std::string &text);
 
   void setFont(const std::string &font);

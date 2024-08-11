@@ -11,6 +11,29 @@ Label::Label(Builder::Ptr_t builder, const std::string &text)
     , font_("")
     , fontSize_(12) {
   setMouseFilter(ois::MouseFilter::IGNORE);
+
+  resize();
+}
+
+void Label::resize() {
+  auto fnt = builder_->getPainter()->getDefaultFont();
+  auto wdt = 0.0F;
+  auto hgt = 0.0F;
+
+  for (auto i = 0; i < text_.size(); ++i) {
+    auto charInfo = fnt->getCharInfo(text_[i]);
+    if (!charInfo.has_value()) {
+      return;
+    }
+
+    auto charSize = charInfo.value().size;
+    auto charOffset = charInfo.value().bitmapGlyphOffset;
+
+    wdt += charOffset.getX() + static_cast<f32_t>(charSize.getW());
+    hgt = std::max(hgt, static_cast<f32_t>(charSize.getH()));
+  }
+
+  this->setSize(wdt, hgt);
 }
 
 void Label::update() {}

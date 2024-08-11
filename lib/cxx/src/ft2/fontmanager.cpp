@@ -41,8 +41,7 @@ void FontManager::load(std::function<void()> fn, std::shared_ptr<rms::FetcherQue
   fetcherQueue->add(loader);
 }
 
-auto FontManager::addFont(
-    const std::string &name, lpcstr_t symbols, int size, int marginSize) -> std::shared_ptr<Font> {
+auto FontManager::addFont(const std::string &name, lpcstr_t symbols, int size, int marginSize) -> Font::SharedPtr_t {
   auto iter = cache_.find(name);
   if (iter == cache_.end()) {
     return nullptr;
@@ -59,7 +58,7 @@ auto FontManager::addFont(
   return font;
 }
 
-auto FontManager::find(const std::string &name) -> std::shared_ptr<Font> {
+auto FontManager::find(const std::string &name) -> Font::SharedPtr_t {
   auto iter = fonts_.find(name);
   if (iter != fonts_.end()) {
     return iter->second;
