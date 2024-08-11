@@ -14,7 +14,7 @@ struct WidgetEventHandler : public core::evts::EventHandler {
 
   ~WidgetEventHandler() override = default;
 
-  MTHD_OVERRIDE(auto invoke(const core::foundation::Event::UniquePtr_t &evt)->bool) final {
+  MTHD_OVERRIDE(auto invoke(const core::foundation::Event::UniquePtr_t &evt) -> bool) final {
     if (ois::InputEventUtil::isMouseEvent(evt)) {
       auto mouseEvtData = evt->getConcreteData<ois::MouseEventData>();
       if (evt->type() == core::detail::toBase(ois::InputActionType::MOUSE_MOVED)) {
@@ -40,7 +40,7 @@ private:
   Builder::Ptr_t builder_;
 };
 
-Builder::Builder(core::foundation::Context *context, Painter::SharedPtr_t painter)
+Builder::Builder(core::foundation::Context::Ptr_t context, Painter::SharedPtr_t painter)
     : core::foundation::Object(context)
     , currWidgetUnderPointer_(nullptr)
     , painter_(painter) {

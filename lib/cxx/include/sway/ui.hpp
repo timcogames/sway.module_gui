@@ -8,6 +8,7 @@
 #include <sway/ui/ft2/fontmanager.hpp>
 #include <sway/ui/ft2/glyph.hpp>
 #include <sway/ui/painter.hpp>
+#include <sway/ui/types.hpp>
 #include <sway/ui/widget/button.hpp>
 #include <sway/ui/widget/label.hpp>
 #include <sway/ui/widget/layout.hpp>
@@ -17,6 +18,7 @@
 #include <sway/ui/widget/radiobutton.hpp>
 #include <sway/ui/widget/radiobuttongroup.hpp>
 #include <sway/ui/widget/togglebutton.hpp>
+#include <sway/ui/widget/types.hpp>
 #include <sway/ui/widget/widget.hpp>
 #include <sway/ui/widget/widgetevent.hpp>
 #include <sway/ui/widget/widgeteventtypes.hpp>

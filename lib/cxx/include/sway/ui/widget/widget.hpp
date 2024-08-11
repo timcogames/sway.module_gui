@@ -6,6 +6,7 @@
 #include <sway/ois.hpp>
 #include <sway/ui/painter.hpp>
 #include <sway/ui/widget/appearance.hpp>
+#include <sway/ui/widget/types.hpp>
 #include <sway/ui/widget/widgetevent.hpp>
 #include <sway/ui/widget/widgeteventtypes.hpp>
 
@@ -27,11 +28,7 @@ class Builder;
 
 NAMESPACE_BEGIN(widget)
 
-class Widget : public core::container::Node {
-public:
-  using Ptr_t = Widget *;
-  using SharedPtr_t = std::shared_ptr<Widget>;
-
+class Widget : public math::Transform<core::container::Node, f32_t> {
   DECLARE_EVENT(EVT_POINTER_ENTER, PointerEnter)
   DECLARE_EVENT(EVT_POINTER_LEAVE, PointerLeave)
   DECLARE_EVENT(EVT_MOUSE_CLICKED, MouseClicked)
@@ -43,13 +40,23 @@ public:
   // DECLARE_EVENT(EVT_LEAVE, Leave)
   // DECLARE_EVENT(EVT_ACTIVATE, Activate)
 
+public:
+#pragma region "Define aliases"
+
+  using Ptr_t = WidgetPtr_t;
+  using SharedPtr_t = WidgetSharedPtr_t;
+
+#pragma endregion
+
 #pragma region "Ctors/Dtor"
 
-  Widget(Builder *builder);
+  Widget(BuilderPtr_t builder);
 
   virtual ~Widget() = default;
 
 #pragma endregion
+
+#pragma region "Base virtual methods"
 
   MTHD_VIRTUAL(void update());
 
@@ -60,6 +67,8 @@ public:
   MTHD_VIRTUAL(void onCursorPointerLeave());
 
   MTHD_VIRTUAL(void onMouseClick());
+
+#pragma endregion
 
   void setRect(const math::rect4f_t &rect);
 
@@ -119,7 +128,7 @@ public:
   void setAlignment(math::Alignment alignment) { alignment_ = alignment; }
 
 protected:
-  Builder *builder_;
+  BuilderPtr_t builder_;
   ois::MouseFilter mouseFilter_;
   math::rect4f_t rect_;
   // math::rect4f_t innerRect_;  // wdt/hgt, padding

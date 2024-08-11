@@ -5,6 +5,7 @@
 #include <sway/ui/cursor.hpp>
 #include <sway/ui/ft2/fontmanager.hpp>
 #include <sway/ui/painter.hpp>
+#include <sway/ui/types.hpp>
 #include <sway/ui/widget/widget.hpp>
 
 #include <memory>
@@ -16,12 +17,16 @@ class Builder : public core::foundation::Object {
   DECLARE_CLASS_METADATA(Builder, core::foundation::Object)
 
 public:
-  using Ptr_t = Builder *;
-  using SharedPtr_t = std::shared_ptr<Builder>;
+#pragma region "Define aliases"
+
+  using Ptr_t = BuilderPtr_t;
+  using SharedPtr_t = BuilderSharedPtr_t;
+
+#pragma endregion
 
 #pragma region "Ctors/Dtor"
 
-  Builder(core::foundation::Context *context, Painter::SharedPtr_t painter);
+  Builder(core::foundation::Context::Ptr_t context, Painter::SharedPtr_t painter);
 
   virtual ~Builder() = default;
 

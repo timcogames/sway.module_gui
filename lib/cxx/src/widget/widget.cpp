@@ -5,7 +5,7 @@ NAMESPACE_BEGIN(sway)
 NAMESPACE_BEGIN(ui)
 NAMESPACE_BEGIN(widget)
 
-Widget::Widget(Builder::Ptr_t builder)
+Widget::Widget(BuilderPtr_t builder)
     : builder_(builder)
     , mouseFilter_(ois::MouseFilter::STOP)
     , rect_(math::rect4f_t(0.0F, 0.0F, 0.0F, 0.0F))
@@ -39,7 +39,7 @@ void Widget::onCursorPointerEnter() {
   auto *evtdata = new PointerEnterEventData();
   auto *evt = new PointerEnterEvent(0, evtdata);
 
-  emit(EVT_POINTER_ENTER, evt, [&](core::foundation::EventHandler *) { return true; });
+  emit(EVT_POINTER_ENTER, evt, [&](core::foundation::EventHandler::Ptr_t) { return true; });
 }
 
 void Widget::onCursorPointerLeave() {
@@ -49,7 +49,7 @@ void Widget::onCursorPointerLeave() {
   auto *evtdata = new PointerLeaveEventData();
   auto *evt = new PointerLeaveEvent(0, evtdata);
 
-  emit(EVT_POINTER_LEAVE, evt, [&](core::foundation::EventHandler *) { return true; });
+  emit(EVT_POINTER_LEAVE, evt, [&](core::foundation::EventHandler::Ptr_t) { return true; });
 }
 
 void Widget::onMouseClick() {
@@ -59,7 +59,7 @@ void Widget::onMouseClick() {
   evtdata->nodeidx = this->getNodeIdx();
   auto *evt = new MouseClickedEvent(0, std::move(evtdata));
 
-  emit(EVT_MOUSE_CLICKED, evt, [&](core::foundation::EventHandler *) { return true; });
+  emit(EVT_MOUSE_CLICKED, evt, [&](core::foundation::EventHandler::Ptr_t) { return true; });
 }
 
 void Widget::setRect(const math::rect4f_t &rect) { rect_ = rect; }
@@ -73,7 +73,7 @@ auto Widget::hasRelated() -> bool {
   }
 
   auto parent = parentOpt.value();
-  return (parent->getNodeIdx().chainEqual(std::vector<int>({-1}))) ? false : true;
+  return (parent->getNodeIdx().chainEqual(std::vector<i32_t>({-1}))) ? false : true;
 }
 
 void Widget::setPosition(const math::vec2f_t &pos) {
