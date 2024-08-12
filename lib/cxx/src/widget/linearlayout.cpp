@@ -5,9 +5,8 @@ NAMESPACE_BEGIN(sway)
 NAMESPACE_BEGIN(ui)
 NAMESPACE_BEGIN(widget)
 
-LinearLayout::LinearLayout(Builder::Ptr_t builder, LinearLayoutOrientation orientation)
-    : Layout(builder)
-    , orientation_(orientation) {}
+LinearLayout::LinearLayout(Builder::Ptr_t builder, LayoutOrientation orien)
+    : Layout(builder, orien) {}
 
 void LinearLayout::build() {
   math::vec2f_t offset(0.0F, 0.0F);
@@ -22,9 +21,9 @@ void LinearLayout::build() {
 
     child->setPosition(offset);
 
-    if (orientation_ == LinearLayoutOrientation::HORZ) {
+    if (this->getOrientation() == LayoutOrientation::HORZ) {
       offset.setX(offset.getX() + boundingSize.getW());
-    } else if (orientation_ == LinearLayoutOrientation::VERT) {
+    } else if (this->getOrientation() == LayoutOrientation::VERT) {
       offset.setY(offset.getY() + boundingSize.getH());
     }
   }

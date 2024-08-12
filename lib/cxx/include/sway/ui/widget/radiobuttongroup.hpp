@@ -3,8 +3,8 @@
 
 #include <sway/core.hpp>
 #include <sway/ui/painter.hpp>
+#include <sway/ui/widget/layoutorientations.hpp>
 #include <sway/ui/widget/linearlayout.hpp>
-#include <sway/ui/widget/linearlayoutorientations.hpp>
 
 NAMESPACE_BEGIN(sway)
 NAMESPACE_BEGIN(ui)
@@ -13,28 +13,31 @@ NAMESPACE_BEGIN(widget)
 struct RadioButtonGroupChangeEventData : public core::foundation::EventData {
   core::container::NodeIdx nodeidx;
 
-  // clang-format off
-  MTHD_OVERRIDE(auto serialize() const -> std::string) { return ""; }  // clang-format on
+  MTHD_OVERRIDE(auto serialize() const -> std::string) { return ""; }
 
   MTHD_OVERRIDE(void deserialize(const std::string &jdata)) {}
 };
 
 class RadioButtonGroup : public LinearLayout {
-public:
   DECLARE_EVENT(EVT_CHANGED, RadioButtonGroupChanged)
 
-  RadioButtonGroup(Builder::Ptr_t builder, LinearLayoutOrientation orientation);
+public:
+#pragma region "Ctors/Dtor"
+
+  RadioButtonGroup(Builder::Ptr_t builder, LayoutOrientation orientation);
 
   virtual ~RadioButtonGroup() = default;
 
+#pragma endregion
+
   void deselect();
 
-  void handleAddNode(core::foundation::Event *evt);
+  void handleAddNode(core::foundation::EventPtr_t evt);
 
-  void handleClickedEvent(core::foundation::Event *evt);
+  void handleClickedEvent(core::foundation::EventPtr_t evt);
 
 private:
-  std::optional<std::shared_ptr<RadioButton>> selected_;
+  std::optional<RadioButton::SharedPtr_t> selected_;
 };
 
 NAMESPACE_END(widget)

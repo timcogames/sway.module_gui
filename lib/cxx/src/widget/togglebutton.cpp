@@ -11,7 +11,7 @@ ToggleButton::ToggleButton(Builder::Ptr_t builder, const std::string &text)
 
 void ToggleButton::update() { Button::update(); }
 
-void ToggleButton::paintEvent(Painter::SharedPtr_t painter) { Button::paintEvent(painter); }
+void ToggleButton::repaint(Painter::SharedPtr_t painter) { Button::repaint(painter); }
 
 NAMESPACE_END(widget)
 NAMESPACE_END(ui)

@@ -10,13 +10,17 @@ NAMESPACE_BEGIN(widget)
 
 class ProgressBar : public Widget {
 public:
+#pragma region "Ctors/Dtor"
+
   ProgressBar(Builder::Ptr_t builder);
 
   virtual ~ProgressBar() = default;
 
+#pragma endregion
+
   MTHD_VIRTUAL(void update());
 
-  MTHD_VIRTUAL(void paintEvent(Painter::SharedPtr_t painter));
+  MTHD_VIRTUAL(void repaint(Painter::SharedPtr_t painter));
 
   void setProgress(f32_t val);
 

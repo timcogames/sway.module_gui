@@ -174,6 +174,10 @@ void Painter::drawRect(f32_t x, f32_t y, f32_t w, f32_t h, math::col4f_t col) {
   chunk.rect.color = col;
 }
 
+void Painter::drawRect(const math::rect4f_t &rect, math::col4f_t col) {
+  drawRect(rect.getL(), rect.getT(), rect.getR(), rect.getB(), col);
+}
+
 void Painter::drawText(f32_t x, f32_t y, f32_t w, f32_t h, math::col4f_t col, lpcstr_t text) {
   if (geomBatchChunkSize_ >= GEOMERTY_BATCH_CHUNK_SIZE) {
     return;
@@ -187,6 +191,10 @@ void Painter::drawText(f32_t x, f32_t y, f32_t w, f32_t h, math::col4f_t col, lp
   // chunk.text.h = h;
   chunk.text.color = col;
   chunk.text.text = text;
+}
+
+void Painter::drawText(const math::rect4f_t &rect, math::col4f_t col, lpcstr_t text) {
+  drawText(rect.getL(), rect.getT(), rect.getR(), rect.getB(), col, text);
 }
 
 void Painter::onUpdateBatchChunks() {

@@ -8,7 +8,7 @@ NAMESPACE_BEGIN(widget)
 Button::Button(Builder::Ptr_t builder, const std::string &text)
     : Widget(builder)
     , hovering_(false) {
-  label_ = std::make_shared<Label>(builder, text);
+  label_ = std::make_shared<Label>(this->builder_, text);
   this->addChildNode(label_);
 }
 
@@ -28,14 +28,14 @@ void Button::update() {
   }
 }
 
-void Button::paintEvent(Painter::SharedPtr_t painter) {
+void Button::repaint(Painter::SharedPtr_t painter) {
   label_->setAlignment(math::Alignment::CENTER);
-  label_->setPosition(math::vec2f_t(rect_.getL(), rect_.getT()));
-  label_->setSize(rect_.asSize());
+  label_->setPosition(math::vec2f_t(this->rect_.getL(), this->rect_.getT()));
+  label_->setSize(this->rect_.asSize());
 
-  painter->drawRect(rect_.getL(), rect_.getT(), rect_.getR(), rect_.getB(), this->getBackgroundColor());
+  painter->drawRect(this->getRect(), this->getBackgroundColor());
 
-  Widget::paintEvent(painter);
+  Widget::repaint(painter);
 }
 
 NAMESPACE_END(widget)

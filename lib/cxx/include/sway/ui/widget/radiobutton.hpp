@@ -11,13 +11,20 @@ NAMESPACE_BEGIN(widget)
 
 class RadioButton : public ToggleButton {
 public:
+  using Ptr_t = RadioButton *;
+  using SharedPtr_t = std::shared_ptr<RadioButton>;
+
+#pragma region "Ctors/Dtor"
+
   RadioButton(Builder::Ptr_t builder, const std::string &text);
 
   virtual ~RadioButton() = default;
 
+#pragma endregion
+
   MTHD_VIRTUAL(void update());
 
-  MTHD_VIRTUAL(void paintEvent(Painter::SharedPtr_t painter));
+  MTHD_VIRTUAL(void repaint(Painter::SharedPtr_t painter));
 };
 
 NAMESPACE_END(widget)

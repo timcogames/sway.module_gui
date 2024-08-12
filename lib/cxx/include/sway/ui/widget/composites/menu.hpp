@@ -3,10 +3,14 @@
 
 #include <sway/core.hpp>
 #include <sway/ui/painter.hpp>
+#include <sway/ui/widget/composites/menueventhandler.hpp>
 #include <sway/ui/widget/composites/menuitem.hpp>
+#include <sway/ui/widget/layoutorientations.hpp>
+#include <sway/ui/widget/linearlayout.hpp>
 
+#include <memory>
 #include <string>
-#include <vector>
+#include <unordered_map>
 
 NAMESPACE_BEGIN(sway)
 NAMESPACE_BEGIN(ui)
@@ -14,31 +18,29 @@ NAMESPACE_BEGIN(widget)
 
 class Menu : public LinearLayout {
 public:
-  using ItemList_t = std::vector<std::string>;
+  using Ptr_t = Menu *;
+  using SharedPtr_t = std::shared_ptr<Menu>;
 
 #pragma region "Ctors/Dtor"
 
-  Menu(Builder::Ptr_t builder, std::initializer_list<std::string> items)
-      : items_(items) {}
+  Menu(Builder *builder, LayoutOrientation orien);
 
-  virtual ~Menu() = default;
+  virtual ~Menu();
 
 #pragma endregion
 
 #pragma region "Override Widget methods"
 
-  MTHD_OVERRIDE(void update()) {}
+  // MTHD_OVERRIDE(void update()) {}
 
-  MTHD_OVERRIDE(void paintEvent(Painter::SharedPtr_t painter)) {}
+  // MTHD_OVERRIDE(void repaint(Painter::SharedPtr_t painter)) {}
 
 #pragma endregion
 
-  void addItem(const std::string &item) { items_.push_back(item); }
-
-  void clear() { items_.clear(); }
+  void addItem(const std::string &text);
 
 private:
-  ItemList_t items_;
+  core::evts::EventBus::Subscriber_t subscriber_;
   int selectedItem_;
 };
 

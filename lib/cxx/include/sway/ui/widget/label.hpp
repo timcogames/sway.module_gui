@@ -5,6 +5,7 @@
 #include <sway/ui/painter.hpp>
 #include <sway/ui/widget/widget.hpp>
 
+#include <memory>
 #include <string>
 
 NAMESPACE_BEGIN(sway)
@@ -13,9 +14,12 @@ NAMESPACE_BEGIN(widget)
 
 class Label : public Widget {
 public:
+  using Ptr_t = Label *;
+  using SharedPtr_t = std::shared_ptr<Label>;
+
 #pragma region "Ctors/Dtor"
 
-  Label(Builder::Ptr_t builder, const std::string &text);
+  Label(Builder *builder, const std::string &text);
 
   virtual ~Label() = default;
 
@@ -25,7 +29,7 @@ public:
 
   MTHD_VIRTUAL(void update());
 
-  MTHD_VIRTUAL(void paintEvent(Painter::SharedPtr_t painter));
+  MTHD_VIRTUAL(void repaint(Painter::SharedPtr_t painter));
 
 #pragma endregion
 

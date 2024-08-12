@@ -11,13 +11,17 @@ NAMESPACE_BEGIN(widget)
 
 class ToggleButton : public Button {
 public:
+#pragma region "Ctors/Dtor"
+
   ToggleButton(Builder::Ptr_t builder, const std::string &text);
 
   virtual ~ToggleButton() = default;
 
+#pragma endregion
+
   MTHD_VIRTUAL(void update());
 
-  MTHD_VIRTUAL(void paintEvent(Painter::SharedPtr_t painter));
+  MTHD_VIRTUAL(void repaint(Painter::SharedPtr_t painter));
 
   [[nodiscard]]
   auto isChecked() const -> bool {

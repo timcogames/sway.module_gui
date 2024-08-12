@@ -2,8 +2,7 @@
 #define SWAY_UI_WIDGET_LAYOUT_HPP
 
 #include <sway/core.hpp>
-#include <sway/ui/painter.hpp>
-#include <sway/ui/widget/linearlayoutorientations.hpp>
+#include <sway/ui/widget/layoutorientations.hpp>
 #include <sway/ui/widget/widget.hpp>
 
 NAMESPACE_BEGIN(sway)
@@ -12,9 +11,18 @@ NAMESPACE_BEGIN(widget)
 
 class Layout : public Widget {
 public:
-  Layout(Builder::Ptr_t builder);
+#pragma region "Ctors/Dtor"
+
+  Layout(Builder *builder, LayoutOrientation orien);
 
   virtual ~Layout() = default;
+
+#pragma endregion
+
+  auto getOrientation() const -> LayoutOrientation { return orientation_; }
+
+private:
+  LayoutOrientation orientation_;
 };
 
 NAMESPACE_END(widget)

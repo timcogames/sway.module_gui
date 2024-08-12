@@ -50,7 +50,7 @@ public:
 
 #pragma region "Ctors/Dtor"
 
-  Widget(BuilderPtr_t builder);
+  Widget(Builder *builder);
 
   virtual ~Widget() = default;
 
@@ -60,7 +60,7 @@ public:
 
   MTHD_VIRTUAL(void update());
 
-  MTHD_VIRTUAL(void paintEvent(Painter::SharedPtr_t painter));
+  MTHD_VIRTUAL(void repaint(Painter::SharedPtr_t painter));
 
   MTHD_VIRTUAL(void onCursorPointerEnter());
 
@@ -128,7 +128,7 @@ public:
   void setAlignment(math::Alignment alignment) { alignment_ = alignment; }
 
 protected:
-  BuilderPtr_t builder_;
+  Builder *builder_;
   ois::MouseFilter mouseFilter_;
   math::rect4f_t rect_;
   // math::rect4f_t innerRect_;  // wdt/hgt, padding
@@ -139,6 +139,7 @@ protected:
   Appearance appearance_;
 
   bool containsPointer_;
+  bool needsRepainting_;
 };
 
 NAMESPACE_END(widget)

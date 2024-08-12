@@ -19,10 +19,14 @@ NAMESPACE_BEGIN(widget)
 
 class ElementBox {
 public:
+#pragma region "Ctors/Dtor"
+
   ElementBox(const math::sizef_t &content)
       : content_(std::move(content)) {}
 
   ~ElementBox() = default;
+
+#pragma endregion
 
   [[nodiscard]]
   auto getArea(ElementBoxAreaType type) const -> std::optional<ElementBoxArea> {

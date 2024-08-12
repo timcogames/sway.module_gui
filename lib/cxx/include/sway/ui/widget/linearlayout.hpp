@@ -4,7 +4,7 @@
 #include <sway/core.hpp>
 #include <sway/ui/painter.hpp>
 #include <sway/ui/widget/layout.hpp>
-#include <sway/ui/widget/linearlayoutorientations.hpp>
+#include <sway/ui/widget/layoutorientations.hpp>
 
 NAMESPACE_BEGIN(sway)
 NAMESPACE_BEGIN(ui)
@@ -12,14 +12,11 @@ NAMESPACE_BEGIN(widget)
 
 class LinearLayout : public Layout {
 public:
-  LinearLayout(Builder::Ptr_t builder, LinearLayoutOrientation orientation);
+  LinearLayout(Builder *builder, LayoutOrientation orien);
 
   virtual ~LinearLayout() = default;
 
   void build();
-
-private:
-  LinearLayoutOrientation orientation_;
 };
 
 NAMESPACE_END(widget)

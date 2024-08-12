@@ -38,8 +38,8 @@ void Label::resize() {
 
 void Label::update() {}
 
-void Label::paintEvent(Painter::SharedPtr_t painter) {
-  painter->drawText(rect_.getL(), rect_.getT(), rect_.getR(), rect_.getB(), this->getForegroundColor(), text_.c_str());
+void Label::repaint(Painter::SharedPtr_t painter) {
+  painter->drawText(this->getRect(), this->getForegroundColor(), text_.c_str());
 }
 
 void Label::setText(const std::string &text) { text_ = text; }

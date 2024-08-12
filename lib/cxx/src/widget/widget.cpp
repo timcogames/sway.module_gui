@@ -11,7 +11,8 @@ Widget::Widget(BuilderPtr_t builder)
     , rect_(math::rect4f_t(0.0F, 0.0F, 0.0F, 0.0F))
     , margin_(math::Margin<f32_t>(0.0F))
     , alignment_(math::Alignment::LEFT_TOP)
-    , containsPointer_(false) {
+    , containsPointer_(false)
+    , needsRepainting_(false) {
   setBackgroundColor(COL4F_GRAY1);
   setForegroundColor(COL4F_BEIGE);
 }
@@ -22,13 +23,13 @@ void Widget::update() {
   }
 }
 
-void Widget::paintEvent(Painter::SharedPtr_t painter) {
+void Widget::repaint(Painter::SharedPtr_t painter) {
   if (!this->isVisible()) {
     return;
   }
 
   for (auto const &child : this->getChildNodes()) {
-    std::static_pointer_cast<Widget>(child)->paintEvent(painter);
+    std::static_pointer_cast<Widget>(child)->repaint(painter);
   }
 }
 

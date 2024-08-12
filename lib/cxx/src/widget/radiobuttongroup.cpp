@@ -6,7 +6,7 @@ NAMESPACE_BEGIN(sway)
 NAMESPACE_BEGIN(ui)
 NAMESPACE_BEGIN(widget)
 
-RadioButtonGroup::RadioButtonGroup(Builder::Ptr_t builder, LinearLayoutOrientation orientation)
+RadioButtonGroup::RadioButtonGroup(Builder::Ptr_t builder, LayoutOrientation orientation)
     : LinearLayout(builder, orientation)
     , selected_(std::nullopt) {
   this->subscribe(this, "NodeAdded", EVENT_HANDLER(RadioButtonGroup, handleAddNode));
@@ -18,7 +18,7 @@ void RadioButtonGroup::deselect() {
   }
 }
 
-void RadioButtonGroup::handleAddNode(core::foundation::Event *evt) {
+void RadioButtonGroup::handleAddNode(core::foundation::EventPtr_t evt) {
   auto self = getSharedFrom<RadioButtonGroup>(this);
 
   auto parentNodeIdx = self->getNodeIdx();
@@ -38,7 +38,7 @@ void RadioButtonGroup::handleAddNode(core::foundation::Event *evt) {
   child->subscribe(child.get(), "MouseClicked", EVENT_HANDLER(RadioButtonGroup, handleClickedEvent));
 }
 
-void RadioButtonGroup::handleClickedEvent(core::foundation::Event *evt) {
+void RadioButtonGroup::handleClickedEvent(core::foundation::EventPtr_t evt) {
   for (auto const &child : this->getChildNodes()) {
     auto radioBtn = std::static_pointer_cast<RadioButton>(child);
     auto radioBtnIdx = radioBtn->getNodeIdx();

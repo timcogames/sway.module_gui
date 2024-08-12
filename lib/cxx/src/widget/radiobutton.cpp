@@ -10,7 +10,7 @@ RadioButton::RadioButton(Builder::Ptr_t builder, const std::string &text)
 
 void RadioButton::update() { ToggleButton::update(); }
 
-void RadioButton::paintEvent(Painter::SharedPtr_t painter) { ToggleButton::paintEvent(painter); }
+void RadioButton::repaint(Painter::SharedPtr_t painter) { ToggleButton::repaint(painter); }
 
 NAMESPACE_END(widget)
 NAMESPACE_END(ui)

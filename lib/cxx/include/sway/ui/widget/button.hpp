@@ -5,24 +5,34 @@
 #include <sway/ui/painter.hpp>
 #include <sway/ui/widget/label.hpp>
 
+#include <memory>
+#include <string>
+
 NAMESPACE_BEGIN(sway)
 NAMESPACE_BEGIN(ui)
 NAMESPACE_BEGIN(widget)
 
 class Button : public Widget {
 public:
-  Button(Builder::Ptr_t builder, const std::string &text);
+  using Ptr_t = Button *;
+  using SharedPtr_t = std::shared_ptr<Button>;
+
+#pragma region "Ctors/Dtor"
+
+  Button(Builder *builder, const std::string &text);
 
   virtual ~Button() = default;
 
+#pragma endregion
+
   MTHD_VIRTUAL(void update());
 
-  MTHD_VIRTUAL(void paintEvent(Painter::SharedPtr_t painter));
+  MTHD_VIRTUAL(void repaint(Painter::SharedPtr_t painter));
 
-  auto getLabel() const -> std::shared_ptr<Label> { return label_; }
+  auto getLabel() const -> Label::SharedPtr_t { return label_; }
 
 private:
-  std::shared_ptr<Label> label_;
+  Label::SharedPtr_t label_;
   bool hovering_;
 };
 

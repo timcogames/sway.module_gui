@@ -13,14 +13,14 @@ ProgressBar::ProgressBar(Builder::Ptr_t builder)
 
 void ProgressBar::update() {}
 
-void ProgressBar::paintEvent(Painter::SharedPtr_t painter) {
-  auto rectWithMargin = rect_;
+void ProgressBar::repaint(Painter::SharedPtr_t painter) {
+  auto rectWithMargin = this->getRect();
   rectWithMargin.reduce(math::Margin<f32_t>(1.5F));
 
   auto barLen = rectWithMargin.getL() + rectWithMargin.getW() * current_;
 
   painter->drawRect(rectWithMargin.getL(), rectWithMargin.getT(), barLen, rectWithMargin.getB(), COL4F_BEIGE);
-  painter->drawRect(rect_.getL(), rect_.getT(), rect_.getR(), rect_.getB(), COL4F_GRAY1);
+  painter->drawRect(this->getRect(), COL4F_GRAY1);
 }
 
 void ProgressBar::setProgress(f32_t val) {

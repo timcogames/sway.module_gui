@@ -65,7 +65,7 @@ void Builder::deinit() {
   currWidgetUnderPointer_ = nullptr;
 }
 
-void Builder::update() { root_->paintEvent(painter_); }
+void Builder::update() { root_->repaint(painter_); }
 
 void Builder::updateWidgetUnderPointer(widget::Widget::Ptr_t target) {
   if (currWidgetUnderPointer_ == target) {

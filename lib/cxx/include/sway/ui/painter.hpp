@@ -69,7 +69,11 @@ public:
 
   void drawRect(f32_t x, f32_t y, f32_t w, f32_t h, math::col4f_t col);
 
+  void drawRect(const math::rect4f_t &rect, math::col4f_t col);
+
   void drawText(f32_t x, f32_t y, f32_t w, f32_t h, math::col4f_t col, lpcstr_t text);
+
+  void drawText(const math::rect4f_t &rect, math::col4f_t col, lpcstr_t text);
 
   void onUpdateBatchChunks();
 
