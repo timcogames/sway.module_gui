@@ -6,15 +6,24 @@
 #include <sway/ui/widget/layout.hpp>
 #include <sway/ui/widget/layoutorientations.hpp>
 
+#include <memory>
+
 NAMESPACE_BEGIN(sway)
 NAMESPACE_BEGIN(ui)
 NAMESPACE_BEGIN(widget)
 
 class LinearLayout : public Layout {
 public:
+  using Ptr_t = LinearLayout *;
+  using SharedPtr_t = std::shared_ptr<LinearLayout>;
+
+#pragma region "Ctors/Dtor"
+
   LinearLayout(Builder *builder, LayoutOrientation orien);
 
   virtual ~LinearLayout() = default;
+
+#pragma endregion
 
   void build();
 };

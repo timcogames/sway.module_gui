@@ -6,6 +6,7 @@
 #include <sway/ois.hpp>
 #include <sway/ui/painter.hpp>
 #include <sway/ui/widget/appearance.hpp>
+#include <sway/ui/widget/elementbox.hpp>
 #include <sway/ui/widget/types.hpp>
 #include <sway/ui/widget/widgetevent.hpp>
 #include <sway/ui/widget/widgeteventtypes.hpp>
@@ -130,6 +131,7 @@ public:
 protected:
   Builder *builder_;
   ois::MouseFilter mouseFilter_;
+  ElementBox box_;
   math::rect4f_t rect_;
   // math::rect4f_t innerRect_;  // wdt/hgt, padding
   // math::rect4f_t outerRect_;  // wdt/hgt, margin, border, padding

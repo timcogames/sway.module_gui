@@ -42,11 +42,11 @@ void RadioButtonGroup::handleClickedEvent(core::foundation::EventPtr_t evt) {
   for (auto const &child : this->getChildNodes()) {
     auto radioBtn = std::static_pointer_cast<RadioButton>(child);
     auto radioBtnIdx = radioBtn->getNodeIdx();
-    auto radioBtnEvtdata = static_cast<ui::widget::MouseClickEventData *>(evt->data());
+    auto radioBtnEvtData = static_cast<ui::widget::MouseClickEventData *>(evt->data());
 
     radioBtn->setChecked(false);
 
-    if (radioBtnIdx.equal(radioBtnEvtdata->nodeidx)) {
+    if (radioBtnIdx.equal(radioBtnEvtData->nodeidx)) {
       radioBtn->setChecked(true);
       selected_ = radioBtn;
 

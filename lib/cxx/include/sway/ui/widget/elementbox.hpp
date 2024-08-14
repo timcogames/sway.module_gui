@@ -40,6 +40,11 @@ public:
     return area;
   }
 
+  template <math::RectEdge ENUM>
+  auto getEdge(ElementBoxArea area) const -> f32_t {
+    return std::get<core::detail::toBase(ENUM)>(area.edges);
+  }
+
   [[nodiscard]]
   auto getPosition(ElementBoxAreaType type) const -> math::vec2f_t {
     auto result = math::vec2f_zero;
@@ -47,22 +52,22 @@ public:
     auto mgn = this->getArea(ElementBoxAreaType::MARGIN);
     if (!mgn.has_value()) {
     } else {
-      result = math::vec2f_t(-std::get<core::detail::toBase(math::RectEdge::IDX_L)>(mgn.value().edges),
-          -std::get<core::detail::toBase(math::RectEdge::IDX_T)>(mgn.value().edges));
+      result =
+          math::vec2f_t(-getEdge<math::RectEdge::IDX_L>(mgn.value()), -getEdge<math::RectEdge::IDX_T>(mgn.value()));
     }
 
     auto brd = this->getArea(ElementBoxAreaType::BORDER);
     if (!brd.has_value()) {
     } else {
-      result = math::vec2f_t(result.getX() + std::get<core::detail::toBase(math::RectEdge::IDX_L)>(brd.value().edges),
-          result.getY() + std::get<core::detail::toBase(math::RectEdge::IDX_T)>(brd.value().edges));
+      result = math::vec2f_t(result.getX() + getEdge<math::RectEdge::IDX_L>(brd.value()),
+          result.getY() + getEdge<math::RectEdge::IDX_T>(brd.value()));
     }
 
     auto pad = this->getArea(ElementBoxAreaType::PADDING);
     if (!pad.has_value()) {
     } else {
-      result = math::vec2f_t(result.getX() + std::get<core::detail::toBase(math::RectEdge::IDX_L)>(pad.value().edges),
-          result.getY() + std::get<core::detail::toBase(math::RectEdge::IDX_T)>(pad.value().edges));
+      result = math::vec2f_t(result.getX() + getEdge<math::RectEdge::IDX_L>(pad.value()),
+          result.getY() + getEdge<math::RectEdge::IDX_T>(pad.value()));
     }
 
     return result;

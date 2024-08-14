@@ -5,6 +5,9 @@
 #include <sway/ui/painter.hpp>
 #include <sway/ui/widget/togglebutton.hpp>
 
+#include <memory>
+#include <string>
+
 NAMESPACE_BEGIN(sway)
 NAMESPACE_BEGIN(ui)
 NAMESPACE_BEGIN(widget)
@@ -22,9 +25,13 @@ public:
 
 #pragma endregion
 
+#pragma region "Override ToggleButton methods"
+
   MTHD_VIRTUAL(void update());
 
   MTHD_VIRTUAL(void repaint(Painter::SharedPtr_t painter));
+
+#pragma endregion
 };
 
 NAMESPACE_END(widget)

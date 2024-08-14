@@ -6,6 +6,9 @@
 #include <sway/ui/widget/layoutorientations.hpp>
 #include <sway/ui/widget/linearlayout.hpp>
 
+#include <memory>
+#include <string>
+
 NAMESPACE_BEGIN(sway)
 NAMESPACE_BEGIN(ui)
 NAMESPACE_BEGIN(widget)
@@ -22,6 +25,9 @@ class RadioButtonGroup : public LinearLayout {
   DECLARE_EVENT(EVT_CHANGED, RadioButtonGroupChanged)
 
 public:
+  using Ptr_t = RadioButtonGroup *;
+  using SharedPtr_t = std::shared_ptr<RadioButtonGroup>;
+
 #pragma region "Ctors/Dtor"
 
   RadioButtonGroup(Builder::Ptr_t builder, LayoutOrientation orientation);
