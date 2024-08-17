@@ -16,8 +16,7 @@ void LinearLayout::build() {
 
     const auto size = child->getSize();
     const auto margin = child->getMargin();
-    const auto boundingSize =
-        math::size2f_t(margin.getL() + size.getW() + margin.getR(), margin.getT() + size.getH() + margin.getB());
+    const auto boundingSize = math::size2f_t(margin->getLR() + size.getW(), margin->getTB() + size.getH());
 
     child->setPosition(offset);
 

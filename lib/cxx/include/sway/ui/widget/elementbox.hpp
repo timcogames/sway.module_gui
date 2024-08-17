@@ -3,10 +3,9 @@
 
 #include <sway/core.hpp>
 #include <sway/math.hpp>
-#include <sway/ui/widget/elementboxarea.hpp>
-#include <sway/ui/widget/elementboxareatypes.hpp>
 
 #include <array>
+#include <memory>
 #include <optional>
 #include <utility>
 
@@ -14,68 +13,141 @@ NAMESPACE_BEGIN(sway)
 NAMESPACE_BEGIN(ui)
 NAMESPACE_BEGIN(widget)
 
-#define NUM_AREAS 3  // MARGIN, BORDER, PADDING
-#define NUM_EDGES 4
+using AreaSharedPtr_t = std::shared_ptr<math::Area<f32_t>>;
+using AreaContainer_t = std::array<AreaSharedPtr_t, NUM_OF_AREAS>;
 
-class ElementBox {
+template <auto TYPE>
+struct IsContentArea : public std::false_type {};
+
+template <>
+struct IsContentArea<math::AreaType::CNT> : public std::true_type {};
+
+class ElementBox : public AreaContainer_t {
 public:
 #pragma region "Ctors/Dtor"
 
-  ElementBox(const math::sizef_t &content)
-      : content_(std::move(content)) {}
+  // clang-format off
+  ElementBox(const math::sizef_t &size = math::size2f_one)
+      : AreaContainer_t({
+          std::make_shared<math::Area<f32_t>>(math::AreaType::MRG),
+          std::make_shared<math::Area<f32_t>>(math::AreaType::BRD),
+          std::make_shared<math::Area<f32_t>>(math::AreaType::PAD),
+          std::make_shared<math::Area<f32_t>>(math::AreaType::CNT)
+        }) {
+    getArea<math::AreaType::CNT>().value()->setContent(size);
+  }
+  // clang-format on
 
   ~ElementBox() = default;
 
 #pragma endregion
 
-  [[nodiscard]]
-  auto getArea(ElementBoxAreaType type) const -> std::optional<ElementBoxArea> {
-    std::optional<ElementBoxArea> area = std::nullopt;
-    for (const auto item : areas_) {
-      if (item.has_value() && item.value().type == type) {
-        area = item;
+  template <math::AreaType TYPE>
+  auto getAreaIndex() const -> i32_t {
+    for (auto i = 0; i < this->size(); i++) {
+      if (this->at(i)->type() == TYPE) {
+        return i;
       }
     }
 
-    return area;
+    return GLOB_IDX_INVALID;
   }
 
-  template <math::RectEdge ENUM>
-  auto getEdge(ElementBoxArea area) const -> f32_t {
-    return std::get<core::detail::toBase(ENUM)>(area.edges);
+  template <math::AreaType TYPE>
+  auto getArea() const -> std::optional<AreaSharedPtr_t> {
+    const auto idx = getAreaIndex<TYPE>();
+    // clang-format off
+    return (idx != GLOB_IDX_INVALID) 
+        ? std::optional<AreaSharedPtr_t>(this->at(idx)) 
+        : std::nullopt;
+    // clang-format on
   }
 
-  [[nodiscard]]
-  auto getPosition(ElementBoxAreaType type) const -> math::vec2f_t {
+  template <math::AreaType TYPE, math::RectEdge EDGE,
+      typename = typename std::enable_if<!IsContentArea<TYPE>::value, math::AreaType>::type>
+  void setEdge(f32_t size) {
+    auto area = getArea<TYPE>();
+    if (!area.has_value()) {
+      return;
+    }
+
+    area.value()->at(EDGE) = size;
+  }
+
+  template <math::RectEdge EDGE>
+  auto getEdge(std::optional<AreaSharedPtr_t> area) const -> f32_t {
+    return area.value()->at(EDGE);
+  }
+
+  template <math::AreaType TYPE, math::RectEdge EDGE>
+  auto getEdge() const -> f32_t {
+    auto area = getArea<TYPE>();
+    if (!area.has_value()) {
+      return 0.0F;
+    }
+
+    return getEdge<EDGE>(area);
+  }
+
+  template <math::AreaType TYPE>
+  auto getPosition() const -> math::vec2f_t {
     auto result = math::vec2f_zero;
 
-    auto mgn = this->getArea(ElementBoxAreaType::MARGIN);
-    if (!mgn.has_value()) {
-    } else {
-      result =
-          math::vec2f_t(-getEdge<math::RectEdge::IDX_L>(mgn.value()), -getEdge<math::RectEdge::IDX_T>(mgn.value()));
+    if (TYPE == math::AreaType::BRD || TYPE == math::AreaType::PAD || TYPE == math::AreaType::CNT) {
+      auto mgn = getArea<math::AreaType::MRG>();
+      if (!mgn.has_value()) {
+        // TODO:
+      } else {
+        result += math::vec2f_t(getEdge<math::RectEdge::IDX_L>(mgn), getEdge<math::RectEdge::IDX_T>(mgn));
+      }
     }
 
-    auto brd = this->getArea(ElementBoxAreaType::BORDER);
-    if (!brd.has_value()) {
-    } else {
-      result = math::vec2f_t(result.getX() + getEdge<math::RectEdge::IDX_L>(brd.value()),
-          result.getY() + getEdge<math::RectEdge::IDX_T>(brd.value()));
+    if (TYPE == math::AreaType::PAD || TYPE == math::AreaType::CNT) {
+      auto brd = getArea<math::AreaType::BRD>();
+      if (!brd.has_value()) {
+        // TODO:
+      } else {
+        result = math::vec2f_t(
+            result.getX() + getEdge<math::RectEdge::IDX_L>(brd), result.getY() + getEdge<math::RectEdge::IDX_T>(brd));
+      }
     }
 
-    auto pad = this->getArea(ElementBoxAreaType::PADDING);
-    if (!pad.has_value()) {
-    } else {
-      result = math::vec2f_t(result.getX() + getEdge<math::RectEdge::IDX_L>(pad.value()),
-          result.getY() + getEdge<math::RectEdge::IDX_T>(pad.value()));
+    if (TYPE == math::AreaType::CNT) {
+      auto pad = getArea<math::AreaType::PAD>();
+      if (!pad.has_value()) {
+        // TODO:
+      } else {
+        result = math::vec2f_t(
+            result.getX() + getEdge<math::RectEdge::IDX_L>(pad), result.getY() + getEdge<math::RectEdge::IDX_T>(pad));
+      }
     }
 
     return result;
   }
 
-private:
-  math::sizef_t content_;
-  std::array<std::optional<ElementBoxArea>, NUM_AREAS> areas_;
+  template <math::AreaType TYPE>
+  auto getSize() const -> math::size2f_t {
+    auto result = math::size2f_zero;
+
+    auto cnt = getArea<math::AreaType::CNT>();
+    if (!cnt.has_value()) {
+      return result;
+    } else {
+      result = cnt.value()->getContent();
+    }
+
+    if (TYPE == math::AreaType::PAD) {
+      auto pad = getArea<math::AreaType::PAD>();
+      if (!pad.has_value()) {
+        // TODO:
+      } else {
+        result = math::vec2f_t(
+            result.getW() + getEdge<math::RectEdge::IDX_L>(pad), result.getH() + getEdge<math::RectEdge::IDX_T>(pad));
+      }
+    }
+
+    return result;
+  }
 };
 
 NAMESPACE_END(widget)

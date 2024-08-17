@@ -93,10 +93,10 @@ public:
   [[nodiscard]]
   auto getSize() const -> math::size2f_t;
 
-  void setMargin(const math::Margin<f32_t> &margin);
+  void setMargin(i32_t mrg);
 
   [[nodiscard]]
-  auto getMargin() const -> math::Margin<f32_t>;
+  auto getMargin() const -> std::shared_ptr<math::Area<f32_t>>;
 
   void setBackgroundColor(const math::col4f_t &col);
 
@@ -110,14 +110,14 @@ public:
 
   auto getChildAtPoint(const math::point2f_t &point) -> Widget *;
 
-  // wdt/hgt, margin, border, padding
-  auto getOuterSize() const -> math::size2f_t {
-    const auto size = this->getSize();
-    const auto outerWdt = size.getW() + margin_.getLR();
-    const auto outerHgt = size.getH() + margin_.getTB();
+  // // wdt/hgt, margin, border, padding
+  // auto getOuterSize() const -> math::size2f_t {
+  //   const auto size = this->getSize();
+  //   const auto outerWdt = size.getW() + margin_.getLR();
+  //   const auto outerHgt = size.getH() + margin_.getTB();
 
-    return math::size2f_t(outerWdt, outerHgt);
-  }
+  //   return math::size2f_t(outerWdt, outerHgt);
+  // }
 
   void setMouseFilter(ois::MouseFilter filter) { mouseFilter_ = filter; }
 
@@ -135,7 +135,6 @@ protected:
   math::rect4f_t rect_;
   // math::rect4f_t innerRect_;  // wdt/hgt, padding
   // math::rect4f_t outerRect_;  // wdt/hgt, margin, border, padding
-  math::Margin<f32_t> margin_;
   // math::Margin<f32_t> padd_;
   math::Alignment alignment_;
   Appearance appearance_;

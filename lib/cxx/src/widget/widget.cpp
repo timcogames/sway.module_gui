@@ -10,7 +10,6 @@ Widget::Widget(BuilderPtr_t builder)
     , mouseFilter_(ois::MouseFilter::STOP)
     , box_(math::sizef_t(0.0F, 0.0F))
     , rect_(math::rect4f_t(0.0F, 0.0F, 0.0F, 0.0F))
-    , margin_(math::Margin<f32_t>(0.0F))
     , alignment_(math::Alignment::LEFT_TOP)
     , containsPointer_(false)
     , needsRepainting_(false) {
@@ -123,9 +122,16 @@ void Widget::setSize(f32_t wdt, f32_t hgt) { setSize({wdt, hgt}); }
 
 auto Widget::getSize() const -> math::size2f_t { return rect_.asSize(); }
 
-void Widget::setMargin(const math::Margin<f32_t> &margin) { margin_ = margin; }
+void Widget::setMargin(i32_t mrg) {
+  box_.setEdge<math::AreaType::MRG, math::RectEdge::IDX_L>(mrg);
+  box_.setEdge<math::AreaType::MRG, math::RectEdge::IDX_R>(mrg);
+  box_.setEdge<math::AreaType::MRG, math::RectEdge::IDX_T>(mrg);
+  box_.setEdge<math::AreaType::MRG, math::RectEdge::IDX_B>(mrg);
+}
 
-auto Widget::getMargin() const -> math::Margin<f32_t> { return margin_; }
+auto Widget::getMargin() const -> std::shared_ptr<math::Area<f32_t>> {
+  return box_.getArea<math::AreaType::MRG>().value();
+}
 
 void Widget::setBackgroundColor(const math::col4f_t &col) {
   appearance_
