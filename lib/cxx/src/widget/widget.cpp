@@ -77,10 +77,8 @@ auto Widget::hasRelated() -> bool {
   return (parent->getNodeIdx().chainEqual(std::vector<i32_t>({-1}))) ? false : true;
 }
 
-void Widget::setPosition(const math::vec2f_t &pos) {
-  rect_.set(pos.getX(), pos.getY(), this->getSize());
-
-  if (this->hasRelated()) {
+void Widget::updPosition() {
+  if (hasRelated()) {
     auto parentOpt = this->getParentNode();
     if (!parentOpt.has_value()) {
       return;
@@ -94,19 +92,25 @@ void Widget::setPosition(const math::vec2f_t &pos) {
     auto y = 0.0F;
 
     if (core::detail::toBase<math::Alignment>(alignment_) & math::ConvFromXAlign<math::HorzAlign::CENTER>()) {
-      x = (parentSize.getW() - this->getSize().getW()) / 2;
+      x = (parentSize.getW() - getSize().getW()) / 2;
     } else if (core::detail::toBase<math::Alignment>(alignment_) & math::ConvFromXAlign<math::HorzAlign::RIGHT>()) {
-      x = (parentSize.getW() - this->getSize().getW());
+      x = (parentSize.getW() - getSize().getW());
     }
 
     if (core::detail::toBase<math::Alignment>(alignment_) & math::ConvFromXAlign<math::VertAlign::CENTER>()) {
-      y = (parentSize.getH() - this->getSize().getH()) / 2;
+      y = (parentSize.getH() - getSize().getH()) / 2;
     } else if (core::detail::toBase<math::Alignment>(alignment_) & math::ConvFromXAlign<math::VertAlign::BOTTOM>()) {
-      y = (parentSize.getH() - this->getSize().getH());
+      y = (parentSize.getH() - getSize().getH());
     }
 
     rect_.offset(x, y);
   }
+}
+
+void Widget::setPosition(const math::vec2f_t &pos) {
+  rect_.set(pos.getX(), pos.getY(), getSize());
+
+  updPosition();
 }
 
 void Widget::setPosition(f32_t x, f32_t y) { setPosition({x, y}); }
@@ -114,24 +118,27 @@ void Widget::setPosition(f32_t x, f32_t y) { setPosition({x, y}); }
 auto Widget::getPosition() const -> math::point2f_t { return rect_.asPoint(); }
 
 void Widget::setSize(const math::size2f_t &size) {
+  box_.getArea<AreaType::IDX_CNT>().value()->setSize(size);
+
   rect_.setR(rect_.getL() + size.getW());
   rect_.setB(rect_.getT() + size.getH());
 }
 
 void Widget::setSize(f32_t wdt, f32_t hgt) { setSize({wdt, hgt}); }
 
-auto Widget::getSize() const -> math::size2f_t { return rect_.asSize(); }
-
-void Widget::setMargin(i32_t mrg) {
-  box_.setEdge<math::AreaType::MRG, math::RectEdge::IDX_L>(mrg);
-  box_.setEdge<math::AreaType::MRG, math::RectEdge::IDX_R>(mrg);
-  box_.setEdge<math::AreaType::MRG, math::RectEdge::IDX_T>(mrg);
-  box_.setEdge<math::AreaType::MRG, math::RectEdge::IDX_B>(mrg);
+auto Widget::getSize() const -> math::size2f_t {
+  // return rect_.asSize();
+  return box_.getArea<AreaType::IDX_CNT>().value()->getSize();
 }
 
-auto Widget::getMargin() const -> std::shared_ptr<math::Area<f32_t>> {
-  return box_.getArea<math::AreaType::MRG>().value();
+void Widget::setMargin(f32_t mrg) {
+  box_.setEdge<AreaType::IDX_MRG, math::RectEdge::IDX_L>(mrg);
+  box_.setEdge<AreaType::IDX_MRG, math::RectEdge::IDX_R>(mrg);
+  box_.setEdge<AreaType::IDX_MRG, math::RectEdge::IDX_T>(mrg);
+  box_.setEdge<AreaType::IDX_MRG, math::RectEdge::IDX_B>(mrg);
 }
+
+auto Widget::getMargin() const -> BoxArea::SharedPtr_t { return box_.getArea<AreaType::IDX_MRG>().value(); }
 
 void Widget::setBackgroundColor(const math::col4f_t &col) {
   appearance_

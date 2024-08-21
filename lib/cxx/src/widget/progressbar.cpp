@@ -15,7 +15,7 @@ void ProgressBar::update() {}
 
 void ProgressBar::repaint(Painter::SharedPtr_t painter) {
   auto rectWithMargin = this->getRect();
-  rectWithMargin.reduce(math::Area<f32_t>(math::AreaType::MRG, 1.5F));
+  rectWithMargin.reduce(math::Rect<f32_t>(1.5F, 1.5F, math::size2f_t(1.5F, 1.5F)));
 
   auto barLen = rectWithMargin.getL() + rectWithMargin.getW() * current_;
 

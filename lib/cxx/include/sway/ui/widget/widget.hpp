@@ -6,7 +6,7 @@
 #include <sway/ois.hpp>
 #include <sway/ui/painter.hpp>
 #include <sway/ui/widget/appearance.hpp>
-#include <sway/ui/widget/elementbox.hpp>
+#include <sway/ui/widget/element.hpp>
 #include <sway/ui/widget/types.hpp>
 #include <sway/ui/widget/widgetevent.hpp>
 #include <sway/ui/widget/widgeteventtypes.hpp>
@@ -79,6 +79,8 @@ public:
   [[nodiscard]]
   auto hasRelated() -> bool;
 
+  void updPosition();
+
   void setPosition(const math::vec2f_t &pos);
 
   void setPosition(f32_t x, f32_t y);
@@ -93,10 +95,10 @@ public:
   [[nodiscard]]
   auto getSize() const -> math::size2f_t;
 
-  void setMargin(i32_t mrg);
+  void setMargin(f32_t mrg);
 
   [[nodiscard]]
-  auto getMargin() const -> std::shared_ptr<math::Area<f32_t>>;
+  auto getMargin() const -> BoxArea::SharedPtr_t;
 
   void setBackgroundColor(const math::col4f_t &col);
 
@@ -131,7 +133,7 @@ public:
 protected:
   Builder *builder_;
   ois::MouseFilter mouseFilter_;
-  ElementBox box_;
+  Element box_;
   math::rect4f_t rect_;
   // math::rect4f_t innerRect_;  // wdt/hgt, padding
   // math::rect4f_t outerRect_;  // wdt/hgt, margin, border, padding
