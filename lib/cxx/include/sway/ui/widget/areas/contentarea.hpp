@@ -25,8 +25,7 @@ public:
 
 #pragma region "Ctors/Dtor"
 
-  ContentArea(const math::size2f_t &size = math::size2f_zero)
-      : size_(size) {}
+  ContentArea(const math::size2f_t &size = math::size2f_zero);
 
   virtual ~ContentArea() = default;
 
@@ -34,16 +33,14 @@ public:
 
 #pragma region "Override Area methods"
 
-  MTHD_OVERRIDE(auto type() const -> AreaType) { return AreaType::IDX_CNT; }
+  MTHD_OVERRIDE(auto type() const -> AreaType);
 
 #pragma endregion
 
-  void setSize(const math::size2f_t &size) { size_ = size; }
+  void setSize(const math::size2f_t &size);
 
   [[nodiscard]]
-  auto getSize() const -> math::size2f_t {
-    return size_;
-  }
+  auto getSize() const -> math::size2f_t;
 
   friend auto operator<<(std::ostream &out, const ContentArea::SharedPtr_t &area) -> std::ostream & {
     const auto size = area->getSize();

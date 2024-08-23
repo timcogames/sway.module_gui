@@ -1,4 +1,8 @@
 #include <sway/ui/builder.hpp>
+#include <sway/ui/widget/area.hpp>
+#include <sway/ui/widget/areas/boxarea.hpp>
+#include <sway/ui/widget/areas/contentarea.hpp>
+#include <sway/ui/widget/areatypes.hpp>
 #include <sway/ui/widget/widget.hpp>
 
 NAMESPACE_BEGIN(sway)
@@ -8,8 +12,6 @@ NAMESPACE_BEGIN(widget)
 Widget::Widget(BuilderPtr_t builder)
     : builder_(builder)
     , mouseFilter_(ois::MouseFilter::STOP)
-    , box_(math::sizef_t(0.0F, 0.0F))
-    , rect_(math::rect4f_t(0.0F, 0.0F, 0.0F, 0.0F))
     , alignment_(math::Alignment::LEFT_TOP)
     , containsPointer_(false)
     , needsRepainting_(false) {
@@ -63,10 +65,6 @@ void Widget::onMouseClick() {
   emit(EVT_MOUSE_CLICKED, evt, [&](core::foundation::EventHandler::Ptr_t) { return true; });
 }
 
-void Widget::setRect(const math::rect4f_t &rect) { rect_ = rect; }
-
-auto Widget::getRect() const -> math::rect4f_t { return rect_; }
-
 auto Widget::hasRelated() -> bool {
   auto parentOpt = this->getParentNode();
   if (!parentOpt.has_value()) {
@@ -86,7 +84,10 @@ void Widget::updPosition() {
 
     auto parent = std::static_pointer_cast<Widget>(parentOpt.value());
     auto parentSize = parent->getSize();
-    rect_.offset(parent->getPosition());
+    auto parentPosition = parent->getPosition();
+
+    this->offset_ =
+        math::point2f_t(this->offset_.getX() + parentPosition.getX(), this->offset_.getY() + parentPosition.getY());
 
     auto x = 0.0F;
     auto y = 0.0F;
@@ -103,42 +104,40 @@ void Widget::updPosition() {
       y = (parentSize.getH() - getSize().getH());
     }
 
-    rect_.offset(x, y);
+    this->offset_ = math::point2f_t(this->offset_.getX() + x, this->offset_.getY() + y);
   }
 }
 
 void Widget::setPosition(const math::vec2f_t &pos) {
-  rect_.set(pos.getX(), pos.getY(), getSize());
+  this->offset_ = math::point2f_t(pos.getX(), pos.getY());
 
   updPosition();
 }
 
 void Widget::setPosition(f32_t x, f32_t y) { setPosition({x, y}); }
 
-auto Widget::getPosition() const -> math::point2f_t { return rect_.asPoint(); }
+auto Widget::getPosition() const -> math::point2f_t { return this->offset_; }
 
 void Widget::setSize(const math::size2f_t &size) {
-  box_.getArea<AreaType::IDX_CNT>().value()->setSize(size);
-
-  rect_.setR(rect_.getL() + size.getW());
-  rect_.setB(rect_.getT() + size.getH());
+  this->elemAreaHolder_.getArea<AreaType::IDX_CNT>().value()->setSize(size);
 }
 
 void Widget::setSize(f32_t wdt, f32_t hgt) { setSize({wdt, hgt}); }
 
 auto Widget::getSize() const -> math::size2f_t {
-  // return rect_.asSize();
-  return box_.getArea<AreaType::IDX_CNT>().value()->getSize();
+  return this->elemAreaHolder_.getArea<AreaType::IDX_CNT>().value()->getSize();
 }
 
-void Widget::setMargin(f32_t mrg) {
-  box_.setEdge<AreaType::IDX_MRG, math::RectEdge::IDX_L>(mrg);
-  box_.setEdge<AreaType::IDX_MRG, math::RectEdge::IDX_R>(mrg);
-  box_.setEdge<AreaType::IDX_MRG, math::RectEdge::IDX_T>(mrg);
-  box_.setEdge<AreaType::IDX_MRG, math::RectEdge::IDX_B>(mrg);
-}
+// void Widget::setMargin(f32_t mrg) {
+//   this->elemAreaHolder_.setEdge<AreaType::IDX_MRG, math::RectEdge::IDX_L>(mrg);
+//   this->elemAreaHolder_.setEdge<AreaType::IDX_MRG, math::RectEdge::IDX_R>(mrg);
+//   this->elemAreaHolder_.setEdge<AreaType::IDX_MRG, math::RectEdge::IDX_T>(mrg);
+//   this->elemAreaHolder_.setEdge<AreaType::IDX_MRG, math::RectEdge::IDX_B>(mrg);
+// }
 
-auto Widget::getMargin() const -> BoxArea::SharedPtr_t { return box_.getArea<AreaType::IDX_MRG>().value(); }
+// auto Widget::getMargin() const -> BoxArea::SharedPtr_t {
+//   return this->elemAreaHolder_.getArea<AreaType::IDX_MRG>().value();
+// }
 
 void Widget::setBackgroundColor(const math::col4f_t &col) {
   appearance_
@@ -167,9 +166,12 @@ auto Widget::getChildAtPoint(const math::point2f_t &point) -> Widget * {
       break;
     }
 
+    const auto childPos = child->getPosition();
+    auto childRect = math::rect4f_t(childPos.getX(), childPos.getY(), child->getSize());
+
     if (auto *const widget = child->getChildAtPoint(point)) {
       return widget;
-    } else if (child->getRect().contains(point) && child->getMouseFilter() != ois::MouseFilter::IGNORE) {
+    } else if (childRect.contains(point) && child->getMouseFilter() != ois::MouseFilter::IGNORE) {
       return child.get();
     }
   }

@@ -19,7 +19,7 @@ public:
 
 #pragma region "Ctors/Dtor"
 
-  Label(Builder *builder, const std::string &text);
+  Label(BuilderPtr_t builder, const std::string &text);
 
   virtual ~Label() = default;
 

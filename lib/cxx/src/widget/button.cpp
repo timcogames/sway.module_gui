@@ -5,7 +5,7 @@ NAMESPACE_BEGIN(sway)
 NAMESPACE_BEGIN(ui)
 NAMESPACE_BEGIN(widget)
 
-Button::Button(Builder::Ptr_t builder, const std::string &text)
+Button::Button(BuilderPtr_t builder, const std::string &text)
     : Widget(builder)
     , hovering_(false) {
   label_ = std::make_shared<Label>(this->builder_, text);
@@ -29,11 +29,13 @@ void Button::update() {
 }
 
 void Button::repaint(Painter::SharedPtr_t painter) {
-  label_->setAlignment(math::Alignment::CENTER);
-  label_->setPosition(math::vec2f_t(this->rect_.getL(), this->rect_.getT()));
-  label_->setSize(this->rect_.asSize());
+  auto position = this->getPosition();
 
-  painter->drawRect(this->getRect(), this->getBackgroundColor());
+  label_->setAlignment(math::Alignment::CENTER);
+  label_->setPosition(math::vec2f_t(position.getX(), position.getY()));
+  label_->setSize(this->getSize());
+
+  painter->drawRect(math::rect4f_t(position.getX(), position.getY(), this->getSize()), this->getBackgroundColor());
 
   Widget::repaint(painter);
 }

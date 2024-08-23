@@ -19,7 +19,7 @@ public:
 
 #pragma region "Ctors/Dtor"
 
-  Button(Builder *builder, const std::string &text);
+  Button(BuilderPtr_t builder, const std::string &text);
 
   virtual ~Button() = default;
 

@@ -23,8 +23,9 @@ void MenuItem::update() {
 void MenuItem::repaint(Painter::SharedPtr_t painter) {
   if (this->needsRepainting_) {
     button_->setAlignment(math::Alignment::CENTER);
-    button_->setPosition(math::vec2f_t(this->rect_.getL(), this->rect_.getT()));
-    button_->setSize(this->rect_.asSize());
+    const auto position = this->getPosition();
+    button_->setPosition(math::vec2f_t(position.getX(), position.getY()));
+    button_->setSize(this->getSize());
     this->needsRepainting_ = false;
   }
 

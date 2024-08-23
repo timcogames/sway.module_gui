@@ -19,7 +19,7 @@ public:
 
 #pragma region "Ctors/Dtor"
 
-  RadioButton(Builder::Ptr_t builder, const std::string &text);
+  RadioButton(BuilderPtr_t builder, const std::string &text);
 
   virtual ~RadioButton() = default;
 

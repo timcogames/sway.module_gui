@@ -13,7 +13,7 @@ class Layout : public Widget {
 public:
 #pragma region "Ctors/Dtor"
 
-  Layout(Builder *builder, LayoutOrientation orien);
+  Layout(BuilderPtr_t builder, LayoutOrientation orien);
 
   virtual ~Layout() = default;
 

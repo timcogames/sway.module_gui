@@ -10,11 +10,15 @@
 #include <sway/ui/painter.hpp>
 #include <sway/ui/types.hpp>
 #include <sway/ui/widget/area.hpp>
+#include <sway/ui/widget/areas/boxarea.hpp>
+#include <sway/ui/widget/areas/contentarea.hpp>
 #include <sway/ui/widget/areatypes.hpp>
 #include <sway/ui/widget/button.hpp>
 #include <sway/ui/widget/composites/menu.hpp>
 #include <sway/ui/widget/composites/menuitem.hpp>
 #include <sway/ui/widget/element.hpp>
+#include <sway/ui/widget/elementareaholder.hpp>
+#include <sway/ui/widget/elementpositions.hpp>
 #include <sway/ui/widget/label.hpp>
 #include <sway/ui/widget/layout.hpp>
 #include <sway/ui/widget/layoutorientations.hpp>

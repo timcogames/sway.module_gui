@@ -5,7 +5,7 @@ NAMESPACE_BEGIN(sway)
 NAMESPACE_BEGIN(ui)
 NAMESPACE_BEGIN(widget)
 
-Layout::Layout(Builder::Ptr_t builder, LayoutOrientation orien)
+Layout::Layout(BuilderPtr_t builder, LayoutOrientation orien)
     : Widget(builder)
     , orientation_(orien) {
   setMouseFilter(ois::MouseFilter::PASS);

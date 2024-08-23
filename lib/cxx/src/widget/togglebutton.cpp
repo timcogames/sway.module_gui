@@ -5,7 +5,7 @@ NAMESPACE_BEGIN(sway)
 NAMESPACE_BEGIN(ui)
 NAMESPACE_BEGIN(widget)
 
-ToggleButton::ToggleButton(Builder::Ptr_t builder, const std::string &text)
+ToggleButton::ToggleButton(BuilderPtr_t builder, const std::string &text)
     : Button(builder, text)
     , checked_(false) {}
 

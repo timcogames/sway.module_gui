@@ -19,7 +19,7 @@ public:
 
 #pragma region "Ctors/Dtor"
 
-  LinearLayout(Builder *builder, LayoutOrientation orien);
+  LinearLayout(BuilderPtr_t builder, LayoutOrientation orien);
 
   virtual ~LinearLayout() = default;
 

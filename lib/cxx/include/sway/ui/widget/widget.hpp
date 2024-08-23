@@ -5,6 +5,7 @@
 #include <sway/math.hpp>
 #include <sway/ois.hpp>
 #include <sway/ui/painter.hpp>
+#include <sway/ui/types.hpp>
 #include <sway/ui/widget/appearance.hpp>
 #include <sway/ui/widget/element.hpp>
 #include <sway/ui/widget/types.hpp>
@@ -12,6 +13,7 @@
 #include <sway/ui/widget/widgeteventtypes.hpp>
 
 #include <memory>
+#include <optional>
 
 NAMESPACE_BEGIN(sway)
 NAMESPACE_BEGIN(ui)
@@ -25,11 +27,9 @@ NAMESPACE_BEGIN(ui)
 
 #define COL4F_PURPLE 0x9900FFFF
 
-class Builder;
-
 NAMESPACE_BEGIN(widget)
 
-class Widget : public math::Transform<core::container::Node, f32_t> {
+class Widget : public Element, public math::Transform<core::container::Node, f32_t> {
   DECLARE_EVENT(EVT_POINTER_ENTER, PointerEnter)
   DECLARE_EVENT(EVT_POINTER_LEAVE, PointerLeave)
   DECLARE_EVENT(EVT_MOUSE_CLICKED, MouseClicked)
@@ -51,7 +51,7 @@ public:
 
 #pragma region "Ctors/Dtor"
 
-  Widget(Builder *builder);
+  Widget(BuilderPtr_t builder);
 
   virtual ~Widget() = default;
 
@@ -71,11 +71,6 @@ public:
 
 #pragma endregion
 
-  void setRect(const math::rect4f_t &rect);
-
-  [[nodiscard]]
-  auto getRect() const -> math::rect4f_t;
-
   [[nodiscard]]
   auto hasRelated() -> bool;
 
@@ -94,11 +89,6 @@ public:
 
   [[nodiscard]]
   auto getSize() const -> math::size2f_t;
-
-  void setMargin(f32_t mrg);
-
-  [[nodiscard]]
-  auto getMargin() const -> BoxArea::SharedPtr_t;
 
   void setBackgroundColor(const math::col4f_t &col);
 
@@ -131,13 +121,10 @@ public:
   void setAlignment(math::Alignment alignment) { alignment_ = alignment; }
 
 protected:
-  Builder *builder_;
+  BuilderPtr_t builder_;
   ois::MouseFilter mouseFilter_;
-  Element box_;
-  math::rect4f_t rect_;
   // math::rect4f_t innerRect_;  // wdt/hgt, padding
   // math::rect4f_t outerRect_;  // wdt/hgt, margin, border, padding
-  // math::Margin<f32_t> padd_;
   math::Alignment alignment_;
   Appearance appearance_;
 

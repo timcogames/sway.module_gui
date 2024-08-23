@@ -25,10 +25,7 @@ public:
 
 #pragma region "Ctors/Dtor"
 
-  BoxArea(AreaType type)
-      : type_(type) {
-    resetEdges();
-  }
+  BoxArea(AreaType type);
 
   virtual ~BoxArea() = default;
 
@@ -36,54 +33,37 @@ public:
 
 #pragma region "Override Area methods"
 
-  MTHD_OVERRIDE(auto type() const -> AreaType) { return type_; }
+  MTHD_OVERRIDE(auto type() const -> AreaType);
 
 #pragma endregion
 
-  void resetEdges() { edges_.fill(0.0F); }
+  void resetEdges();
 
-  void set(math::RectEdge edge, f32_t val) { edges_[core::detail::toBase(edge)] = val; }
+  void set(math::RectEdge edge, f32_t val);
 
-  void set(f32_t l, f32_t t, f32_t r, f32_t b) {
-    set(math::RectEdge::IDX_L, l);
-    set(math::RectEdge::IDX_T, t);
-    set(math::RectEdge::IDX_R, r);
-    set(math::RectEdge::IDX_B, b);
-  }
+  void set(f32_t l, f32_t t, f32_t r, f32_t b);
 
-  auto at(math::RectEdge edge) const -> const f32_t & { return edges_[core::detail::toBase(edge)]; }
+  auto at(math::RectEdge edge) const -> const f32_t &;
 
-  auto at(math::RectEdge edge) -> f32_t & { return edges_[core::detail::toBase(edge)]; }
+  auto at(math::RectEdge edge) -> f32_t &;
 
   [[nodiscard]]
-  auto getL() const -> f32_t {
-    return at(math::RectEdge::IDX_L);
-  }
+  auto getL() const -> f32_t;
 
   [[nodiscard]]
-  auto getT() const -> f32_t {
-    return at(math::RectEdge::IDX_T);
-  }
+  auto getT() const -> f32_t;
 
   [[nodiscard]]
-  auto getR() const -> f32_t {
-    return at(math::RectEdge::IDX_R);
-  }
+  auto getR() const -> f32_t;
 
   [[nodiscard]]
-  auto getB() const -> f32_t {
-    return at(math::RectEdge::IDX_B);
-  }
+  auto getB() const -> f32_t;
 
   [[nodiscard]]
-  auto getLR() const -> f32_t {
-    return getL() + getR();
-  }
+  auto getLR() const -> f32_t;
 
   [[nodiscard]]
-  auto getTB() const -> f32_t {
-    return getT() + getB();
-  }
+  auto getTB() const -> f32_t;
 
   friend auto operator<<(std::ostream &out, const BoxArea &area) -> std::ostream & {
     return out << std::fixed << std::setprecision(3) << "{"

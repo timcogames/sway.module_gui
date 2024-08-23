@@ -12,7 +12,7 @@ class ProgressBar : public Widget {
 public:
 #pragma region "Ctors/Dtor"
 
-  ProgressBar(Builder::Ptr_t builder);
+  ProgressBar(BuilderPtr_t builder);
 
   virtual ~ProgressBar() = default;
 

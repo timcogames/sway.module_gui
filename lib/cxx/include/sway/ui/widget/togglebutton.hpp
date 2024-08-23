@@ -13,7 +13,7 @@ class ToggleButton : public Button {
 public:
 #pragma region "Ctors/Dtor"
 
-  ToggleButton(Builder::Ptr_t builder, const std::string &text);
+  ToggleButton(BuilderPtr_t builder, const std::string &text);
 
   virtual ~ToggleButton() = default;
 

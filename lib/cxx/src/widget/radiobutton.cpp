@@ -5,7 +5,7 @@ NAMESPACE_BEGIN(sway)
 NAMESPACE_BEGIN(ui)
 NAMESPACE_BEGIN(widget)
 
-RadioButton::RadioButton(Builder::Ptr_t builder, const std::string &text)
+RadioButton::RadioButton(BuilderPtr_t builder, const std::string &text)
     : ToggleButton(builder, text) {}
 
 void RadioButton::update() { ToggleButton::update(); }

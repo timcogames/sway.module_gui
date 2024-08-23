@@ -5,7 +5,7 @@ NAMESPACE_BEGIN(sway)
 NAMESPACE_BEGIN(ui)
 NAMESPACE_BEGIN(widget)
 
-LinearLayout::LinearLayout(Builder::Ptr_t builder, LayoutOrientation orien)
+LinearLayout::LinearLayout(BuilderPtr_t builder, LayoutOrientation orien)
     : Layout(builder, orien) {}
 
 void LinearLayout::build() {
@@ -15,8 +15,7 @@ void LinearLayout::build() {
     auto child = std::static_pointer_cast<Widget>(node);
 
     const auto size = child->getSize();
-    const auto margin = child->getMargin();
-    const auto boundingSize = math::size2f_t(margin->getLR() + size.getW(), margin->getTB() + size.getH());
+    const auto boundingSize = math::size2f_t(size.getW(), size.getH());
 
     child->setPosition(offset);
 

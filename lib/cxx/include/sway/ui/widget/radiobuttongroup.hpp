@@ -30,7 +30,7 @@ public:
 
 #pragma region "Ctors/Dtor"
 
-  RadioButtonGroup(Builder::Ptr_t builder, LayoutOrientation orientation);
+  RadioButtonGroup(BuilderPtr_t builder, LayoutOrientation orientation);
 
   virtual ~RadioButtonGroup() = default;
 
