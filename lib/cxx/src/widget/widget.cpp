@@ -84,7 +84,7 @@ void Widget::updPosition() {
 
     auto parent = std::static_pointer_cast<Widget>(parentOpt.value());
     auto parentSize = parent->getSize();
-    auto parentPosition = parent->getPosition();
+    auto parentPosition = parent->getOffset();
 
     this->offset_ =
         math::point2f_t(this->offset_.getX() + parentPosition.getX(), this->offset_.getY() + parentPosition.getY());
@@ -108,35 +108,35 @@ void Widget::updPosition() {
   }
 }
 
-void Widget::setPosition(const math::vec2f_t &pos) {
-  this->offset_ = math::point2f_t(pos.getX(), pos.getY());
+void Widget::setOffset(const math::point2f_t &pnt) {
+  this->offset_ = pnt;
 
   updPosition();
 }
 
-void Widget::setPosition(f32_t x, f32_t y) { setPosition({x, y}); }
+void Widget::setOffset(f32_t x, f32_t y) { setOffset({x, y}); }
 
-auto Widget::getPosition() const -> math::point2f_t { return this->offset_; }
+auto Widget::getOffset() const -> math::point2f_t { return this->offset_; }
 
 void Widget::setSize(const math::size2f_t &size) {
-  this->elemAreaHolder_.getArea<AreaType::IDX_CNT>().value()->setSize(size);
+  this->areaHolder_.getArea<AreaType::IDX_CNT>().value()->setSize(size);
 }
 
 void Widget::setSize(f32_t wdt, f32_t hgt) { setSize({wdt, hgt}); }
 
 auto Widget::getSize() const -> math::size2f_t {
-  return this->elemAreaHolder_.getArea<AreaType::IDX_CNT>().value()->getSize();
+  return this->areaHolder_.getArea<AreaType::IDX_CNT>().value()->getSize();
 }
 
 // void Widget::setMargin(f32_t mrg) {
-//   this->elemAreaHolder_.setEdge<AreaType::IDX_MRG, math::RectEdge::IDX_L>(mrg);
-//   this->elemAreaHolder_.setEdge<AreaType::IDX_MRG, math::RectEdge::IDX_R>(mrg);
-//   this->elemAreaHolder_.setEdge<AreaType::IDX_MRG, math::RectEdge::IDX_T>(mrg);
-//   this->elemAreaHolder_.setEdge<AreaType::IDX_MRG, math::RectEdge::IDX_B>(mrg);
+//   this->areaHolder_.setEdge<AreaType::IDX_MRG, math::RectEdge::IDX_L>(mrg);
+//   this->areaHolder_.setEdge<AreaType::IDX_MRG, math::RectEdge::IDX_R>(mrg);
+//   this->areaHolder_.setEdge<AreaType::IDX_MRG, math::RectEdge::IDX_T>(mrg);
+//   this->areaHolder_.setEdge<AreaType::IDX_MRG, math::RectEdge::IDX_B>(mrg);
 // }
 
 // auto Widget::getMargin() const -> BoxArea::SharedPtr_t {
-//   return this->elemAreaHolder_.getArea<AreaType::IDX_MRG>().value();
+//   return this->areaHolder_.getArea<AreaType::IDX_MRG>().value();
 // }
 
 void Widget::setBackgroundColor(const math::col4f_t &col) {
@@ -166,7 +166,7 @@ auto Widget::getChildAtPoint(const math::point2f_t &point) -> Widget * {
       break;
     }
 
-    const auto childPos = child->getPosition();
+    const auto childPos = child->getOffset();
     auto childRect = math::rect4f_t(childPos.getX(), childPos.getY(), child->getSize());
 
     if (auto *const widget = child->getChildAtPoint(point)) {

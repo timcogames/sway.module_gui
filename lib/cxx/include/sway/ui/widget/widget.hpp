@@ -29,7 +29,7 @@ NAMESPACE_BEGIN(ui)
 
 NAMESPACE_BEGIN(widget)
 
-class Widget : public Element, public math::Transform<core::container::Node, f32_t> {
+class Widget : public Element {
   DECLARE_EVENT(EVT_POINTER_ENTER, PointerEnter)
   DECLARE_EVENT(EVT_POINTER_LEAVE, PointerLeave)
   DECLARE_EVENT(EVT_MOUSE_CLICKED, MouseClicked)
@@ -76,12 +76,12 @@ public:
 
   void updPosition();
 
-  void setPosition(const math::vec2f_t &pos);
+  void setOffset(const math::point2f_t &pnt);
 
-  void setPosition(f32_t x, f32_t y);
+  void setOffset(f32_t x, f32_t y);
 
   [[nodiscard]]
-  auto getPosition() const -> math::point2f_t;
+  auto getOffset() const -> math::point2f_t;
 
   void setSize(const math::size2f_t &size);
 

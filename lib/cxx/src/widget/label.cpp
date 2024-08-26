@@ -39,9 +39,9 @@ void Label::resize() {
 void Label::update() {}
 
 void Label::repaint(Painter::SharedPtr_t painter) {
-  auto position = this->getPosition();
+  auto offset = this->getOffset();
   painter->drawText(
-      math::rect4f_t(position.getX(), position.getY(), this->getSize()), this->getForegroundColor(), text_.c_str());
+      math::rect4f_t(offset.getX(), offset.getY(), this->getSize()), this->getForegroundColor(), text_.c_str());
 }
 
 void Label::setText(const std::string &text) { text_ = text; }

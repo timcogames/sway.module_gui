@@ -9,7 +9,7 @@ LinearLayout::LinearLayout(BuilderPtr_t builder, LayoutOrientation orien)
     : Layout(builder, orien) {}
 
 void LinearLayout::build() {
-  math::vec2f_t offset(0.0F, 0.0F);
+  auto offset = math::point2f_zero;
 
   for (auto node : this->getChildNodes()) {
     auto child = std::static_pointer_cast<Widget>(node);
@@ -17,7 +17,7 @@ void LinearLayout::build() {
     const auto size = child->getSize();
     const auto boundingSize = math::size2f_t(size.getW(), size.getH());
 
-    child->setPosition(offset);
+    child->setOffset(offset);
 
     if (this->getOrientation() == LayoutOrientation::HORZ) {
       offset.setX(offset.getX() + boundingSize.getW());

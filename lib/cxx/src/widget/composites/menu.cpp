@@ -25,7 +25,7 @@ Menu::~Menu() { this->builder_->getEventBus()->unsubscribe(subscriber_); }
 void Menu::addItem(const std::string &text) {
   auto item = std::make_shared<MenuItem>(this->builder_, text);
   item->setAlignment(math::Alignment::CENTER);
-  item->setPosition(0.0F, 0.0F);
+  item->setOffset(0.0F, 0.0F);
   item->setSize(150.0F, 70.0F);
   this->addChildNode(item);
 }

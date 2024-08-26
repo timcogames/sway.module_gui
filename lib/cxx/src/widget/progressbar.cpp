@@ -14,14 +14,14 @@ ProgressBar::ProgressBar(BuilderPtr_t builder)
 void ProgressBar::update() {}
 
 void ProgressBar::repaint(Painter::SharedPtr_t painter) {
-  const auto position = this->getPosition();
-  auto rectWithMargin = math::rect4f_t(position.getX(), position.getY(), this->getSize());
+  const auto offset = this->getOffset();
+  auto rectWithMargin = math::rect4f_t(offset.getX(), offset.getY(), this->getSize());
   rectWithMargin.reduce(math::Rect<f32_t>(1.5F, 1.5F, math::size2f_t(1.5F, 1.5F)));
 
   auto barLen = rectWithMargin.getL() + rectWithMargin.getW() * current_;
 
   painter->drawRect(rectWithMargin.getL(), rectWithMargin.getT(), barLen, rectWithMargin.getB(), COL4F_BEIGE);
-  painter->drawRect(math::rect4f_t(position.getX(), position.getY(), this->getSize()), COL4F_GRAY1);
+  painter->drawRect(math::rect4f_t(offset.getX(), offset.getY(), this->getSize()), COL4F_GRAY1);
 }
 
 void ProgressBar::setProgress(f32_t val) {

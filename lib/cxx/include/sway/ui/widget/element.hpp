@@ -10,7 +10,8 @@
 NAMESPACE_BEGIN(sway)
 NAMESPACE_BEGIN(ui)
 
-class Element {
+class Element : public core::container::Node  // math::Transform<core::container::Node, f32_t>
+{
 public:
 #pragma region "Ctors/Dtor"
 
@@ -18,23 +19,21 @@ public:
 
   ~Element() = default;
 
-  void setOffset(ElementPosition pos, const math::point2f_t &pnt) {
-    position_ = pos;
-    offset_ = pnt;
-  }
+  void setPosition(ElementPosition pos) { position_ = pos; }
 
-  void updateOffset() {
-    if (position_ == ElementPosition::ABSOLUTE || position_ == ElementPosition::FIXED) {
-    } else {
-    }
-  }
+  void setOffset(const math::point2f_t &pnt);
+
+  auto getOffset(ElementPosition pos) -> math::point2f_t;
+
+  void updateOffset();
 
 #pragma endregion
 
 protected:
-  ElementAreaHolder elemAreaHolder_;
+  ElementAreaHolder areaHolder_;
   ElementPosition position_;
   math::point2f_t offset_;
+  bool offsetDirty_;
 };
 
 NAMESPACE_END(ui)

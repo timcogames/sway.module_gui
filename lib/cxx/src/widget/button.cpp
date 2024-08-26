@@ -29,13 +29,13 @@ void Button::update() {
 }
 
 void Button::repaint(Painter::SharedPtr_t painter) {
-  auto position = this->getPosition();
+  auto offset = this->getOffset();
 
   label_->setAlignment(math::Alignment::CENTER);
-  label_->setPosition(math::vec2f_t(position.getX(), position.getY()));
+  label_->setOffset(offset);
   label_->setSize(this->getSize());
 
-  painter->drawRect(math::rect4f_t(position.getX(), position.getY(), this->getSize()), this->getBackgroundColor());
+  painter->drawRect(math::rect4f_t(offset.getX(), offset.getY(), this->getSize()), this->getBackgroundColor());
 
   Widget::repaint(painter);
 }
