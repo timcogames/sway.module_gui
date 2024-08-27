@@ -3,8 +3,8 @@
 
 #include <sway/core.hpp>
 #include <sway/ois.hpp>
+#include <sway/ui/orientations.hpp>
 #include <sway/ui/widget/composites/menucontrolscheme.hpp>
-#include <sway/ui/widget/layoutorientations.hpp>
 
 #include <memory>
 
@@ -17,7 +17,7 @@ class Menu;
 struct MenuEventHandler : public core::evts::EventHandler {
   MenuEventHandler(Menu *menu);
 
-  ~MenuEventHandler() override = default;
+  virtual ~MenuEventHandler() override = default;
 
   MTHD_OVERRIDE(auto invoke(const core::foundation::Event::UniquePtr_t &evt) -> bool) final;
 

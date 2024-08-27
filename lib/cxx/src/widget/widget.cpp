@@ -11,6 +11,7 @@ NAMESPACE_BEGIN(widget)
 
 Widget::Widget(BuilderPtr_t builder)
     : builder_(builder)
+    , eventFilter_(nullptr)
     , mouseFilter_(ois::MouseFilter::STOP)
     , alignment_(math::Alignment::LEFT_TOP)
     , containsPointer_(false)
@@ -58,6 +59,10 @@ void Widget::onCursorPointerLeave() {
 void Widget::onMouseClick() {
   this->update();
 
+  if (eventFilter_ != nullptr) {
+    //   eventFilter_->handle(this, event);
+  }
+
   auto *evtdata = new MouseClickEventData();
   evtdata->nodeidx = this->getNodeIdx();
   auto *evt = new MouseClickedEvent(0, std::move(evtdata));
@@ -83,11 +88,11 @@ void Widget::updPosition() {
     }
 
     auto parent = std::static_pointer_cast<Widget>(parentOpt.value());
+    auto parentPosition = parent->getOffset(ElementPosition::RELATIVE);
     auto parentSize = parent->getSize();
-    auto parentPosition = parent->getOffset();
 
-    this->offset_ =
-        math::point2f_t(this->offset_.getX() + parentPosition.getX(), this->offset_.getY() + parentPosition.getY());
+    this->setOffset({this->getOffset(ElementPosition::RELATIVE).getX() + parentPosition.getX(),
+        this->getOffset(ElementPosition::RELATIVE).getY() + parentPosition.getY()});
 
     auto x = 0.0F;
     auto y = 0.0F;
@@ -104,35 +109,32 @@ void Widget::updPosition() {
       y = (parentSize.getH() - getSize().getH());
     }
 
-    this->offset_ = math::point2f_t(this->offset_.getX() + x, this->offset_.getY() + y);
+    this->setOffset(
+        {this->getOffset(ElementPosition::RELATIVE).getX() + x, this->getOffset(ElementPosition::RELATIVE).getY() + y});
   }
 }
 
 void Widget::setOffset(const math::point2f_t &pnt) {
-  this->offset_ = pnt;
+  this->setOffset(pnt);
 
   updPosition();
 }
 
-void Widget::setOffset(f32_t x, f32_t y) { setOffset({x, y}); }
-
-auto Widget::getOffset() const -> math::point2f_t { return this->offset_; }
-
 void Widget::setSize(const math::size2f_t &size) {
-  this->areaHolder_.getArea<AreaType::IDX_CNT>().value()->setSize(size);
+  this->getAreaHolder().getArea<AreaType::IDX_CNT>().value()->setSize(size);
 }
 
 void Widget::setSize(f32_t wdt, f32_t hgt) { setSize({wdt, hgt}); }
 
 auto Widget::getSize() const -> math::size2f_t {
-  return this->areaHolder_.getArea<AreaType::IDX_CNT>().value()->getSize();
+  return this->getAreaHolder().getArea<AreaType::IDX_CNT>().value()->getSize();
 }
 
 // void Widget::setMargin(f32_t mrg) {
-//   this->areaHolder_.setEdge<AreaType::IDX_MRG, math::RectEdge::IDX_L>(mrg);
-//   this->areaHolder_.setEdge<AreaType::IDX_MRG, math::RectEdge::IDX_R>(mrg);
-//   this->areaHolder_.setEdge<AreaType::IDX_MRG, math::RectEdge::IDX_T>(mrg);
-//   this->areaHolder_.setEdge<AreaType::IDX_MRG, math::RectEdge::IDX_B>(mrg);
+//   this->getAreaHolder().setEdge<AreaType::IDX_MRG, math::RectEdge::IDX_L>(mrg);
+//   this->getAreaHolder().setEdge<AreaType::IDX_MRG, math::RectEdge::IDX_R>(mrg);
+//   this->getAreaHolder().setEdge<AreaType::IDX_MRG, math::RectEdge::IDX_T>(mrg);
+//   this->getAreaHolder().setEdge<AreaType::IDX_MRG, math::RectEdge::IDX_B>(mrg);
 // }
 
 // auto Widget::getMargin() const -> BoxArea::SharedPtr_t {
@@ -166,7 +168,7 @@ auto Widget::getChildAtPoint(const math::point2f_t &point) -> Widget * {
       break;
     }
 
-    const auto childPos = child->getOffset();
+    const auto childPos = child->getOffset(ElementPosition::RELATIVE);
     auto childRect = math::rect4f_t(childPos.getX(), childPos.getY(), child->getSize());
 
     if (auto *const widget = child->getChildAtPoint(point)) {
@@ -178,6 +180,14 @@ auto Widget::getChildAtPoint(const math::point2f_t &point) -> Widget * {
 
   return nullptr;
 }
+
+void Widget::setEventFilter(core::evts::EventHandler::Ptr_t hdl) { eventFilter_ = hdl; }
+
+void Widget::setMouseFilter(ois::MouseFilter filter) { mouseFilter_ = filter; }
+
+auto Widget::getMouseFilter() const -> ois::MouseFilter { return mouseFilter_; }
+
+void Widget::setAlignment(math::Alignment alignment) { alignment_ = alignment; }
 
 // void Widget::setHover(bool val) {
 //   // if (hovered_ == val) {

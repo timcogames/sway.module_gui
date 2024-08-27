@@ -13,7 +13,7 @@ NAMESPACE_BEGIN(widget)
 
 class Item : public Widget {
 public:
-  Item(Builder *builder)
+  Item(BuilderPtr_t builder)
       : Widget(builder) {}
 
   virtual ~Item() = default;

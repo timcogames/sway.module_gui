@@ -19,18 +19,39 @@ public:
 
   ~Element() = default;
 
-  void setPosition(ElementPosition pos) { position_ = pos; }
+  void setPosition(ElementPosition pos);
+
+  [[nodiscard]]
+  auto getPosition() const -> ElementPosition;
 
   void setOffset(const math::point2f_t &pnt);
 
-  auto getOffset(ElementPosition pos) -> math::point2f_t;
+  void setOffset(f32_t x, f32_t y);
+
+  [[nodiscard]]
+  auto getOffset(ElementPosition pos) const -> math::point2f_t;
+
+  [[nodiscard]]
+  auto isOffsetDirty() const -> bool;
 
   void updateOffset();
 
+  [[nodiscard]]
+  auto getAreaHolder() const -> ElementAreaHolder;
+
+  [[nodiscard]]
+  auto getInnerSize() const -> math::size2f_t;
+
+  [[nodiscard]]
+  auto getOuterSize() const -> math::size2f_t;
+
+  [[nodiscard]]
+  auto getOuterSizeWithMargin() const -> math::size2f_t;
+
 #pragma endregion
 
-protected:
-  ElementAreaHolder areaHolder_;
+private:
+  ElementAreaHolder holder_;
   ElementPosition position_;
   math::point2f_t offset_;
   bool offsetDirty_;

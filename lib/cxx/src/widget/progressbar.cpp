@@ -14,7 +14,7 @@ ProgressBar::ProgressBar(BuilderPtr_t builder)
 void ProgressBar::update() {}
 
 void ProgressBar::repaint(Painter::SharedPtr_t painter) {
-  const auto offset = this->getOffset();
+  const auto offset = this->getOffset(ElementPosition::RELATIVE);
   auto rectWithMargin = math::rect4f_t(offset.getX(), offset.getY(), this->getSize());
   rectWithMargin.reduce(math::Rect<f32_t>(1.5F, 1.5F, math::size2f_t(1.5F, 1.5F)));
 

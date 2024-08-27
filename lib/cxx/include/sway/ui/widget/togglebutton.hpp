@@ -19,9 +19,13 @@ public:
 
 #pragma endregion
 
+#pragma region "Override Button methods"
+
   MTHD_VIRTUAL(void update());
 
   MTHD_VIRTUAL(void repaint(Painter::SharedPtr_t painter));
+
+#pragma endregion
 
   [[nodiscard]]
   auto isChecked() const -> bool {

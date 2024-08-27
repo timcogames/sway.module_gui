@@ -8,8 +8,8 @@ NAMESPACE_BEGIN(widget)
 Button::Button(BuilderPtr_t builder, const std::string &text)
     : Widget(builder)
     , hovering_(false) {
-  label_ = std::make_shared<Label>(this->builder_, text);
-  this->addChildNode(label_);
+  labelWidget_ = std::make_shared<Label>(this->builder_, text);
+  this->addChildNode(labelWidget_);
 }
 
 void Button::update() {
@@ -20,20 +20,20 @@ void Button::update() {
   }
 
   if (hovering_) {
-    label_->setForegroundColor(COL4F_WHITE);
+    labelWidget_->setForegroundColor(COL4F_WHITE);
     this->setBackgroundColor(COL4F_GRAY2);
   } else {
-    label_->setForegroundColor(COL4F_BEIGE);
+    labelWidget_->setForegroundColor(COL4F_BEIGE);
     this->setBackgroundColor(COL4F_GRAY1);
   }
 }
 
 void Button::repaint(Painter::SharedPtr_t painter) {
-  auto offset = this->getOffset();
+  auto offset = this->getOffset(ElementPosition::RELATIVE);
 
-  label_->setAlignment(math::Alignment::CENTER);
-  label_->setOffset(offset);
-  label_->setSize(this->getSize());
+  labelWidget_->setAlignment(math::Alignment::CENTER);
+  labelWidget_->setOffset(offset);
+  labelWidget_->setSize(this->getSize());
 
   painter->drawRect(math::rect4f_t(offset.getX(), offset.getY(), this->getSize()), this->getBackgroundColor());
 

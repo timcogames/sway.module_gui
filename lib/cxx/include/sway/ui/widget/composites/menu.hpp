@@ -2,10 +2,10 @@
 #define SWAY_UI_WIDGET_MENU_HPP
 
 #include <sway/core.hpp>
+#include <sway/ui/orientations.hpp>
 #include <sway/ui/painter.hpp>
 #include <sway/ui/widget/composites/menueventhandler.hpp>
 #include <sway/ui/widget/composites/menuitem.hpp>
-#include <sway/ui/widget/layoutorientations.hpp>
 #include <sway/ui/widget/linearlayout.hpp>
 
 #include <memory>
@@ -23,7 +23,7 @@ public:
 
 #pragma region "Ctors/Dtor"
 
-  Menu(Builder *builder, LayoutOrientation orien);
+  Menu(BuilderPtr_t builder, Orientation orien);
 
   virtual ~Menu();
 
@@ -31,9 +31,9 @@ public:
 
 #pragma region "Override Widget methods"
 
-  // MTHD_OVERRIDE(void update()) {}
+  MTHD_OVERRIDE(void update());
 
-  // MTHD_OVERRIDE(void repaint(Painter::SharedPtr_t painter)) {}
+  MTHD_OVERRIDE(void repaint(Painter::SharedPtr_t painter));
 
 #pragma endregion
 

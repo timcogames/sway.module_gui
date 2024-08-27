@@ -25,14 +25,18 @@ public:
 
 #pragma endregion
 
+#pragma region "Override Widget methods"
+
   MTHD_VIRTUAL(void update());
 
   MTHD_VIRTUAL(void repaint(Painter::SharedPtr_t painter));
 
-  auto getLabel() const -> Label::SharedPtr_t { return label_; }
+#pragma endregion
+
+  auto getLabel() const -> Label::SharedPtr_t { return labelWidget_; }
 
 private:
-  Label::SharedPtr_t label_;
+  Label::SharedPtr_t labelWidget_;
   bool hovering_;
 };
 

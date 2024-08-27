@@ -2,8 +2,8 @@
 #define SWAY_UI_WIDGET_RADIOBUTTONGROUP_HPP
 
 #include <sway/core.hpp>
+#include <sway/ui/orientations.hpp>
 #include <sway/ui/painter.hpp>
-#include <sway/ui/widget/layoutorientations.hpp>
 #include <sway/ui/widget/linearlayout.hpp>
 
 #include <memory>
@@ -30,7 +30,7 @@ public:
 
 #pragma region "Ctors/Dtor"
 
-  RadioButtonGroup(BuilderPtr_t builder, LayoutOrientation orientation);
+  RadioButtonGroup(BuilderPtr_t builder, Orientation orientation);
 
   virtual ~RadioButtonGroup() = default;
 

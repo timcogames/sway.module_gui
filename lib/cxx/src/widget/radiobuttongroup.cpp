@@ -6,8 +6,8 @@ NAMESPACE_BEGIN(sway)
 NAMESPACE_BEGIN(ui)
 NAMESPACE_BEGIN(widget)
 
-RadioButtonGroup::RadioButtonGroup(BuilderPtr_t builder, LayoutOrientation orientation)
-    : LinearLayout(builder, orientation)
+RadioButtonGroup::RadioButtonGroup(BuilderPtr_t builder, Orientation orien)
+    : LinearLayout(builder, orien)
     , selected_(std::nullopt) {
   this->subscribe(this, "NodeAdded", EVENT_HANDLER(RadioButtonGroup, handleAddNode));
 }

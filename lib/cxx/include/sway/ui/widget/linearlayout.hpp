@@ -2,9 +2,9 @@
 #define SWAY_UI_WIDGET_LINEARLAYOUT_HPP
 
 #include <sway/core.hpp>
+#include <sway/ui/orientations.hpp>
 #include <sway/ui/painter.hpp>
 #include <sway/ui/widget/layout.hpp>
-#include <sway/ui/widget/layoutorientations.hpp>
 
 #include <memory>
 
@@ -19,7 +19,7 @@ public:
 
 #pragma region "Ctors/Dtor"
 
-  LinearLayout(BuilderPtr_t builder, LayoutOrientation orien);
+  LinearLayout(BuilderPtr_t builder, Orientation orien);
 
   virtual ~LinearLayout() = default;
 

@@ -54,15 +54,6 @@ public:
 
   [[nodiscard]]
   auto getContentSize() const -> math::size2f_t;
-
-  [[nodiscard]]
-  auto getInnerSize() const -> math::size2f_t;
-
-  [[nodiscard]]
-  auto getOuterSize() const -> math::size2f_t;
-
-  [[nodiscard]]
-  auto getOuterSizeWithMargin() const -> math::size2f_t;
 };
 
 NAMESPACE_END(ui)

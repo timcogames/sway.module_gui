@@ -18,9 +18,13 @@ public:
 
 #pragma endregion
 
+#pragma region "Override Widget methods"
+
   MTHD_VIRTUAL(void update());
 
   MTHD_VIRTUAL(void repaint(Painter::SharedPtr_t painter));
+
+#pragma endregion
 
   void setProgress(f32_t val);
 

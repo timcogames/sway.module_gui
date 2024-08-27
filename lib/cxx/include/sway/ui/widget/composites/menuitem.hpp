@@ -24,13 +24,13 @@ public:
 
 #pragma region "Ctors/Dtor"
 
-  MenuItem(Builder *builder, const std::string &text);
+  MenuItem(BuilderPtr_t builder, const std::string &text);
 
   virtual ~MenuItem() = default;
 
 #pragma endregion
 
-#pragma region "Override Widget methods"
+#pragma region "Override Item methods"
 
   MTHD_OVERRIDE(void update());
 

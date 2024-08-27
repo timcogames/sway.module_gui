@@ -76,12 +76,13 @@ public:
 
   void updPosition();
 
+#pragma region "Getters/Setters Offset"
+
   void setOffset(const math::point2f_t &pnt);
 
-  void setOffset(f32_t x, f32_t y);
+#pragma endregion
 
-  [[nodiscard]]
-  auto getOffset() const -> math::point2f_t;
+#pragma region "Getters/Setters Size"
 
   void setSize(const math::size2f_t &size);
 
@@ -89,6 +90,8 @@ public:
 
   [[nodiscard]]
   auto getSize() const -> math::size2f_t;
+
+#pragma endregion
 
   void setBackgroundColor(const math::col4f_t &col);
 
@@ -111,18 +114,19 @@ public:
   //   return math::size2f_t(outerWdt, outerHgt);
   // }
 
-  void setMouseFilter(ois::MouseFilter filter) { mouseFilter_ = filter; }
+  void setEventFilter(core::evts::EventHandler::Ptr_t hdl);
+
+  void setMouseFilter(ois::MouseFilter filter);
 
   [[nodiscard]]
-  auto getMouseFilter() const -> ois::MouseFilter {
-    return mouseFilter_;
-  }
+  auto getMouseFilter() const -> ois::MouseFilter;
 
-  void setAlignment(math::Alignment alignment) { alignment_ = alignment; }
+  void setAlignment(math::Alignment alignment);
 
 protected:
   BuilderPtr_t builder_;
   ois::MouseFilter mouseFilter_;
+  core::evts::EventHandler::Ptr_t eventFilter_;
   // math::rect4f_t innerRect_;  // wdt/hgt, padding
   // math::rect4f_t outerRect_;  // wdt/hgt, margin, border, padding
   math::Alignment alignment_;

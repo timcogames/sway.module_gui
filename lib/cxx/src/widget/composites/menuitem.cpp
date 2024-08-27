@@ -4,7 +4,7 @@ NAMESPACE_BEGIN(sway)
 NAMESPACE_BEGIN(ui)
 NAMESPACE_BEGIN(widget)
 
-MenuItem::MenuItem(Builder *builder, const std::string &text)
+MenuItem::MenuItem(BuilderPtr_t builder, const std::string &text)
     : Item(builder) {
   button_ = std::make_shared<Button>(this->builder_, text);
   // button_->subscribe(button_.get(), "MouseClicked", EVENT_HANDLER(MenuScreenView, handlePlayMouseClickedEvent));
@@ -23,7 +23,7 @@ void MenuItem::update() {
 void MenuItem::repaint(Painter::SharedPtr_t painter) {
   if (this->needsRepainting_) {
     button_->setAlignment(math::Alignment::CENTER);
-    const auto offset = this->getOffset();
+    const auto offset = this->getOffset(ElementPosition::RELATIVE);
     button_->setOffset(offset);
     button_->setSize(this->getSize());
     this->needsRepainting_ = false;

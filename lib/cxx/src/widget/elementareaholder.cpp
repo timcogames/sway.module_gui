@@ -43,11 +43,5 @@ auto ElementAreaHolder::getContentSize() const -> math::size2f_t {
   return cnt.value()->getSize();
 }
 
-auto ElementAreaHolder::getInnerSize() const -> math::size2f_t { return getSize<AreaType::IDX_PAD>(); }
-
-auto ElementAreaHolder::getOuterSize() const -> math::size2f_t { return getSize<AreaType::IDX_BRD>(); }
-
-auto ElementAreaHolder::getOuterSizeWithMargin() const -> math::size2f_t { return getSize<AreaType::IDX_MRG>(); }
-
 NAMESPACE_END(ui)
 NAMESPACE_END(sway)
