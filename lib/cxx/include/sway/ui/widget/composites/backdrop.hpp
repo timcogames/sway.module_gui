@@ -1,5 +1,5 @@
-#ifndef SWAY_UI_WIDGET_OVERLAY_HPP
-#define SWAY_UI_WIDGET_OVERLAY_HPP
+#ifndef SWAY_UI_WIDGET_BACKDROP_HPP
+#define SWAY_UI_WIDGET_BACKDROP_HPP
 
 #include <sway/core.hpp>
 #include <sway/ui/painter.hpp>
@@ -12,16 +12,17 @@ NAMESPACE_BEGIN(sway)
 NAMESPACE_BEGIN(ui)
 NAMESPACE_BEGIN(widget)
 
-class Overlay : public Widget {
+// pseudo-element
+class Backdrop : public Widget {
 public:
-  using Ptr_t = Overlay *;
-  using SharedPtr_t = std::shared_ptr<Overlay>;
+  using Ptr_t = Backdrop *;
+  using SharedPtr_t = std::shared_ptr<Backdrop>;
 
 #pragma region "Ctors/Dtor"
 
-  Overlay(BuilderPtr_t builder);
+  Backdrop(BuilderPtr_t builder);
 
-  virtual ~Overlay();
+  virtual ~Backdrop();
 
 #pragma endregion
 
@@ -38,4 +39,4 @@ NAMESPACE_END(widget)
 NAMESPACE_END(ui)
 NAMESPACE_END(sway)
 
-#endif  // SWAY_UI_WIDGET_OVERLAY_HPP
+#endif  // SWAY_UI_WIDGET_BACKDROP_HPP

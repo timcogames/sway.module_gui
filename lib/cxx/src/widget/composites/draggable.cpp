@@ -21,7 +21,12 @@ void Draggable::update() {
   }
 }
 
-void Draggable::repaint(Painter::SharedPtr_t painter) {}
+void Draggable::repaint(Painter::SharedPtr_t painter) {
+  auto offset = this->getOffset();
+  painter->drawRect(math::rect4f_t(offset.getX(), offset.getY(), this->getSize()), this->getBackgroundColor());
+
+  Widget::repaint(painter);
+}
 
 NAMESPACE_END(widget)
 NAMESPACE_END(ui)

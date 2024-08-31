@@ -16,7 +16,7 @@ TEST(ElementTest, ctor_def) {
   ui::Element elem;
 
   ASSERT_EQ(elem.getPosition(), ui::ElementPosition::RELATIVE);
-  ASSERT_EQ(elem.getOffset(ui::ElementPosition::RELATIVE), math::point2f_zero);
+  ASSERT_EQ(elem.getOffset(), math::point2f_zero);
   ASSERT_FALSE(elem.isOffsetDirty());
 }
 
@@ -30,7 +30,7 @@ TEST(ElementTest, position) {
 TEST(ElementTest, offset) {
   ui::Element elem;
 
-  elem.setOffset({1.0F, 2.0F});
-  ASSERT_EQ(elem.getOffset(ui::ElementPosition::RELATIVE), math::point2f_t(1.0F, 2.0F));
+  elem.setOffset(1.0F, 2.0F);
+  ASSERT_EQ(elem.getOffset(), math::point2f_t(1.0F, 2.0F));
   ASSERT_TRUE(elem.isOffsetDirty());
 }

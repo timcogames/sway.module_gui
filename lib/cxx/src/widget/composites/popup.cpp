@@ -19,7 +19,7 @@ Popup::~Popup() {}
 void Popup::update() {}
 
 void Popup::repaint(Painter::SharedPtr_t painter) {
-  auto offset = this->getOffset(ElementPosition::RELATIVE);
+  auto offset = this->getOffset();
   painter->drawRect(math::rect4f_t(offset.getX(), offset.getY(), this->getSize()), this->getBackgroundColor());
 
   Widget::repaint(painter);

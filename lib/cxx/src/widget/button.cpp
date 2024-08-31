@@ -29,7 +29,7 @@ void Button::update() {
 }
 
 void Button::repaint(Painter::SharedPtr_t painter) {
-  auto offset = this->getOffset(ElementPosition::RELATIVE);
+  auto offset = this->getOffset();
 
   labelWidget_->setAlignment(math::Alignment::CENTER);
   labelWidget_->setOffset(offset);

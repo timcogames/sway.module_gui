@@ -3,8 +3,8 @@
 
 #include <sway/core.hpp>
 #include <sway/ui/painter.hpp>
+#include <sway/ui/widget/composites/backdrop.hpp>
 #include <sway/ui/widget/composites/draggable.hpp>
-#include <sway/ui/widget/composites/overlay.hpp>
 #include <sway/ui/widget/composites/popup.hpp>
 
 #include <memory>
@@ -35,6 +35,8 @@ public:
 
 #pragma endregion
 
+  void setBackdrop();
+
   void setDragability(bool draggable);
 
   void show();
@@ -44,8 +46,8 @@ public:
 private:
   core::evts::EventBus::Subscriber_t subscriber_;
 
-  Overlay::SharedPtr_t overlayWidget_;
-  Draggable::SharedPtr_t dragWidget_;
+  Backdrop::SharedPtr_t backdrop_;
+  Draggable::SharedPtr_t dragHeader_;
 
   bool draggable_;
   bool resizable_;

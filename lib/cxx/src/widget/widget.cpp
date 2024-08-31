@@ -88,11 +88,11 @@ void Widget::updPosition() {
     }
 
     auto parent = std::static_pointer_cast<Widget>(parentOpt.value());
-    auto parentPosition = parent->getOffset(ElementPosition::RELATIVE);
+    auto parentPosition = parent->getOffset();
     auto parentSize = parent->getSize();
 
-    this->setOffset({this->getOffset(ElementPosition::RELATIVE).getX() + parentPosition.getX(),
-        this->getOffset(ElementPosition::RELATIVE).getY() + parentPosition.getY()});
+    this->setOffset(math::point2f_t(
+        this->getOffset().getX() + parentPosition.getX(), this->getOffset().getY() + parentPosition.getY()));
 
     auto x = 0.0F;
     auto y = 0.0F;
@@ -109,22 +109,21 @@ void Widget::updPosition() {
       y = (parentSize.getH() - getSize().getH());
     }
 
-    this->setOffset(
-        {this->getOffset(ElementPosition::RELATIVE).getX() + x, this->getOffset(ElementPosition::RELATIVE).getY() + y});
+    this->setOffset({this->getOffset().getX() + x, this->getOffset().getY() + y});
   }
 }
 
-void Widget::setOffset(const math::point2f_t &pnt) {
-  this->setOffset(pnt);
+// void Widget::setOffset(const math::point2f_t &pnt) {
+//   this->setOffset(pnt);
 
-  updPosition();
-}
+//   updPosition();
+// }
 
 void Widget::setSize(const math::size2f_t &size) {
   this->getAreaHolder().getArea<AreaType::IDX_CNT>().value()->setSize(size);
 }
 
-void Widget::setSize(f32_t wdt, f32_t hgt) { setSize({wdt, hgt}); }
+void Widget::setSize(f32_t wdt, f32_t hgt) { setSize(math::size2f_t(wdt, hgt)); }
 
 auto Widget::getSize() const -> math::size2f_t {
   return this->getAreaHolder().getArea<AreaType::IDX_CNT>().value()->getSize();
@@ -168,7 +167,7 @@ auto Widget::getChildAtPoint(const math::point2f_t &point) -> Widget * {
       break;
     }
 
-    const auto childPos = child->getOffset(ElementPosition::RELATIVE);
+    const auto childPos = child->getOffset();
     auto childRect = math::rect4f_t(childPos.getX(), childPos.getY(), child->getSize());
 
     if (auto *const widget = child->getChildAtPoint(point)) {

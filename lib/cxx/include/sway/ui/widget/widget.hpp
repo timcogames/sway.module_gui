@@ -76,12 +76,6 @@ public:
 
   void updPosition();
 
-#pragma region "Getters/Setters Offset"
-
-  void setOffset(const math::point2f_t &pnt);
-
-#pragma endregion
-
 #pragma region "Getters/Setters Size"
 
   void setSize(const math::size2f_t &size);

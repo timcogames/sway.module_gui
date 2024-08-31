@@ -10,6 +10,17 @@
 NAMESPACE_BEGIN(sway)
 NAMESPACE_BEGIN(ui)
 
+struct ElementOffset {
+  math::point2f_t original;
+  math::point2f_t computed;
+  bool dirty;
+
+  ElementOffset()
+      : original(math::point2f_zero)
+      , computed(math::point2f_zero)
+      , dirty(false) {}
+};
+
 class Element : public core::container::Node  // math::Transform<core::container::Node, f32_t>
 {
 public:
@@ -19,22 +30,34 @@ public:
 
   ~Element() = default;
 
+#pragma endregion
+
+#pragma region "Getters/Setters Position"
+
   void setPosition(ElementPosition pos);
 
   [[nodiscard]]
   auto getPosition() const -> ElementPosition;
+
+#pragma endregion
+
+#pragma region "Getters/Setters Offset"
 
   void setOffset(const math::point2f_t &pnt);
 
   void setOffset(f32_t x, f32_t y);
 
   [[nodiscard]]
-  auto getOffset(ElementPosition pos) const -> math::point2f_t;
+  auto getOffset() const -> math::point2f_t;
 
   [[nodiscard]]
   auto isOffsetDirty() const -> bool;
 
+#pragma endregion
+
   void updateOffset();
+
+  void recursiveUpdate(Element::SharedPtr_t elem);
 
   [[nodiscard]]
   auto getAreaHolder() const -> ElementAreaHolder;
@@ -48,13 +71,12 @@ public:
   [[nodiscard]]
   auto getOuterSizeWithMargin() const -> math::size2f_t;
 
-#pragma endregion
+  void handleAddNode(core::foundation::Event::Ptr_t evt);
 
 private:
   ElementAreaHolder holder_;
   ElementPosition position_;
-  math::point2f_t offset_;
-  bool offsetDirty_;
+  ElementOffset offset_;
 };
 
 NAMESPACE_END(ui)

@@ -4,30 +4,26 @@ NAMESPACE_BEGIN(sway)
 NAMESPACE_BEGIN(ui)
 
 Element::Element()
-    : position_(ElementPosition::RELATIVE)
-    , offset_(math::point2f_zero)
-    , offsetDirty_(false) {}
+    : position_(ElementPosition::RELATIVE) {
+  this->subscribe(this, "NodeAdded", EVENT_HANDLER(Element, handleAddNode));
+}
 
 void Element::setPosition(ElementPosition pos) { position_ = pos; }
 
 auto Element::getPosition() const -> ElementPosition { return position_; }
 
 void Element::setOffset(const math::point2f_t &pnt) {
-  offset_ = pnt;
-  offsetDirty_ = true;
+  offset_.original = pnt;
+  offset_.dirty = true;
+
+  // recursiveUpdate(this->getSharedFrom<Element>(this));
 }
 
-void Element::setOffset(f32_t x, f32_t y) { setOffset({x, y}); }
+void Element::setOffset(f32_t x, f32_t y) { setOffset(math::point2f_t(x, y)); }
 
-auto Element::getOffset(ElementPosition pos) const -> math::point2f_t {
-  if (position_ == ElementPosition::RELATIVE) {
-  } else if (position_ == ElementPosition::ABSOLUTE || position_ == ElementPosition::FIXED) {
-  }
+auto Element::getOffset() const -> math::point2f_t { return offset_.computed; }
 
-  return offset_;
-}
-
-auto Element::isOffsetDirty() const -> bool { return offsetDirty_; }
+auto Element::isOffsetDirty() const -> bool { return offset_.dirty; }
 
 void Element::updateOffset() {
   auto parentOpt = this->getParentNode();
@@ -38,16 +34,26 @@ void Element::updateOffset() {
   auto parent = std::static_pointer_cast<Element>(parentOpt.value());
 
   if (position_ == ElementPosition::RELATIVE) {
-    auto parentContentSize = parent->getAreaHolder().getContentSize();
-    offset_ = math::point2f_zero;
+    auto parentOffset = parent->getOffset();
+    auto parentAreaPosition = parent->getAreaHolder().getPosition<ui::AreaType::IDX_CNT>();
+    auto parentAreaSize = parent->getAreaHolder().getContentSize();
+    offset_.computed = math::point2f_t(parentOffset.getX(), parentOffset.getY());
   } else if (position_ == ElementPosition::ABSOLUTE || position_ == ElementPosition::FIXED) {
-    auto parentContentSize = getInnerSize();
-    offset_ = math::point2f_zero;
+    auto parentInnerSize = parent->getInnerSize();
+    offset_.computed = offset_.original;
   } else {
-    offset_ = math::point2f_zero;
+    offset_.computed = offset_.original;
   }
 
-  offsetDirty_ = false;
+  offset_.dirty = false;
+}
+
+void Element::recursiveUpdate(Element::SharedPtr_t elem) {
+  std::static_pointer_cast<Element>(elem)->updateOffset();
+
+  for (const auto &item : elem->getChildNodes()) {
+    recursiveUpdate(std::static_pointer_cast<Element>(item));
+  }
 }
 
 auto Element::getAreaHolder() const -> ElementAreaHolder { return holder_; }
@@ -57,6 +63,11 @@ auto Element::getInnerSize() const -> math::size2f_t { return holder_.getSize<Ar
 auto Element::getOuterSize() const -> math::size2f_t { return holder_.getSize<AreaType::IDX_BRD>(); }
 
 auto Element::getOuterSizeWithMargin() const -> math::size2f_t { return holder_.getSize<AreaType::IDX_MRG>(); }
+
+void Element::handleAddNode(core::foundation::Event::Ptr_t evt) {
+  auto evtdata = static_cast<core::container::NodeEventData *>(evt->data());
+  recursiveUpdate(std::static_pointer_cast<Element>(this->getChildNode(evtdata->nodeidx)));
+}
 
 NAMESPACE_END(ui)
 NAMESPACE_END(sway)

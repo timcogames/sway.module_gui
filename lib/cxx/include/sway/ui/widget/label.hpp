@@ -3,6 +3,7 @@
 
 #include <sway/core.hpp>
 #include <sway/ui/painter.hpp>
+#include <sway/ui/typography.hpp>
 #include <sway/ui/widget/widget.hpp>
 
 #include <memory>
@@ -46,7 +47,7 @@ private:
   std::string font_;
 
   int fontSize_;
-  math::col4f_t fontColor_;
+  typography::col_t fontColor_;
 
   // int lineSpacing_;
   // math::col4f_t fontShadowColor_;

@@ -1,4 +1,5 @@
 #include <sway/render/procedurals/prims/quadrilateral.hpp>
+#include <sway/ui/ft2/fontshader.hpp>
 #include <sway/ui/painter.hpp>
 
 NAMESPACE_BEGIN(sway)
@@ -61,7 +62,7 @@ void Painter::initialize(ft2::Font::SharedPtr_t font, std::shared_ptr<render::Re
   texCreateInfo.dataType = core::ValueDataType::UBYTE;
   texCreateInfo.pixels = nullptr;
   texCreateInfo.mipLevels = 0;
-  auto image = textMtrl_->addImage(texCreateInfo, "diffuse_sampler");
+  auto image = textMtrl_->addImage(texCreateInfo, "text_glyph_sampler");
 
   for (auto i = 0; i < font_->glyphs_.size(); i++) {
     auto bi = font_->getBitmapData(font_->glyphs_[i]);
@@ -350,6 +351,10 @@ void Painter::onUpdate(math::mat4f_t tfrm, math::mat4f_t proj, math::mat4f_t vie
     textCmd.stencilDesc.back = textCmd.stencilDesc.front;
     textCmd.geom = textGeom_;
     textCmd.topology = gapi::TopologyType::TRIANGLE_LIST;
+
+    ft2::FontShader::setLayer(textMtrl_->getEffect(), 1);
+    ft2::FontShader::setColor(textMtrl_->getEffect(), math::col4f_t(0.7F, 0.8F, 1.0F, 1.0F));
+
     textCmd.material = textMtrl_;
     textCmd.tfrm = math::mat4f_t();
     // clang-format off

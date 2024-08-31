@@ -112,8 +112,16 @@ public:
   using SharedPtr_t = std::shared_ptr<Font>;
 
   static void toJson(nlohmann::json &jdata, const FontGlyphDescriptor &glyph) {
-    jdata = nlohmann::json{{"a", glyph.advance}, {"x", glyph.x}, {"y", glyph.y}, {"t", glyph.top}, {"l", glyph.left},
-        {"r", glyph.rows}, {"w", glyph.width}};
+    // clang-format off
+    jdata = nlohmann::json{
+      {"a", glyph.advance}, 
+      {"x", glyph.x}, 
+      {"y", glyph.y}, 
+      {"t", glyph.top}, 
+      {"l", glyph.left},
+      {"r", glyph.rows}, 
+      {"w", glyph.width}};
+    // clang-format on
   }
 
   static void fromJson(nlohmann::json &jdata, FontGlyphDescriptor &glyph) {
