@@ -30,7 +30,10 @@ TEST(ElementTest, position) {
 TEST(ElementTest, offset) {
   ui::Element elem;
 
+  elem.setPosition(ui::ElementPosition::ABSOLUTE);
   elem.setOffset(1.0F, 2.0F);
-  ASSERT_EQ(elem.getOffset(), math::point2f_t(1.0F, 2.0F));
   ASSERT_TRUE(elem.isOffsetDirty());
+
+  elem.updateOffset();
+  ASSERT_EQ(elem.getOffset(), math::point2f_t(1.0F, 2.0F));
 }

@@ -26,20 +26,20 @@ auto Element::getOffset() const -> math::point2f_t { return offset_.computed; }
 auto Element::isOffsetDirty() const -> bool { return offset_.dirty; }
 
 void Element::updateOffset() {
-  auto parentOpt = this->getParentNode();
-  if (!parentOpt.has_value()) {
-    return;
-  }
-
-  auto parent = std::static_pointer_cast<Element>(parentOpt.value());
-
   if (position_ == ElementPosition::RELATIVE) {
+    auto parentOpt = this->getParentNode();
+    if (!parentOpt.has_value()) {
+      return;
+    }
+
+    auto parent = std::static_pointer_cast<Element>(parentOpt.value());
+
     auto parentOffset = parent->getOffset();
     auto parentAreaPosition = parent->getAreaHolder().getPosition<ui::AreaType::IDX_CNT>();
     auto parentAreaSize = parent->getAreaHolder().getContentSize();
     offset_.computed = math::point2f_t(parentOffset.getX(), parentOffset.getY());
   } else if (position_ == ElementPosition::ABSOLUTE || position_ == ElementPosition::FIXED) {
-    auto parentInnerSize = parent->getInnerSize();
+    // auto parentInnerSize = parent->getInnerSize();
     offset_.computed = offset_.original;
   } else {
     offset_.computed = offset_.original;
