@@ -28,12 +28,21 @@ TEST(ElementTest, position) {
 }
 
 TEST(ElementTest, offset) {
-  ui::Element elem;
+  auto absElem = std::make_shared<ui::Element>();
 
-  elem.setPosition(ui::ElementPosition::ABSOLUTE);
-  elem.setOffset(1.0F, 2.0F);
-  ASSERT_TRUE(elem.isOffsetDirty());
+  absElem->setPosition(ui::ElementPosition::ABSOLUTE);
+  absElem->setOffset(1.0F, 2.0F);
+  ASSERT_TRUE(absElem->isOffsetDirty());
+  absElem->updateOffset();
+  ASSERT_FALSE(absElem->isOffsetDirty());
+  ASSERT_EQ(absElem->getOffset(), math::point2f_t(1.0F, 2.0F));
 
-  elem.updateOffset();
-  ASSERT_EQ(elem.getOffset(), math::point2f_t(1.0F, 2.0F));
+  auto relElem = std::make_shared<ui::Element>();
+  relElem->setPosition(ui::ElementPosition::RELATIVE);
+  relElem->setOffset(3.0F, 4.0F);
+  ASSERT_TRUE(relElem->isOffsetDirty());
+  relElem->updateOffset();
+  ASSERT_FALSE(relElem->isOffsetDirty());
+  absElem->addChildNode(relElem);
+  ASSERT_EQ(relElem->getOffset(), math::point2f_t(1.0F, 2.0F));
 }

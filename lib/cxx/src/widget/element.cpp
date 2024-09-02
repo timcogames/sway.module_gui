@@ -29,15 +29,14 @@ void Element::updateOffset() {
   if (position_ == ElementPosition::RELATIVE) {
     auto parentOpt = this->getParentNode();
     if (!parentOpt.has_value()) {
-      return;
+      // TODO
+    } else {
+      auto parent = std::static_pointer_cast<Element>(parentOpt.value());
+      auto parentOffset = parent->getOffset();
+      auto parentAreaPosition = parent->getAreaHolder().getPosition<ui::AreaType::IDX_CNT>();
+      auto parentAreaSize = parent->getAreaHolder().getContentSize();
+      offset_.computed = math::point2f_t(parentOffset.getX(), parentOffset.getY());
     }
-
-    auto parent = std::static_pointer_cast<Element>(parentOpt.value());
-
-    auto parentOffset = parent->getOffset();
-    auto parentAreaPosition = parent->getAreaHolder().getPosition<ui::AreaType::IDX_CNT>();
-    auto parentAreaSize = parent->getAreaHolder().getContentSize();
-    offset_.computed = math::point2f_t(parentOffset.getX(), parentOffset.getY());
   } else if (position_ == ElementPosition::ABSOLUTE || position_ == ElementPosition::FIXED) {
     // auto parentInnerSize = parent->getInnerSize();
     offset_.computed = offset_.original;
