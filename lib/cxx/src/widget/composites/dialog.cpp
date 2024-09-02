@@ -13,11 +13,9 @@ NAMESPACE_BEGIN(widget)
 
 Dialog::Dialog(BuilderPtr_t builder)
     : Popup(builder)
-    , backdrop_(nullptr) {
+    , backdrop_(nullptr)
+    , draghead_(nullptr) {
   this->setPosition(ElementPosition::ABSOLUTE);
-
-  dragHeader_ = std::make_shared<Draggable>(this->builder_);
-  this->addChildNode(dragHeader_);
 }
 
 Dialog::~Dialog() {}
@@ -27,7 +25,12 @@ void Dialog::setBackdrop() {
   this->getParentNode().value()->addChildNode(backdrop_);
 }
 
-void Dialog::setDragability(bool draggable) { draggable_ = draggable; }
+void Dialog::setDragability(bool val) {
+  draghead_ = std::make_shared<Draggable>(this->builder_);
+  this->addChildNode(draghead_);
+
+  draggable_ = val;
+}
 
 void Dialog::show() {}
 
@@ -37,17 +40,17 @@ void Dialog::update() {}
 
 void Dialog::repaint(Painter::SharedPtr_t painter) {
   auto offset = this->getOffset();
+  auto contentSize = this->getAreaHolder().getContentSize();
+
+  draghead_->setOffset(0.0F, 0.0F);
+  draghead_->setSize(contentSize.getW(), 20.0F);
+  draghead_->setBackgroundColor(COL4F_GREEN);
 
   if (backdrop_) {
     backdrop_->setOffset(0.0F, 0.0F);
-    backdrop_->setSize(800.0F, 600.0F);
+    backdrop_->setSize(painter->getScreenSize());
     backdrop_->setBackgroundColor(COL4F_BEIGE);
   }
-
-  dragHeader_->setAlignment(math::Alignment::CENTER);
-  dragHeader_->setOffset(0.0F, 0.0F);
-  dragHeader_->setSize(800.0F, 20.0F);
-  dragHeader_->setBackgroundColor(COL4F_GREEN);
 
   Popup::repaint(painter);
 }

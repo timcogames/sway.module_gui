@@ -9,12 +9,13 @@ static int maxCharTall = 0;
 static math::point2i_t pos;
 
 Painter::Painter()
-    : geomBatchChunkSize_(0) {}
+    : geomBatchChunkSize_(0)
+    , screenSize_(math::size2f_zero) {}
 
 Painter::~Painter() {}
 
-void Painter::initialize(ft2::Font::SharedPtr_t font, std::shared_ptr<render::RenderSubsystem> subsystem,
-    std::shared_ptr<render::MaterialManager> materialMngr, std::shared_ptr<rms::ImageResourceManager> imgResMngr,
+void Painter::initialize(ft2::Font::SharedPtr_t font, render::RenderSubsystem::SharedPtr_t subsystem,
+    render::MaterialManagerSharedPtr_t materialMngr, std::shared_ptr<rms::ImageResourceManager> imgResMngr,
     std::shared_ptr<rms::GLSLResourceManager> glslResMngr) {
 
   font_ = font;
@@ -161,7 +162,7 @@ void Painter::clear() {
   // geomBuilder_->remove(0);
 }
 
-void Painter::drawRect(f32_t x, f32_t y, f32_t w, f32_t h, math::col4f_t col) {
+void Painter::drawRect(f32_t x, f32_t y, f32_t w, f32_t h, math::col4f_t col, f32_t zindex) {
   if (geomBatchChunkSize_ >= GEOMERTY_BATCH_CHUNK_SIZE) {
     return;
   }
@@ -172,11 +173,12 @@ void Painter::drawRect(f32_t x, f32_t y, f32_t w, f32_t h, math::col4f_t col) {
   chunk.rect.y = y;
   chunk.rect.w = w;
   chunk.rect.h = h;
+  chunk.rect.zindex = zindex;
   chunk.rect.color = col;
 }
 
-void Painter::drawRect(const math::rect4f_t &rect, math::col4f_t col) {
-  drawRect(rect.getL(), rect.getT(), rect.getR(), rect.getB(), col);
+void Painter::drawRect(const math::rect4f_t &rect, math::col4f_t col, f32_t zindex) {
+  drawRect(rect.getL(), rect.getT(), rect.getR(), rect.getB(), col, zindex);
 }
 
 void Painter::drawText(f32_t x, f32_t y, f32_t w, f32_t h, math::col4f_t col, lpcstr_t text) {
@@ -213,11 +215,12 @@ void Painter::onUpdateBatchChunks() {
         } else {
           inst->setRemap(true);
 
-          auto dX = 1.0F / ((f32_t)800 / 2.0F);
-          auto dY = 1.0F / ((f32_t)600 / 2.0F);
+          auto dX = 1.0F / ((f32_t)screenSize_.getW() / 2.0F);
+          auto dY = 1.0F / ((f32_t)screenSize_.getH() / 2.0F);
 
           inst->setPosDataAttrib(
-              math::rect4f_t(chunk.rect.x * dX, chunk.rect.y * dY, chunk.rect.w * dX, chunk.rect.h * dY));
+              math::rect4f_t(chunk.rect.x * dX, chunk.rect.y * dY, chunk.rect.w * dX, chunk.rect.h * dY),
+              chunk.rect.zindex);
           inst->setColDataAttrib(chunk.rect.color);
           nextRectIdx_ += 1;
         }
@@ -249,8 +252,8 @@ void Painter::onUpdateBatchChunks() {
           } else {
             inst->setRemap(true);
 
-            auto dX = 1.0F / ((f32_t)800 / 2.0F);
-            auto dY = 1.0F / ((f32_t)600 / 2.0F);
+            auto dX = 1.0F / ((f32_t)screenSize_.getW() / 2.0F);
+            auto dY = 1.0F / ((f32_t)screenSize_.getH() / 2.0F);
 
             inst->setPosDataAttrib(
                 math::rect4f_t(textPos.getL() * dX, textPos.getT() * dY, textPos.getR() * dX, textPos.getB() * dY));
@@ -316,7 +319,7 @@ void Painter::onUpdate(math::mat4f_t tfrm, math::mat4f_t proj, math::mat4f_t vie
     rectCmd.proj.setData(math::Projection((struct math::ProjectionDescription) {
       .rect = {{ -1.0F /* L */, 1.0F /* B->T */, 1.0F /* R */, -1.0F /* T->B */ }},
       .fov = 0,
-      .aspect = f32_t(800 / 600),
+      .aspect = f32_t(screenSize_.getW() / screenSize_.getH()),
       .znear = 1.0F,
       .zfar = 10.0F
     }).makeOrtho());
@@ -361,7 +364,7 @@ void Painter::onUpdate(math::mat4f_t tfrm, math::mat4f_t proj, math::mat4f_t vie
     textCmd.proj.setData(math::Projection((struct math::ProjectionDescription) {
       .rect = {{ -1.0F /* L */, 1.0F /* B->T */, 1.0F /* R */, -1.0F /* T->B */ }},
       .fov = 0,
-      .aspect = f32_t(800 / 600),
+      .aspect = f32_t(screenSize_.getW() / screenSize_.getH()),
       .znear = 1.0F,
       .zfar = 10.0F
     }).makeOrtho());

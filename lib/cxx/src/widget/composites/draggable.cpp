@@ -23,7 +23,7 @@ void Draggable::update() {
 
 void Draggable::repaint(Painter::SharedPtr_t painter) {
   auto offset = this->getOffset();
-  painter->drawRect(math::rect4f_t(offset.getX(), offset.getY(), this->getSize()), this->getBackgroundColor());
+  painter->drawRect(math::rect4f_t(offset.getX(), offset.getY(), this->getSize()), this->getBackgroundColor(), 0.01F);
 
   Widget::repaint(painter);
 }

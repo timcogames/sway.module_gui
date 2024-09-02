@@ -3,6 +3,7 @@
 
 #include <sway/core.hpp>
 #include <sway/gapi.hpp>
+#include <sway/math.hpp>
 #include <sway/render.hpp>
 #include <sway/render/updatable.hpp>
 #include <sway/ui/ft2/font.hpp>
@@ -22,6 +23,7 @@ enum class GeometryBatchChunkType : u32_t { RECT, TEXT, IMG };
 
 struct GeometryBatchChunkRect {
   f32_t x, y, w, h;
+  f32_t zindex;
   math::col4f_t color;
 };
 
@@ -59,17 +61,17 @@ public:
 
 #pragma endregion
 
-  void initialize(ft2::Font::SharedPtr_t font, std::shared_ptr<render::RenderSubsystem> subsystem,
-      std::shared_ptr<render::MaterialManager> materialMngr, std::shared_ptr<rms::ImageResourceManager> imgResMngr,
+  void initialize(ft2::Font::SharedPtr_t font, render::RenderSubsystem::SharedPtr_t subsystem,
+      render::MaterialManagerSharedPtr_t materialMngr, std::shared_ptr<rms::ImageResourceManager> imgResMngr,
       std::shared_ptr<rms::GLSLResourceManager> glslResMngr);
 
-  void createRectGeom(std::shared_ptr<render::RenderSubsystem> subsystem, u32_t geomIdx);
+  void createRectGeom(render::RenderSubsystem::SharedPtr_t subsystem, u32_t geomIdx);
 
-  void createTextGeom(std::shared_ptr<render::RenderSubsystem> subsystem, u32_t geomIdx);
+  void createTextGeom(render::RenderSubsystem::SharedPtr_t subsystem, u32_t geomIdx);
 
-  void drawRect(f32_t x, f32_t y, f32_t w, f32_t h, math::col4f_t col);
+  void drawRect(f32_t x, f32_t y, f32_t w, f32_t h, math::col4f_t col, f32_t zindex = 0.0F);
 
-  void drawRect(const math::rect4f_t &rect, math::col4f_t col);
+  void drawRect(const math::rect4f_t &rect, math::col4f_t col, f32_t zindex = 0.0F);
 
   void drawText(f32_t x, f32_t y, f32_t w, f32_t h, math::col4f_t col, lpcstr_t text);
 
@@ -93,16 +95,25 @@ public:
 
   auto getDefaultFont() -> ft2::Font::SharedPtr_t { return font_; }
 
+  void setScreenSize(const math::size2i_t &size) {
+    screenSize_ = math::size2f_t((f32_t)size.getW(), (f32_t)size.getH());
+  }
+
+  [[nodiscard]]
+  auto getScreenSize() const -> math::size2f_t {
+    return screenSize_;
+  }
+
 private:
-  std::shared_ptr<render::RenderQueue> queue_;
-  std::shared_ptr<render::RenderSubqueue> subqueue_;
+  render::RenderQueue::SharedPtr_t queue_;
+  render::RenderSubqueue::SharedPtr_t subqueue_;
   std::shared_ptr<render::GeomBuilder> geomBuilder_;
 
-  std::shared_ptr<render::Material> rectMtrl_;
+  render::Material::SharedPtr_t rectMtrl_;
   render::GeomInstanceDataDivisor<render::procedurals::prims::Quadrilateral<math::VertexColor>> *rectGeomDataDivisor_;
   render::GeomInstance<render::procedurals::prims::Quadrilateral<math::VertexColor>> *rectGeom_;  // mapped
 
-  std::shared_ptr<render::Material> textMtrl_;
+  render::Material::SharedPtr_t textMtrl_;
   render::GeomInstanceDataDivisor<render::procedurals::prims::Quadrilateral<math::VertexTexCoord>>
       *textGeomDataDivisor_;
   render::GeomInstance<render::procedurals::prims::Quadrilateral<math::VertexTexCoord>> *textGeom_;
@@ -115,6 +126,8 @@ private:
 
   int nextRectIdx_;
   int nextTextIdx_;
+
+  math::size2f_t screenSize_;
 };
 
 NAMESPACE_END(ui)

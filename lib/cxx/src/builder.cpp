@@ -47,13 +47,14 @@ Builder::Builder(core::foundation::Context::Ptr_t context, Painter::SharedPtr_t 
   root_ = std::make_shared<widget::Widget>(this);
 }
 
-void Builder::initialize(ft2::Font::SharedPtr_t font, std::shared_ptr<render::MaterialManager> materialMngr,
+void Builder::initialize(ft2::Font::SharedPtr_t font, render::MaterialManagerSharedPtr_t materialMngr,
     std::shared_ptr<rms::ImageResourceManager> imgResMngr, std::shared_ptr<rms::GLSLResourceManager> glslResMngr) {
-  auto ctx = this->getContext();
-  auto renderSubsystem = ctx->getSubsystem<render::RenderSubsystem>("RenderSubsystem").value();
+  auto renderSubsystemOpt = this->getContext()->getSubsystem<render::RenderSubsystem>("RenderSubsystem");
+  if (!renderSubsystemOpt) {
+    // TODO
+  }
 
-  painter_->initialize(font, renderSubsystem, materialMngr, imgResMngr, glslResMngr);
-
+  painter_->initialize(font, renderSubsystemOpt.value(), materialMngr, imgResMngr, glslResMngr);
   subscriber_ = evtbus_->subscribe(new WidgetEventHandler(this));
 
   // root_->setAbsolutePosition(0, 0);

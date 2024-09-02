@@ -2,6 +2,7 @@
 #define SWAY_UI_BUILDER_HPP
 
 #include <sway/core.hpp>
+#include <sway/math.hpp>
 #include <sway/ui/cursor.hpp>
 #include <sway/ui/ft2/fontmanager.hpp>
 #include <sway/ui/painter.hpp>
@@ -32,7 +33,7 @@ public:
 
 #pragma endregion
 
-  void initialize(ft2::Font::SharedPtr_t font, std::shared_ptr<render::MaterialManager> materialMngr,
+  void initialize(ft2::Font::SharedPtr_t font, render::MaterialManagerSharedPtr_t materialMngr,
       std::shared_ptr<rms::ImageResourceManager> imgResMngr, std::shared_ptr<rms::GLSLResourceManager> glslResMngr);
 
   void deinit();

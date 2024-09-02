@@ -47,7 +47,7 @@ private:
   core::evts::EventBus::Subscriber_t subscriber_;
 
   Backdrop::SharedPtr_t backdrop_;
-  Draggable::SharedPtr_t dragHeader_;
+  Draggable::SharedPtr_t draghead_;
 
   bool draggable_;
   bool resizable_;
