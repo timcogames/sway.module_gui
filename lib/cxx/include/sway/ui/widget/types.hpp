@@ -5,59 +5,27 @@
 #include <sway/ui/widget/areatypes.hpp>
 
 #include <array>
-#include <memory>
 #include <type_traits>  // std::conditional
-
-#define NUM_OF_AREAS (sway::core::detail::toBase(sway::ui::AreaType::Latest))
 
 NAMESPACE_BEGIN(sway)
 NAMESPACE_BEGIN(ui)
 
-#pragma region "Area"
-
-class Area;
-class BoxArea;
-class ContentArea;
-
-using AreaPtr_t = Area *;
-using AreaSharedPtr_t = std::shared_ptr<Area>;
-
-using BoxAreaPtr_t = BoxArea *;
-using BoxAreaSharedPtr_t = std::shared_ptr<BoxArea>;
-
-using ContentAreaPtr_t = ContentArea *;
-using ContentAreaSharedPtr_t = std::shared_ptr<ContentArea>;
+DECLARE_CLASS_POINTER_TYPES(Area)
+DECLARE_CLASS_POINTER_TYPES(BoxArea)
+DECLARE_CLASS_POINTER_TYPES(ContentArea)
+DECLARE_CLASS_POINTER_TYPES(Element)
+DECLARE_CLASS_POINTER_TYPES(ElementAreaHolder)
 
 using AreaHolder_t = std::array<AreaSharedPtr_t, NUM_OF_AREAS>;
 
 template <AreaType TYPE>
 using OutputAreaType_t = typename std::conditional<TYPE == AreaType::IDX_CNT, ContentArea, BoxArea>::type;
 
-#pragma endregion
-
-#pragma region "Element"
-
-class Element;
-class ElementAreaHolder;
-
-using ElementPtr_t = Element *;
-
-using ElementAreaHolderPtr_t = ElementAreaHolder *;
-
-#pragma endregion
-
 NAMESPACE_BEGIN(widget)
-
-#pragma region "Widget"
-
-class Widget;
-
-using WidgetPtr_t = Widget *;
-using WidgetSharedPtr_t = std::shared_ptr<Widget>;
-
-#pragma endregion
-
+DECLARE_CLASS_POINTER_TYPES(Widget)
+DECLARE_CLASS_POINTER_TYPES(Label)
 NAMESPACE_END(widget)
+
 NAMESPACE_END(ui)
 NAMESPACE_END(sway)
 

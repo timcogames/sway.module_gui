@@ -9,9 +9,13 @@ NAMESPACE_BEGIN(widget)
 
 Draggable::Draggable(BuilderPtr_t builder)
     : Widget(builder)
-    , hovering_(false) {}
+    , hovering_(false) {
+  subscribe(this, "MouseClicked", EVENT_HANDLER(Draggable, handleMouseClickedEvent));
+}
 
 Draggable::~Draggable() {}
+
+void Draggable::handleMouseClickedEvent(core::foundation::Event *evt) { std::cout << "clicked" << std::endl; }
 
 void Draggable::update() {
   const auto oldState = hovering_;

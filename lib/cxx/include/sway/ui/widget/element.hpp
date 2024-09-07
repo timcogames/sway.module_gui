@@ -21,8 +21,9 @@ struct ElementOffset {
       , dirty(false) {}
 };
 
-class Element : public core::container::Node  // math::Transform<core::container::Node, f32_t>
-{
+class Element : public core::container::Node {
+  DECLARE_CLASS_POINTER_ALIASES(Element)
+
 public:
 #pragma region "Ctors/Dtor"
 

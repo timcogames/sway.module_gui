@@ -16,15 +16,9 @@ NAMESPACE_BEGIN(ui)
 
 class Builder : public core::foundation::Object {
   DECLARE_CLASS_METADATA(Builder, core::foundation::Object)
+  DECLARE_CLASS_POINTER_ALIASES(Builder)
 
 public:
-#pragma region "Define aliases"
-
-  using Ptr_t = BuilderPtr_t;
-  using SharedPtr_t = BuilderSharedPtr_t;
-
-#pragma endregion
-
 #pragma region "Ctors/Dtor"
 
   Builder(core::foundation::Context::Ptr_t context, Painter::SharedPtr_t painter);

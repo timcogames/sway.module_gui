@@ -7,6 +7,7 @@
 #include <sway/render.hpp>
 #include <sway/render/updatable.hpp>
 #include <sway/ui/ft2/font.hpp>
+#include <sway/ui/types.hpp>
 
 #include <array>
 #include <memory>
@@ -48,11 +49,9 @@ struct GeometryBatchChunk {
 
 class Painter : public render::RenderComponent, public render::FinalUpdatable {
   DECLARE_CLASS_METADATA(Painter, RenderComponent)
+  DECLARE_CLASS_POINTER_ALIASES(Painter)
 
 public:
-  using Ptr_t = Painter *;
-  using SharedPtr_t = std::shared_ptr<Painter>;
-
 #pragma region "Ctors/Dtor"
 
   Painter();
@@ -95,16 +94,35 @@ public:
 
   auto getDefaultFont() -> ft2::Font::SharedPtr_t { return font_; }
 
-  void setScreenSize(const math::size2i_t &size) {
-    screenSize_ = math::size2f_t((f32_t)size.getW(), (f32_t)size.getH());
+  void setEnvironment(const core::misc::Dictionary &env) { environment_ = env; }
+
+  [[nodiscard]]
+  auto getScreenWdt() -> f32_t {
+    return (f32_t)environment_.getIntegerOrDefault("screen_wdt", 800);
   }
 
   [[nodiscard]]
-  auto getScreenSize() const -> math::size2f_t {
-    return screenSize_;
+  auto getScreenHgt() -> f32_t {
+    return (f32_t)environment_.getIntegerOrDefault("screen_hgt", 600);
+  }
+
+  [[nodiscard]]
+  auto getScreenSize() -> math::size2f_t {
+    return math::size2f_t(getScreenWdt(), getScreenHgt());
+  }
+
+  [[nodiscard]]
+  auto getScreenHalfWdt() -> f32_t {
+    return getScreenWdt() / 2.0F;
+  }
+
+  [[nodiscard]]
+  auto getScreenHalfHgt() -> f32_t {
+    return getScreenHgt() / 2.0F;
   }
 
 private:
+  core::misc::Dictionary environment_;
   render::RenderQueue::SharedPtr_t queue_;
   render::RenderSubqueue::SharedPtr_t subqueue_;
   std::shared_ptr<render::GeomBuilder> geomBuilder_;
@@ -126,8 +144,6 @@ private:
 
   int nextRectIdx_;
   int nextTextIdx_;
-
-  math::size2f_t screenSize_;
 };
 
 NAMESPACE_END(ui)

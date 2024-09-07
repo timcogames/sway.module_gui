@@ -15,6 +15,8 @@ NAMESPACE_BEGIN(sway)
 NAMESPACE_BEGIN(ui)
 
 class ElementAreaHolder : public AreaHolder_t {
+  DECLARE_CLASS_POINTER_ALIASES(ElementAreaHolder)
+
 public:
 #pragma region "Ctors/Dtor"
 

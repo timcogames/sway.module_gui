@@ -9,8 +9,7 @@ static int maxCharTall = 0;
 static math::point2i_t pos;
 
 Painter::Painter()
-    : geomBatchChunkSize_(0)
-    , screenSize_(math::size2f_zero) {}
+    : geomBatchChunkSize_(0) {}
 
 Painter::~Painter() {}
 
@@ -215,8 +214,8 @@ void Painter::onUpdateBatchChunks() {
         } else {
           inst->setRemap(true);
 
-          auto dX = 1.0F / ((f32_t)screenSize_.getW() / 2.0F);
-          auto dY = 1.0F / ((f32_t)screenSize_.getH() / 2.0F);
+          auto dX = 1.0F / getScreenHalfWdt();
+          auto dY = 1.0F / getScreenHalfHgt();
 
           inst->setPosDataAttrib(
               math::rect4f_t(chunk.rect.x * dX, chunk.rect.y * dY, chunk.rect.w * dX, chunk.rect.h * dY),
@@ -252,8 +251,8 @@ void Painter::onUpdateBatchChunks() {
           } else {
             inst->setRemap(true);
 
-            auto dX = 1.0F / ((f32_t)screenSize_.getW() / 2.0F);
-            auto dY = 1.0F / ((f32_t)screenSize_.getH() / 2.0F);
+            auto dX = 1.0F / getScreenHalfWdt();
+            auto dY = 1.0F / getScreenHalfHgt();
 
             inst->setPosDataAttrib(
                 math::rect4f_t(textPos.getL() * dX, textPos.getT() * dY, textPos.getR() * dX, textPos.getB() * dY));
@@ -319,7 +318,7 @@ void Painter::onUpdate(math::mat4f_t tfrm, math::mat4f_t proj, math::mat4f_t vie
     rectCmd.proj.setData(math::Projection((struct math::ProjectionDescription) {
       .rect = {{ -1.0F /* L */, 1.0F /* B->T */, 1.0F /* R */, -1.0F /* T->B */ }},
       .fov = 0,
-      .aspect = f32_t(screenSize_.getW() / screenSize_.getH()),
+      .aspect = getScreenSize().getW() / getScreenSize().getH(),
       .znear = 1.0F,
       .zfar = 10.0F
     }).makeOrtho());
@@ -364,7 +363,7 @@ void Painter::onUpdate(math::mat4f_t tfrm, math::mat4f_t proj, math::mat4f_t vie
     textCmd.proj.setData(math::Projection((struct math::ProjectionDescription) {
       .rect = {{ -1.0F /* L */, 1.0F /* B->T */, 1.0F /* R */, -1.0F /* T->B */ }},
       .fov = 0,
-      .aspect = f32_t(screenSize_.getW() / screenSize_.getH()),
+      .aspect = getScreenSize().getW() / getScreenSize().getH(),
       .znear = 1.0F,
       .zfar = 10.0F
     }).makeOrtho());

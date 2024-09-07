@@ -15,14 +15,9 @@ NAMESPACE_BEGIN(sway)
 NAMESPACE_BEGIN(ui)
 
 class BoxArea : public Area {
+  DECLARE_CLASS_POINTER_ALIASES(BoxArea)
+
 public:
-#pragma region "Define aliases"
-
-  using Ptr_t = BoxAreaPtr_t;
-  using SharedPtr_t = BoxAreaSharedPtr_t;
-
-#pragma endregion
-
 #pragma region "Ctors/Dtor"
 
   BoxArea(AreaType type);

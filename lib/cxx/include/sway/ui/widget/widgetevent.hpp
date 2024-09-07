@@ -9,15 +9,13 @@ NAMESPACE_BEGIN(ui)
 NAMESPACE_BEGIN(widget)
 
 struct PointerEnterEventData : public core::foundation::EventData {
-  // clang-format off
-  MTHD_OVERRIDE(auto serialize() const -> std::string) { return ""; }  // clang-format on
+  MTHD_OVERRIDE(auto serialize() const -> std::string) { return ""; }
 
   MTHD_OVERRIDE(void deserialize(const std::string &jdata)) {}
 };
 
 struct PointerLeaveEventData : public core::foundation::EventData {
-  // clang-format off
-  MTHD_OVERRIDE(auto serialize() const -> std::string) { return ""; }  // clang-format on
+  MTHD_OVERRIDE(auto serialize() const -> std::string) { return ""; }
 
   MTHD_OVERRIDE(void deserialize(const std::string &jdata)) {}
 };
@@ -25,8 +23,7 @@ struct PointerLeaveEventData : public core::foundation::EventData {
 struct MouseClickEventData : public core::foundation::EventData {
   core::container::NodeIdx nodeidx;
 
-  // clang-format off
-  MTHD_OVERRIDE(auto serialize() const -> std::string) { return ""; }  // clang-format on
+  MTHD_OVERRIDE(auto serialize() const -> std::string) { return ""; }
 
   MTHD_OVERRIDE(void deserialize(const std::string &jdata)) {}
 };

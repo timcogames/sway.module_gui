@@ -15,14 +15,9 @@ NAMESPACE_BEGIN(sway)
 NAMESPACE_BEGIN(ui)
 
 class ContentArea : public Area {
+  DECLARE_CLASS_POINTER_ALIASES(ContentArea)
+
 public:
-#pragma region "Define aliases"
-
-  using Ptr_t = ContentAreaPtr_t;
-  using SharedPtr_t = ContentAreaSharedPtr_t;
-
-#pragma endregion
-
 #pragma region "Ctors/Dtor"
 
   ContentArea(const math::size2f_t &size = math::size2f_zero);

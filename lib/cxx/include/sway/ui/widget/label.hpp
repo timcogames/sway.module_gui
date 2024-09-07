@@ -4,6 +4,7 @@
 #include <sway/core.hpp>
 #include <sway/ui/painter.hpp>
 #include <sway/ui/typography.hpp>
+#include <sway/ui/widget/types.hpp>
 #include <sway/ui/widget/widget.hpp>
 
 #include <memory>
@@ -14,10 +15,9 @@ NAMESPACE_BEGIN(ui)
 NAMESPACE_BEGIN(widget)
 
 class Label : public Widget {
-public:
-  using Ptr_t = Label *;
-  using SharedPtr_t = std::shared_ptr<Label>;
+  DECLARE_CLASS_POINTER_ALIASES(Label)
 
+public:
 #pragma region "Ctors/Dtor"
 
   Label(BuilderPtr_t builder, const std::string &text);

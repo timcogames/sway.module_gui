@@ -3,15 +3,11 @@
 
 #include <sway/core.hpp>
 
-#include <memory>
-
 NAMESPACE_BEGIN(sway)
 NAMESPACE_BEGIN(ui)
 
-class Builder;
-
-using BuilderPtr_t = Builder *;
-using BuilderSharedPtr_t = std::shared_ptr<Builder>;
+DECLARE_CLASS_POINTER_TYPES(Builder)
+DECLARE_CLASS_POINTER_TYPES(Painter)
 
 NAMESPACE_END(ui)
 NAMESPACE_END(sway)

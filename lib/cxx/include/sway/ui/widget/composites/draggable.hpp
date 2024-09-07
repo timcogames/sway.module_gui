@@ -33,6 +33,8 @@ public:
 
 #pragma endregion
 
+  void handleMouseClickedEvent(core::foundation::Event *evt);
+
 private:
   core::evts::EventBus::Subscriber_t subscriber_;
   bool hovering_;

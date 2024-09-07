@@ -30,6 +30,7 @@ NAMESPACE_BEGIN(ui)
 NAMESPACE_BEGIN(widget)
 
 class Widget : public Element {
+  DECLARE_CLASS_POINTER_ALIASES(Widget)
   DECLARE_EVENT(EVT_POINTER_ENTER, PointerEnter)
   DECLARE_EVENT(EVT_POINTER_LEAVE, PointerLeave)
   DECLARE_EVENT(EVT_MOUSE_CLICKED, MouseClicked)
@@ -40,15 +41,7 @@ class Widget : public Element {
   // DECLARE_EVENT(EVT_ENTER, Enter)
   // DECLARE_EVENT(EVT_LEAVE, Leave)
   // DECLARE_EVENT(EVT_ACTIVATE, Activate)
-
 public:
-#pragma region "Define aliases"
-
-  using Ptr_t = WidgetPtr_t;
-  using SharedPtr_t = WidgetSharedPtr_t;
-
-#pragma endregion
-
 #pragma region "Ctors/Dtor"
 
   Widget(BuilderPtr_t builder);
