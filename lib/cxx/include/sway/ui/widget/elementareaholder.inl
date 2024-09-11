@@ -4,7 +4,7 @@
 #include <sway/ui/widget/areas/contentarea.hpp>
 #include <sway/ui/widget/areatypes.hpp>
 #include <sway/ui/widget/elementareaholder.hpp>
-#include <sway/ui/widget/types.hpp>
+#include <sway/ui/widget/typedefs.hpp>
 
 #include <memory>
 #include <optional>

@@ -2,6 +2,7 @@
 #include <sway/ui/builder.hpp>
 #include <sway/ui/painter.hpp>
 #include <sway/ui/widget/composites/draggable.hpp>
+#include <sway/ui/zindex.hpp>
 
 NAMESPACE_BEGIN(sway)
 NAMESPACE_BEGIN(ui)
@@ -27,7 +28,8 @@ void Draggable::update() {
 
 void Draggable::repaint(Painter::SharedPtr_t painter) {
   auto offset = this->getOffset();
-  painter->drawRect(math::rect4f_t(offset.getX(), offset.getY(), this->getSize()), this->getBackgroundColor(), 0.01F);
+  painter->drawRect(math::rect4f_t(offset.getX(), offset.getY(), this->getSize()), this->getBackgroundColor(),
+      getZIndex((f32_t)core::detail::toBase(ZIndex::DLG_HEAD)));
 
   Widget::repaint(painter);
 }

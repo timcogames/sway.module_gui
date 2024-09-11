@@ -3,6 +3,7 @@
 
 #include <sway/core.hpp>
 #include <sway/ui/painter.hpp>
+#include <sway/ui/widget/typedefs.hpp>
 #include <sway/ui/widget/widget.hpp>
 
 #include <memory>
@@ -15,10 +16,9 @@ NAMESPACE_BEGIN(widget)
 class DropSource {};
 
 class DropTarget : public Widget {
-public:
-  using Ptr_t = DropTarget *;
-  using SharedPtr_t = std::shared_ptr<DropTarget>;
+  DECLARE_CLASS_POINTER_ALIASES(DropTarget)
 
+public:
 #pragma region "Ctors/Dtor"
 
   DropTarget(BuilderPtr_t builder);

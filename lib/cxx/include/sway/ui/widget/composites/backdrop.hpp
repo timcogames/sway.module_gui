@@ -3,6 +3,7 @@
 
 #include <sway/core.hpp>
 #include <sway/ui/painter.hpp>
+#include <sway/ui/widget/typedefs.hpp>
 #include <sway/ui/widget/widget.hpp>
 
 #include <memory>
@@ -14,10 +15,9 @@ NAMESPACE_BEGIN(widget)
 
 // pseudo-element
 class Backdrop : public Widget {
-public:
-  using Ptr_t = Backdrop *;
-  using SharedPtr_t = std::shared_ptr<Backdrop>;
+  DECLARE_CLASS_POINTER_ALIASES(Backdrop)
 
+public:
 #pragma region "Ctors/Dtor"
 
   Backdrop(BuilderPtr_t builder);

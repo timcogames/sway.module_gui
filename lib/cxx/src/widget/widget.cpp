@@ -13,7 +13,6 @@ Widget::Widget(BuilderPtr_t builder)
     : builder_(builder)
     , eventFilter_(nullptr)
     , mouseFilter_(ois::MouseFilter::STOP)
-    , alignment_(math::Alignment::LEFT_TOP)
     , containsPointer_(false)
     , needsRepainting_(false) {
   setBackgroundColor(COL4F_GRAY1);

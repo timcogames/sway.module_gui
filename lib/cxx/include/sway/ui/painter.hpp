@@ -60,13 +60,13 @@ public:
 
 #pragma endregion
 
-  void initialize(ft2::Font::SharedPtr_t font, render::RenderSubsystem::SharedPtr_t subsystem,
+  void initialize(ft2::Font::SharedPtr_t font, render::RenderSubsystem::SharedPtr_t subsys,
       render::MaterialManagerSharedPtr_t materialMngr, std::shared_ptr<rms::ImageResourceManager> imgResMngr,
       std::shared_ptr<rms::GLSLResourceManager> glslResMngr);
 
-  void createRectGeom(render::RenderSubsystem::SharedPtr_t subsystem, u32_t geomIdx);
+  void createRectGeom(render::RenderSubsystem::SharedPtr_t subsys, u32_t geomIdx);
 
-  void createTextGeom(render::RenderSubsystem::SharedPtr_t subsystem, u32_t geomIdx);
+  void createTextGeom(render::RenderSubsystem::SharedPtr_t subsys, u32_t geomIdx);
 
   void drawRect(f32_t x, f32_t y, f32_t w, f32_t h, math::col4f_t col, f32_t zindex = 0.0F);
 

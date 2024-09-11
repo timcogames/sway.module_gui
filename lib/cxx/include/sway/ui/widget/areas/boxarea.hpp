@@ -5,7 +5,7 @@
 #include <sway/math.hpp>
 #include <sway/ui/widget/area.hpp>
 #include <sway/ui/widget/areatypes.hpp>
-#include <sway/ui/widget/types.hpp>
+#include <sway/ui/widget/typedefs.hpp>
 
 #include <array>
 #include <iostream>  // std::ostream

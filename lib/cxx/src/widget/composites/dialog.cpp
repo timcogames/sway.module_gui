@@ -46,11 +46,9 @@ void Dialog::repaint(Painter::SharedPtr_t painter) {
   draghead_->setSize(contentSize.getW(), 20.0F);
   draghead_->setBackgroundColor(COL4F_GREEN);
 
-  if (backdrop_) {
-    backdrop_->setOffset(0.0F, 0.0F);
-    backdrop_->setSize(painter->getScreenSize());
-    backdrop_->setBackgroundColor(COL4F_BEIGE);
-  }
+  backdrop_->setOffset(0.0F, 0.0F);
+  backdrop_->setSize(painter->getScreenSize());
+  backdrop_->setBackgroundColor(COL4F_BEIGE);
 
   Popup::repaint(painter);
 }

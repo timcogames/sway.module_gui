@@ -2,6 +2,7 @@
 #include <sway/ui/builder.hpp>
 #include <sway/ui/painter.hpp>
 #include <sway/ui/widget/composites/backdrop.hpp>
+#include <sway/ui/zindex.hpp>
 
 #include <memory>
 #include <string>
@@ -22,7 +23,8 @@ void Backdrop::update() {}
 
 void Backdrop::repaint(Painter::SharedPtr_t painter) {
   auto offset = this->getOffset();
-  painter->drawRect(math::rect4f_t(offset.getX(), offset.getY(), this->getSize()), this->getBackgroundColor());
+  painter->drawRect(math::rect4f_t(offset.getX(), offset.getY(), this->getSize()), this->getBackgroundColor(),
+      getZIndex((f32_t)core::detail::toBase(ZIndex::BACKDROP)));
 
   Widget::repaint(painter);
 }

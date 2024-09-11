@@ -7,6 +7,7 @@
 #include <sway/ui/widget/composites/menueventhandler.hpp>
 #include <sway/ui/widget/composites/menuitem.hpp>
 #include <sway/ui/widget/linearlayout.hpp>
+#include <sway/ui/widget/typedefs.hpp>
 
 #include <memory>
 #include <string>
@@ -17,10 +18,9 @@ NAMESPACE_BEGIN(ui)
 NAMESPACE_BEGIN(widget)
 
 class Menu : public LinearLayout {
-public:
-  using Ptr_t = Menu *;
-  using SharedPtr_t = std::shared_ptr<Menu>;
+  DECLARE_CLASS_POINTER_ALIASES(Menu)
 
+public:
 #pragma region "Ctors/Dtor"
 
   Menu(BuilderPtr_t builder, Orientation orien);

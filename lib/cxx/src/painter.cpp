@@ -13,7 +13,7 @@ Painter::Painter()
 
 Painter::~Painter() {}
 
-void Painter::initialize(ft2::Font::SharedPtr_t font, render::RenderSubsystem::SharedPtr_t subsystem,
+void Painter::initialize(ft2::Font::SharedPtr_t font, render::RenderSubsystem::SharedPtr_t subsys,
     render::MaterialManagerSharedPtr_t materialMngr, std::shared_ptr<rms::ImageResourceManager> imgResMngr,
     std::shared_ptr<rms::GLSLResourceManager> glslResMngr) {
 
@@ -22,10 +22,10 @@ void Painter::initialize(ft2::Font::SharedPtr_t font, render::RenderSubsystem::S
   subqueue_ = std::make_shared<render::RenderSubqueue>();
   subqueue_->initialize();
 
-  queue_ = subsystem->createQueue(core::detail::toBase(core::intrusive::Priority::VERY_HIGH));
+  queue_ = subsys->createQueue(core::detail::toBase(core::intrusive::Priority::VERY_HIGH));
   queue_->addSubqueue(subqueue_);
 
-  subqueue_ = subsystem->getQueueByPriority(core::detail::toBase(core::intrusive::Priority::VERY_HIGH))
+  subqueue_ = subsys->getQueueByPriority(core::detail::toBase(core::intrusive::Priority::VERY_HIGH))
                   ->getSubqueues(render::RenderSubqueueGroup::OPAQUE)[0];
 
   const std::unordered_map<gapi::ShaderType, std::string> shaderSources = {
@@ -104,13 +104,13 @@ void Painter::initialize(ft2::Font::SharedPtr_t font, render::RenderSubsystem::S
     }
   }
 
-  geomBuilder_ = subsystem->getGeomBuilder();
+  geomBuilder_ = subsys->getGeomBuilder();
 
-  createRectGeom(subsystem, 0);
-  createTextGeom(subsystem, 1);
+  createRectGeom(subsys, 0);
+  createTextGeom(subsys, 1);
 }
 
-void Painter::createRectGeom(std::shared_ptr<render::RenderSubsystem> subsystem, u32_t geomIdx) {
+void Painter::createRectGeom(std::shared_ptr<render::RenderSubsystem> subsys, u32_t geomIdx) {
   rectGeomDataDivisor_ =
       new render::GeomInstanceDataDivisor<render::procedurals::prims::Quadrilateral<math::VertexColor>>(
           {gapi::VertexSemantic::POS, gapi::VertexSemantic::COL}, MAX_UI_RECT);
@@ -133,7 +133,7 @@ void Painter::createRectGeom(std::shared_ptr<render::RenderSubsystem> subsystem,
       geomIdx, rectGeomDataDivisor_, rectGeomCreateInfo, rectMtrl_->getEffect());
 }
 
-void Painter::createTextGeom(std::shared_ptr<render::RenderSubsystem> subsystem, u32_t geomIdx) {
+void Painter::createTextGeom(std::shared_ptr<render::RenderSubsystem> subsys, u32_t geomIdx) {
   textGeomDataDivisor_ =
       new render::GeomInstanceDataDivisor<render::procedurals::prims::Quadrilateral<math::VertexTexCoord>>(
           {gapi::VertexSemantic::POS, gapi::VertexSemantic::COL, gapi::VertexSemantic::TEXCOORD_0}, MAX_UI_TEXT);

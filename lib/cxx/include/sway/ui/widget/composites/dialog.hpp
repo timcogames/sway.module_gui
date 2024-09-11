@@ -6,6 +6,7 @@
 #include <sway/ui/widget/composites/backdrop.hpp>
 #include <sway/ui/widget/composites/draggable.hpp>
 #include <sway/ui/widget/composites/popup.hpp>
+#include <sway/ui/widget/typedefs.hpp>
 
 #include <memory>
 #include <string>
@@ -15,10 +16,9 @@ NAMESPACE_BEGIN(ui)
 NAMESPACE_BEGIN(widget)
 
 class Dialog : public Popup {
-public:
-  using Ptr_t = Dialog *;
-  using SharedPtr_t = std::shared_ptr<Dialog>;
+  DECLARE_CLASS_POINTER_ALIASES(Dialog)
 
+public:
 #pragma region "Ctors/Dtor"
 
   Dialog(BuilderPtr_t builder);

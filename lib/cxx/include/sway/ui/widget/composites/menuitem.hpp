@@ -6,6 +6,7 @@
 #include <sway/ui/painter.hpp>
 #include <sway/ui/widget/button.hpp>
 #include <sway/ui/widget/composites/item.hpp>
+#include <sway/ui/widget/typedefs.hpp>
 
 #include <memory>
 #include <string>
@@ -18,10 +19,9 @@ class Builder;
 NAMESPACE_BEGIN(widget)
 
 class MenuItem : public Item {
-public:
-  using Ptr_t = MenuItem *;
-  using SharedPtr_t = std::shared_ptr<MenuItem>;
+  DECLARE_CLASS_POINTER_ALIASES(MenuItem)
 
+public:
 #pragma region "Ctors/Dtor"
 
   MenuItem(BuilderPtr_t builder, const std::string &text);

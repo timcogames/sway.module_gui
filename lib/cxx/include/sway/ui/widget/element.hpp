@@ -5,7 +5,7 @@
 #include <sway/math.hpp>
 #include <sway/ui/widget/elementareaholder.hpp>
 #include <sway/ui/widget/elementpositions.hpp>
-#include <sway/ui/widget/types.hpp>
+#include <sway/ui/widget/typedefs.hpp>
 
 NAMESPACE_BEGIN(sway)
 NAMESPACE_BEGIN(ui)
@@ -73,6 +73,9 @@ public:
   auto getOuterSizeWithMargin() const -> math::size2f_t;
 
   void handleAddNode(core::foundation::Event::Ptr_t evt);
+
+protected:
+  math::Alignment alignment_;
 
 private:
   ElementAreaHolder holder_;

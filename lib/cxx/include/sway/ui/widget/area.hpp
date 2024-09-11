@@ -3,7 +3,7 @@
 
 #include <sway/core.hpp>
 #include <sway/ui/widget/areatypes.hpp>
-#include <sway/ui/widget/types.hpp>
+#include <sway/ui/widget/typedefs.hpp>
 
 NAMESPACE_BEGIN(sway)
 NAMESPACE_BEGIN(ui)

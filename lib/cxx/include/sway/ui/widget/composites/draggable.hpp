@@ -3,6 +3,7 @@
 
 #include <sway/core.hpp>
 #include <sway/ui/painter.hpp>
+#include <sway/ui/widget/typedefs.hpp>
 #include <sway/ui/widget/widget.hpp>
 
 #include <memory>
@@ -13,10 +14,9 @@ NAMESPACE_BEGIN(ui)
 NAMESPACE_BEGIN(widget)
 
 class Draggable : public Widget {
-public:
-  using Ptr_t = Draggable *;
-  using SharedPtr_t = std::shared_ptr<Draggable>;
+  DECLARE_CLASS_POINTER_ALIASES(Draggable)
 
+public:
 #pragma region "Ctors/Dtor"
 
   Draggable(BuilderPtr_t builder);

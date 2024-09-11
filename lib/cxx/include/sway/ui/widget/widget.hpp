@@ -8,7 +8,7 @@
 #include <sway/ui/types.hpp>
 #include <sway/ui/widget/appearance.hpp>
 #include <sway/ui/widget/element.hpp>
-#include <sway/ui/widget/types.hpp>
+#include <sway/ui/widget/typedefs.hpp>
 #include <sway/ui/widget/widgetevent.hpp>
 #include <sway/ui/widget/widgeteventtypes.hpp>
 
@@ -116,7 +116,6 @@ protected:
   core::evts::EventHandler::Ptr_t eventFilter_;
   // math::rect4f_t innerRect_;  // wdt/hgt, padding
   // math::rect4f_t outerRect_;  // wdt/hgt, margin, border, padding
-  math::Alignment alignment_;
   Appearance appearance_;
 
   bool containsPointer_;

@@ -4,7 +4,8 @@ NAMESPACE_BEGIN(sway)
 NAMESPACE_BEGIN(ui)
 
 Element::Element()
-    : position_(ElementPosition::RELATIVE) {
+    : position_(ElementPosition::RELATIVE)
+    , alignment_(math::Alignment::LEFT_TOP) {
   this->subscribe(this, "NodeAdded", EVENT_HANDLER(Element, handleAddNode));
 }
 
@@ -35,7 +36,32 @@ void Element::updateOffset() {
       auto parentOffset = parent->getOffset();
       auto parentAreaPosition = parent->getAreaHolder().getPosition<ui::AreaType::IDX_CNT>();
       auto parentAreaSize = parent->getAreaHolder().getContentSize();
-      offset_.computed = math::point2f_t(parentOffset.getX(), parentOffset.getY());
+
+      // auto related = parent->getNodeIdx().chainEqual(std::vector<i32_t>({-1})) ? false : true;
+      // if (related) {
+      offset_.computed =
+          math::point2f_t(offset_.computed.getX() + parentOffset.getX(), offset_.computed.getY() + parentOffset.getX());
+
+      auto x = 0.0F;
+      auto y = 0.0F;
+      auto sz = getAreaHolder().getContentSize();
+
+      if (core::detail::toBase<math::Alignment>(alignment_) & math::ConvFromXAlign<math::HorzAlign::CENTER>()) {
+        x = (parentAreaSize.getW() - sz.getW()) / 2;
+      } else if (core::detail::toBase<math::Alignment>(alignment_) & math::ConvFromXAlign<math::HorzAlign::RIGHT>()) {
+        x = (parentAreaSize.getW() - sz.getW());
+      }
+
+      if (core::detail::toBase<math::Alignment>(alignment_) & math::ConvFromXAlign<math::VertAlign::CENTER>()) {
+        y = (parentAreaSize.getH() - sz.getH()) / 2;
+      } else if (core::detail::toBase<math::Alignment>(alignment_) & math::ConvFromXAlign<math::VertAlign::BOTTOM>()) {
+        y = (parentAreaSize.getH() - sz.getH());
+      }
+
+      offset_.computed = math::point2f_t(offset_.computed.getX() + x, offset_.computed.getY() + y);
+      // } else {
+      //   offset_.computed = math::point2f_t(parentOffset.getX(), parentOffset.getY());
+      // }
     }
   } else if (position_ == ElementPosition::ABSOLUTE || position_ == ElementPosition::FIXED) {
     // auto parentInnerSize = parent->getInnerSize();

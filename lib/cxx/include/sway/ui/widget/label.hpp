@@ -4,7 +4,7 @@
 #include <sway/core.hpp>
 #include <sway/ui/painter.hpp>
 #include <sway/ui/typography.hpp>
-#include <sway/ui/widget/types.hpp>
+#include <sway/ui/widget/typedefs.hpp>
 #include <sway/ui/widget/widget.hpp>
 
 #include <memory>

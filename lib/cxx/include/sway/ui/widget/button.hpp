@@ -3,6 +3,7 @@
 
 #include <sway/core.hpp>
 #include <sway/ui/painter.hpp>
+#include <sway/ui/widget/button.hpp>
 #include <sway/ui/widget/label.hpp>
 
 #include <memory>
@@ -13,10 +14,9 @@ NAMESPACE_BEGIN(ui)
 NAMESPACE_BEGIN(widget)
 
 class Button : public Widget {
-public:
-  using Ptr_t = Button *;
-  using SharedPtr_t = std::shared_ptr<Button>;
+  DECLARE_CLASS_POINTER_ALIASES(Button)
 
+public:
 #pragma region "Ctors/Dtor"
 
   Button(BuilderPtr_t builder, const std::string &text);
