@@ -22,7 +22,7 @@ Backdrop::~Backdrop() {}
 void Backdrop::update() {}
 
 void Backdrop::repaint(Painter::SharedPtr_t painter) {
-  auto offset = this->getOffset();
+  auto offset = this->getOffset().computed;
   painter->drawRect(math::rect4f_t(offset.getX(), offset.getY(), this->getSize()), this->getBackgroundColor(),
       getZIndex((f32_t)core::detail::toBase(ZIndex::BACKDROP)));
 

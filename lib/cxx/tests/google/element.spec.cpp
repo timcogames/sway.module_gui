@@ -16,8 +16,8 @@ TEST(ElementTest, ctor_def) {
   ui::Element elem;
 
   ASSERT_EQ(elem.getPosition(), ui::ElementPosition::RELATIVE);
-  ASSERT_EQ(elem.getOffset(), math::point2f_zero);
-  ASSERT_FALSE(elem.isOffsetDirty());
+  ASSERT_EQ(elem.getOffset().computed, math::point2f_zero);
+  ASSERT_FALSE(elem.getOffset().dirty);
 }
 
 TEST(ElementTest, position) {
@@ -32,17 +32,17 @@ TEST(ElementTest, offset) {
 
   absElem->setPosition(ui::ElementPosition::ABSOLUTE);
   absElem->setOffset(1.0F, 2.0F);
-  ASSERT_TRUE(absElem->isOffsetDirty());
+  ASSERT_TRUE(absElem->getOffset().dirty);
   absElem->updateOffset();
-  ASSERT_FALSE(absElem->isOffsetDirty());
-  ASSERT_EQ(absElem->getOffset(), math::point2f_t(1.0F, 2.0F));
+  ASSERT_FALSE(absElem->getOffset().dirty);
+  ASSERT_EQ(absElem->getOffset().computed, math::point2f_t(1.0F, 2.0F));
 
   auto relElem = std::make_shared<ui::Element>();
   relElem->setPosition(ui::ElementPosition::RELATIVE);
   relElem->setOffset(3.0F, 4.0F);
-  ASSERT_TRUE(relElem->isOffsetDirty());
+  ASSERT_TRUE(relElem->getOffset().dirty);
   relElem->updateOffset();
-  ASSERT_FALSE(relElem->isOffsetDirty());
+  ASSERT_FALSE(relElem->getOffset().dirty);
   absElem->addChildNode(relElem);
   ASSERT_EQ(relElem->getOffset(), math::point2f_t(1.0F, 2.0F));
 }

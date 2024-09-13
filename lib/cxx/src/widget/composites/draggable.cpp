@@ -10,24 +10,60 @@ NAMESPACE_BEGIN(widget)
 
 Draggable::Draggable(BuilderPtr_t builder)
     : Widget(builder)
-    , hovering_(false) {
+    , hovering_(false)
+    , dragging_(false) {
   subscribe(this, "MouseClicked", EVENT_HANDLER(Draggable, handleMouseClickedEvent));
 }
 
 Draggable::~Draggable() {}
 
-void Draggable::handleMouseClickedEvent(core::foundation::Event *evt) { std::cout << "clicked" << std::endl; }
+auto distance(math::point2f_t p1, math::point2f_t p2) -> f32_t {
+  return (p1.getX() - p2.getX()) * (p1.getX() - p2.getX()) + (p1.getY() - p2.getY()) * (p1.getY() - p2.getY());
+}
+
+void Draggable::handleMouseClickedEvent(core::foundation::Event *evt) {
+  auto mouseEvtData = evt->getConcreteData<MouseClickEventData>();
+  auto cursor = builder_->getCursor();
+  auto offset = this->getOffset();
+
+  if (mouseEvtData.state == core::detail::toBase(ois::InputActionState::PRESSED)) {
+    mouseDownPosition_ = cursor.pnt;
+    mouseDownOffset_ =
+        math::point2f_t(cursor.pnt.getX() - offset.computed.getX(), cursor.pnt.getY() - offset.computed.getY());
+    mouseIsDown_ = true;
+  } else if (mouseEvtData.state == core::detail::toBase(ois::InputActionState::RELEASED)) {
+    mouseIsDown_ = false;
+  }
+}
 
 void Draggable::update() {
-  const auto oldState = hovering_;
-  hovering_ = this->builder_->getWidgetUnderPointer()->getNodeIdx().equal(this->getNodeIdx());
-  if (oldState == hovering_) {
-    return;
+  auto cursor = builder_->getCursor();
+  auto parent = std::static_pointer_cast<Element>(this->getParentNode().value());
+
+  if (mouseIsDown_) {
+    if (distance(mouseDownPosition_, cursor.pnt) > 2) {
+      // mouseDownOffset_.setX(offset.getX());
+      // mouseDownOffset_.setY(offset.getY());
+
+      parent->setOffset(
+          math::point2f_t(cursor.pnt.getX() - mouseDownOffset_.getX(), cursor.pnt.getY() - mouseDownOffset_.getY()));
+      parent->getOffset().markAsDirty();
+
+      parent->updateOffset();
+
+      for (const auto &item : parent->getChildNodes()) {
+        auto elem = std::static_pointer_cast<Element>(item);
+        elem->getOffset().markAsDirty();
+        recursiveUpdate(elem);
+      }
+    }
   }
 }
 
 void Draggable::repaint(Painter::SharedPtr_t painter) {
-  auto offset = this->getOffset();
+  update();
+
+  auto offset = this->getOffset().computed;
   painter->drawRect(math::rect4f_t(offset.getX(), offset.getY(), this->getSize()), this->getBackgroundColor(),
       getZIndex((f32_t)core::detail::toBase(ZIndex::DLG_HEAD)));
 

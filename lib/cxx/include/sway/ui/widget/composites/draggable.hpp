@@ -39,6 +39,11 @@ private:
   core::evts::EventBus::Subscriber_t subscriber_;
   bool hovering_;
   bool dragging_;
+
+  math::point2f_t mouseDownPosition_ = math::point2f_zero;
+  math::point2f_t mouseDownOffset_ = math::point2f_zero;
+  // math::bounds2f_t mouseDownBounds_;
+  bool mouseIsDown_ = false;
 };
 
 NAMESPACE_END(widget)

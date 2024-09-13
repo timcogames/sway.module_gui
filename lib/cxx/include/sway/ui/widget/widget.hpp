@@ -60,14 +60,12 @@ public:
 
   MTHD_VIRTUAL(void onCursorPointerLeave());
 
-  MTHD_VIRTUAL(void onMouseClick());
+  MTHD_VIRTUAL(void onMouseClick(u32_t state));
 
 #pragma endregion
 
   [[nodiscard]]
   auto hasRelated() -> bool;
-
-  void updPosition();
 
 #pragma region "Getters/Setters Size"
 
@@ -91,15 +89,6 @@ public:
   auto getForegroundColor() const -> math::col4f_t;
 
   auto getChildAtPoint(const math::point2f_t &point) -> Widget *;
-
-  // // wdt/hgt, margin, border, padding
-  // auto getOuterSize() const -> math::size2f_t {
-  //   const auto size = this->getSize();
-  //   const auto outerWdt = size.getW() + margin_.getLR();
-  //   const auto outerHgt = size.getH() + margin_.getTB();
-
-  //   return math::size2f_t(outerWdt, outerHgt);
-  // }
 
   void setEventFilter(core::evts::EventHandler::Ptr_t hdl);
 

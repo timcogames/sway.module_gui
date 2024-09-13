@@ -15,62 +15,56 @@ auto Element::getPosition() const -> ElementPosition { return position_; }
 
 void Element::setOffset(const math::point2f_t &pnt) {
   offset_.original = pnt;
-  offset_.dirty = true;
-
+  offset_.markAsDirty();
   // recursiveUpdate(this->getSharedFrom<Element>(this));
 }
 
 void Element::setOffset(f32_t x, f32_t y) { setOffset(math::point2f_t(x, y)); }
 
-auto Element::getOffset() const -> math::point2f_t { return offset_.computed; }
-
-auto Element::isOffsetDirty() const -> bool { return offset_.dirty; }
+auto Element::getOffset() -> ElementOffset & { return offset_; }
 
 void Element::updateOffset() {
-  if (position_ == ElementPosition::RELATIVE) {
-    auto parentOpt = this->getParentNode();
-    if (!parentOpt.has_value()) {
-      // TODO
+  if (offset_.dirty) {
+    if (position_ == ElementPosition::RELATIVE) {
+      auto parentOpt = this->getParentNode();
+      if (!parentOpt.has_value()) {
+        // TODO
+      } else {
+        auto parent = std::static_pointer_cast<Element>(parentOpt.value());
+        auto parentOffset = parent->getOffset().computed;
+        auto parentAreaPosition = parent->getAreaHolder().getPosition<ui::AreaType::IDX_CNT>();
+        auto parentAreaSize = parent->getAreaHolder().getContentSize();
+
+        offset_.computed = math::point2f_t(parentOffset.getX(), parentOffset.getY());
+
+        auto x = 0.0F;
+        auto y = 0.0F;
+        auto sz = getAreaHolder().getContentSize();
+
+        if (core::detail::toBase<math::Alignment>(alignment_) & math::ConvFromXAlign<math::HorzAlign::CENTER>()) {
+          x = (parentAreaSize.getW() - sz.getW()) / 2;
+        } else if (core::detail::toBase<math::Alignment>(alignment_) & math::ConvFromXAlign<math::HorzAlign::RIGHT>()) {
+          x = (parentAreaSize.getW() - sz.getW());
+        }
+
+        if (core::detail::toBase<math::Alignment>(alignment_) & math::ConvFromXAlign<math::VertAlign::CENTER>()) {
+          y = (parentAreaSize.getH() - sz.getH()) / 2;
+        } else if (core::detail::toBase<math::Alignment>(alignment_) &
+                   math::ConvFromXAlign<math::VertAlign::BOTTOM>()) {
+          y = (parentAreaSize.getH() - sz.getH());
+        }
+
+        offset_.computed = math::point2f_t(offset_.computed.getX() + x, offset_.computed.getY() + y);
+      }
+    } else if (position_ == ElementPosition::ABSOLUTE || position_ == ElementPosition::FIXED) {
+      // auto parentInnerSize = parent->getInnerSize();
+      offset_.computed = offset_.original;
     } else {
-      auto parent = std::static_pointer_cast<Element>(parentOpt.value());
-      auto parentOffset = parent->getOffset();
-      auto parentAreaPosition = parent->getAreaHolder().getPosition<ui::AreaType::IDX_CNT>();
-      auto parentAreaSize = parent->getAreaHolder().getContentSize();
-
-      // auto related = parent->getNodeIdx().chainEqual(std::vector<i32_t>({-1})) ? false : true;
-      // if (related) {
-      offset_.computed =
-          math::point2f_t(offset_.computed.getX() + parentOffset.getX(), offset_.computed.getY() + parentOffset.getX());
-
-      auto x = 0.0F;
-      auto y = 0.0F;
-      auto sz = getAreaHolder().getContentSize();
-
-      if (core::detail::toBase<math::Alignment>(alignment_) & math::ConvFromXAlign<math::HorzAlign::CENTER>()) {
-        x = (parentAreaSize.getW() - sz.getW()) / 2;
-      } else if (core::detail::toBase<math::Alignment>(alignment_) & math::ConvFromXAlign<math::HorzAlign::RIGHT>()) {
-        x = (parentAreaSize.getW() - sz.getW());
-      }
-
-      if (core::detail::toBase<math::Alignment>(alignment_) & math::ConvFromXAlign<math::VertAlign::CENTER>()) {
-        y = (parentAreaSize.getH() - sz.getH()) / 2;
-      } else if (core::detail::toBase<math::Alignment>(alignment_) & math::ConvFromXAlign<math::VertAlign::BOTTOM>()) {
-        y = (parentAreaSize.getH() - sz.getH());
-      }
-
-      offset_.computed = math::point2f_t(offset_.computed.getX() + x, offset_.computed.getY() + y);
-      // } else {
-      //   offset_.computed = math::point2f_t(parentOffset.getX(), parentOffset.getY());
-      // }
+      offset_.computed = offset_.original;
     }
-  } else if (position_ == ElementPosition::ABSOLUTE || position_ == ElementPosition::FIXED) {
-    // auto parentInnerSize = parent->getInnerSize();
-    offset_.computed = offset_.original;
-  } else {
-    offset_.computed = offset_.original;
-  }
 
-  offset_.dirty = false;
+    offset_.dirty = false;
+  }
 }
 
 void Element::recursiveUpdate(Element::SharedPtr_t elem) {

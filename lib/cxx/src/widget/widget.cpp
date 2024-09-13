@@ -55,7 +55,7 @@ void Widget::onCursorPointerLeave() {
   emit(EVT_POINTER_LEAVE, evt, [&](core::foundation::EventHandler::Ptr_t) { return true; });
 }
 
-void Widget::onMouseClick() {
+void Widget::onMouseClick(u32_t state) {
   this->update();
 
   if (eventFilter_ != nullptr) {
@@ -64,6 +64,7 @@ void Widget::onMouseClick() {
 
   auto *evtdata = new MouseClickEventData();
   evtdata->nodeidx = this->getNodeIdx();
+  evtdata->state = state;
   auto *evt = new MouseClickedEvent(0, std::move(evtdata));
 
   emit(EVT_MOUSE_CLICKED, evt, [&](core::foundation::EventHandler::Ptr_t) { return true; });
@@ -78,45 +79,6 @@ auto Widget::hasRelated() -> bool {
   auto parent = parentOpt.value();
   return (parent->getNodeIdx().chainEqual(std::vector<i32_t>({-1}))) ? false : true;
 }
-
-void Widget::updPosition() {
-  if (hasRelated()) {
-    auto parentOpt = this->getParentNode();
-    if (!parentOpt.has_value()) {
-      return;
-    }
-
-    auto parent = std::static_pointer_cast<Widget>(parentOpt.value());
-    auto parentPosition = parent->getOffset();
-    auto parentSize = parent->getSize();
-
-    this->setOffset(math::point2f_t(
-        this->getOffset().getX() + parentPosition.getX(), this->getOffset().getY() + parentPosition.getY()));
-
-    auto x = 0.0F;
-    auto y = 0.0F;
-
-    if (core::detail::toBase<math::Alignment>(alignment_) & math::ConvFromXAlign<math::HorzAlign::CENTER>()) {
-      x = (parentSize.getW() - getSize().getW()) / 2;
-    } else if (core::detail::toBase<math::Alignment>(alignment_) & math::ConvFromXAlign<math::HorzAlign::RIGHT>()) {
-      x = (parentSize.getW() - getSize().getW());
-    }
-
-    if (core::detail::toBase<math::Alignment>(alignment_) & math::ConvFromXAlign<math::VertAlign::CENTER>()) {
-      y = (parentSize.getH() - getSize().getH()) / 2;
-    } else if (core::detail::toBase<math::Alignment>(alignment_) & math::ConvFromXAlign<math::VertAlign::BOTTOM>()) {
-      y = (parentSize.getH() - getSize().getH());
-    }
-
-    this->setOffset({this->getOffset().getX() + x, this->getOffset().getY() + y});
-  }
-}
-
-// void Widget::setOffset(const math::point2f_t &pnt) {
-//   this->setOffset(pnt);
-
-//   updPosition();
-// }
 
 void Widget::setSize(const math::size2f_t &size) {
   this->getAreaHolder().getArea<AreaType::IDX_CNT>().value()->setSize(size);
@@ -159,19 +121,21 @@ auto Widget::getForegroundColor() const -> math::col4f_t {
       .text[core::detail::toBase(WidgetColorGroup::INACTIVE)][core::detail::toBase(WidgetColorState::NORM)];
 }
 
-auto Widget::getChildAtPoint(const math::point2f_t &point) -> Widget * {
+auto Widget::getChildAtPoint(const math::point2f_t &pnt) -> Widget::Ptr_t {
   for (auto node : this->getChildNodes()) {
     auto child = std::static_pointer_cast<Widget>(node);
     if (!child->isVisible()) {
       break;
     }
 
-    const auto childPos = child->getOffset();
-    auto childRect = math::rect4f_t(childPos.getX(), childPos.getY(), child->getSize());
+    const auto childPos = child->getOffset().computed;
+    auto childRect = math::rect4f_t(childPos.getX(), childPos.getY(), child->getOuterSize());
 
-    if (auto *const widget = child->getChildAtPoint(point)) {
+    // std::cout << childRect << " / " << pnt << std::endl;
+
+    if (auto *const widget = child->getChildAtPoint(pnt)) {
       return widget;
-    } else if (childRect.contains(point) && child->getMouseFilter() != ois::MouseFilter::IGNORE) {
+    } else if (childRect.contains(pnt) && child->getMouseFilter() != ois::MouseFilter::IGNORE) {
       return child.get();
     }
   }

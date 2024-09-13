@@ -39,14 +39,14 @@ void Dialog::hide() {}
 void Dialog::update() {}
 
 void Dialog::repaint(Painter::SharedPtr_t painter) {
-  auto offset = this->getOffset();
+  auto offset = this->getOffset().computed;
   auto contentSize = this->getAreaHolder().getContentSize();
 
-  draghead_->setOffset(0.0F, 0.0F);
+  // draghead_->setOffset(0.0F, 0.0F);
   draghead_->setSize(contentSize.getW(), 20.0F);
   draghead_->setBackgroundColor(COL4F_GREEN);
 
-  backdrop_->setOffset(0.0F, 0.0F);
+  // backdrop_->setOffset(0.0F, 0.0F);
   backdrop_->setSize(painter->getScreenSize());
   backdrop_->setBackgroundColor(COL4F_BEIGE);
 

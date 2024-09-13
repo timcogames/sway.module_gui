@@ -39,7 +39,7 @@ void Label::resize() {
 void Label::update() {}
 
 void Label::repaint(Painter::SharedPtr_t painter) {
-  auto offset = this->getOffset();
+  auto offset = this->getOffset().computed;
   painter->drawText(
       math::rect4f_t(offset.getX(), offset.getY(), this->getSize()), this->getForegroundColor(), text_.c_str());
 }

@@ -22,6 +22,7 @@ struct PointerLeaveEventData : public core::foundation::EventData {
 
 struct MouseClickEventData : public core::foundation::EventData {
   core::container::NodeIdx nodeidx;
+  u32_t state;
 
   MTHD_OVERRIDE(auto serialize() const -> std::string) { return ""; }
 

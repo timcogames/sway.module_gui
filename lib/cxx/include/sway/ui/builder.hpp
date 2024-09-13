@@ -19,6 +19,8 @@ class Builder : public core::foundation::Object {
   DECLARE_CLASS_POINTER_ALIASES(Builder)
 
 public:
+  using ElementUnderPointer_t = widget::Widget::Ptr_t;
+
 #pragma region "Ctors/Dtor"
 
   Builder(core::foundation::Context::Ptr_t context, Painter::SharedPtr_t painter);
@@ -44,11 +46,11 @@ public:
 
   auto getCursor() const -> Cursor { return cursor_; }
 
-  void updateWidgetUnderPointer(widget::Widget::Ptr_t target);
+  void updateWidgetUnderPointer(ElementUnderPointer_t target);
 
-  auto getWidgetUnderPointer() -> widget::Widget::Ptr_t { return currWidgetUnderPointer_; }
+  auto getWidgetUnderPointer() -> ElementUnderPointer_t { return currWidgetUnderPointer_; }
 
-  void handleMouseClick();
+  void handleMouseClick(u32_t state);
 
   auto getPainter() -> Painter::SharedPtr_t { return painter_; }
 
@@ -58,7 +60,13 @@ private:
   ft2::FontManager::SharedPtr_t fontMngr_;
   Painter::SharedPtr_t painter_;
   widget::Widget::SharedPtr_t root_;
-  widget::Widget::Ptr_t currWidgetUnderPointer_;
+
+  struct ElementUnderPointerInfo {
+    ElementUnderPointer_t element;
+  };
+
+  ElementUnderPointer_t currWidgetUnderPointer_;
+
   Cursor cursor_;
 };
 

@@ -28,7 +28,7 @@ struct WidgetEventHandler : public core::evts::EventHandler {
 
       if (evt->type() == core::detail::toBase(ois::InputActionType::MOUSE_BUTTON)) {
         if (mouseEvtData.btnCode == core::detail::toBase(ois::MouseButtonCode::LMB)) {
-          builder_->handleMouseClick();
+          builder_->handleMouseClick(mouseEvtData.state);
         }
       }
     }
@@ -68,7 +68,7 @@ void Builder::deinit() {
 
 void Builder::update() { root_->repaint(painter_); }
 
-void Builder::updateWidgetUnderPointer(widget::Widget::Ptr_t target) {
+void Builder::updateWidgetUnderPointer(ElementUnderPointer_t target) {
   if (currWidgetUnderPointer_ == target) {
     return;
   }
@@ -85,9 +85,9 @@ void Builder::updateWidgetUnderPointer(widget::Widget::Ptr_t target) {
   }
 }
 
-void Builder::handleMouseClick() {
+void Builder::handleMouseClick(u32_t state) {
   if (currWidgetUnderPointer_) {
-    currWidgetUnderPointer_->onMouseClick();
+    currWidgetUnderPointer_->onMouseClick(state);
   }
 }
 

@@ -23,7 +23,7 @@ void MenuItem::update() {
 void MenuItem::repaint(Painter::SharedPtr_t painter) {
   if (this->needsRepainting_) {
     button_->setAlignment(math::Alignment::CENTER);
-    const auto offset = this->getOffset();
+    const auto offset = this->getOffset().computed;
     button_->setOffset(offset);
     button_->setSize(this->getSize());
     this->needsRepainting_ = false;

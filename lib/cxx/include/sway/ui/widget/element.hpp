@@ -19,6 +19,8 @@ struct ElementOffset {
       : original(math::point2f_zero)
       , computed(math::point2f_zero)
       , dirty(false) {}
+
+  void markAsDirty() { dirty = true; }
 };
 
 class Element : public core::container::Node {
@@ -48,11 +50,7 @@ public:
 
   void setOffset(f32_t x, f32_t y);
 
-  [[nodiscard]]
-  auto getOffset() const -> math::point2f_t;
-
-  [[nodiscard]]
-  auto isOffsetDirty() const -> bool;
+  auto getOffset() -> ElementOffset &;
 
 #pragma endregion
 
