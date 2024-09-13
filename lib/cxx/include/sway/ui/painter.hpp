@@ -125,7 +125,7 @@ private:
   core::misc::Dictionary environment_;
   render::RenderQueue::SharedPtr_t queue_;
   render::RenderSubqueue::SharedPtr_t subqueue_;
-  std::shared_ptr<render::GeomBuilder> geomBuilder_;
+  render::GeomBuilder::SharedPtr_t geomBuilder_;
 
   render::Material::SharedPtr_t rectMtrl_;
   render::GeomInstanceDataDivisor<render::procedurals::prims::Quadrilateral<math::VertexColor>> *rectGeomDataDivisor_;

@@ -43,6 +43,9 @@ TEST(ElementTest, offset) {
   ASSERT_TRUE(relElem->getOffset().dirty);
   relElem->updateOffset();
   ASSERT_FALSE(relElem->getOffset().dirty);
+
+  relElem->getOffset().markAsDirty();
   absElem->addChildNode(relElem);
-  ASSERT_EQ(relElem->getOffset(), math::point2f_t(1.0F, 2.0F));
+
+  ASSERT_EQ(relElem->getOffset().computed, math::point2f_t(1.0F, 2.0F));
 }
