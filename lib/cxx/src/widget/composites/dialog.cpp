@@ -42,13 +42,12 @@ void Dialog::repaint(Painter::SharedPtr_t painter) {
   auto offset = this->getOffset().computed;
   auto contentSize = this->getAreaHolder().getContentSize();
 
-  // draghead_->setOffset(0.0F, 0.0F);
   draghead_->setSize(contentSize.getW(), 20.0F);
   draghead_->setBackgroundColor(COL4F_GREEN);
 
-  // backdrop_->setOffset(0.0F, 0.0F);
   backdrop_->setSize(painter->getScreenSize());
-  backdrop_->setBackgroundColor(COL4F_BEIGE);
+  // backdrop_->setBackgroundColor(COL4F_BEIGE);
+  backdrop_->setBackgroundColor(math::col4f_t(0.81F, 0.75F, 0.68F, 0.5F));
 
   Popup::repaint(painter);
 }

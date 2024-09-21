@@ -19,13 +19,7 @@ void Painter::initialize(ft2::Font::SharedPtr_t font, render::RenderSubsystem::S
 
   font_ = font;
 
-  subqueue_ = std::make_shared<render::RenderSubqueue>();
-  subqueue_->initialize();
-
-  queue_ = subsys->createQueue(core::detail::toBase(core::intrusive::Priority::VERY_HIGH));
-  queue_->addSubqueue(subqueue_);
-
-  subqueue_ = subsys->getQueueByPriority(core::detail::toBase(core::intrusive::Priority::VERY_HIGH))
+  subqueue_ = subsys->getQueueByPriority(core::detail::toBase(core::intrusive::Priority::VERY_LOW))
                   ->getSubqueues(render::RenderSubqueueGroup::OPAQUE)[0];
 
   const std::unordered_map<gapi::ShaderType, std::string> shaderSources = {
@@ -42,7 +36,11 @@ void Painter::initialize(ft2::Font::SharedPtr_t font, render::RenderSubsystem::S
       {gapi::ShaderType::FRAG, "in vec4 vtx_col;"
                                "out vec4 out_col;"
                                "void main() {"
-                               "    out_col = vtx_col;"
+                               "    vec4 final = vec4(vtx_col.rgb, vtx_col.a);"
+                               "    if (final.a < 0.1) {"
+                               "        discard;"
+                               "    }"
+                               "    out_col = final;"
                                "}"}};
 
   rectMtrl_ = std::make_shared<render::Material>("material_ui_rect", imgResMngr, glslResMngr);
@@ -290,9 +288,9 @@ void Painter::onUpdate(math::mat4f_t tfrm, math::mat4f_t proj, math::mat4f_t vie
   render::pipeline::ForwardRenderCommand rectCmd;
   if (rectGeom_ != nullptr) {
     rectCmd.stage = 0;
-    rectCmd.blendDesc.enabled = false;
+    rectCmd.blendDesc.enabled = true;
     rectCmd.blendDesc.src = gapi::BlendFn::SRC_ALPHA;
-    rectCmd.blendDesc.dst = gapi::BlendFn::ONE_MINUS_SRC_ALPHA;
+    rectCmd.blendDesc.dst = gapi::BlendFn::ONE;
     rectCmd.blendDesc.mask = true;
     rectCmd.rasterizerDesc.mode = gapi::CullFace::BACK;
     rectCmd.rasterizerDesc.ccw = false;

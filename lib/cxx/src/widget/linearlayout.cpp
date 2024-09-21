@@ -17,13 +17,13 @@ void LinearLayout::build() {
     const auto size = child->getSize();
     const auto boundingSize = math::size2f_t(size.getW(), size.getH());
 
-    child->setOffset(offset);
-
     if (this->getOrientation() == Orientation::HORZ) {
       offset.setX(offset.getX() + boundingSize.getW());
     } else if (this->getOrientation() == Orientation::VERT) {
       offset.setY(offset.getY() + boundingSize.getH());
     }
+
+    child->setOffset(offset);
   }
 }
 
