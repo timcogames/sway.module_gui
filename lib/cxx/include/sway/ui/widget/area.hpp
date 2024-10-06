@@ -5,8 +5,8 @@
 #include <sway/ui/widget/areatypes.hpp>
 #include <sway/ui/widget/typedefs.hpp>
 
-NAMESPACE_BEGIN(sway)
-NAMESPACE_BEGIN(ui)
+NS_BEGIN_SWAY()
+NS_BEGIN(ui)
 
 class Area {
   DECLARE_CLASS_POINTER_ALIASES(Area)
@@ -25,7 +25,7 @@ public:
 #pragma endregion
 };
 
-NAMESPACE_END(ui)
-NAMESPACE_END(sway)
+NS_END()  // namespace ui
+NS_END()  // namespace sway
 
 #endif  // SWAY_UI_WIDGETS_AREA_HPP

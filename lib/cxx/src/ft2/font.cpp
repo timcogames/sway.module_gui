@@ -3,9 +3,9 @@
 
 #include <algorithm>  // std::max
 
-NAMESPACE_BEGIN(sway)
-NAMESPACE_BEGIN(ui)
-NAMESPACE_BEGIN(ft2)
+NS_BEGIN_SWAY()
+NS_BEGIN(ui)
+NS_BEGIN(ft2)
 
 Font::Font(std::shared_ptr<Face> face, math::size2i_t atlasSize, math::size2i_t atlasMarginSize)
     : face_(face)
@@ -124,6 +124,6 @@ auto Font::getCharMetrics(FT_GlyphSlot slot) -> CharInfo {
   return info;
 }
 
-NAMESPACE_END(ft2)
-NAMESPACE_END(ui)
-NAMESPACE_END(sway)
+NS_END()  // namespace ft2
+NS_END()  // namespace ui
+NS_END()  // namespace sway

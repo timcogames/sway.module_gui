@@ -8,9 +8,9 @@
 #include <freetype/ftstroke.h>
 #include <ft2build.h>
 
-NAMESPACE_BEGIN(sway)
-NAMESPACE_BEGIN(ui)
-NAMESPACE_BEGIN(ft2)
+NS_BEGIN_SWAY()
+NS_BEGIN(ui)
+NS_BEGIN(ft2)
 
 struct ObjectFetchResponse : public rms::FetchResponse {
   ObjectFetchResponse(lpcstr_t data, u32_t numBytes)
@@ -33,8 +33,8 @@ private:
   // std::shared_ptr<Face> faceResponse_;
 };
 
-NAMESPACE_END(ft2)
-NAMESPACE_END(ui)
-NAMESPACE_END(sway)
+NS_END()  // namespace ft2
+NS_END()  // namespace ui
+NS_END()  // namespace sway
 
 #endif  // SWAY_UI_FT2_FACELOADER_HPP

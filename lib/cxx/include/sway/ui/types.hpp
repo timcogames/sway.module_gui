@@ -3,13 +3,13 @@
 
 #include <sway/core.hpp>
 
-NAMESPACE_BEGIN(sway)
-NAMESPACE_BEGIN(ui)
+NS_BEGIN_SWAY()
+NS_BEGIN(ui)
 
 DECLARE_CLASS_POINTER_TYPES(Builder)
 DECLARE_CLASS_POINTER_TYPES(Painter)
 
-NAMESPACE_END(ui)
-NAMESPACE_END(sway)
+NS_END()  // namespace ui
+NS_END()  // namespace sway
 
 #endif  // SWAY_UI_TYPES_HPP

@@ -3,14 +3,14 @@
 
 #include <sway/core.hpp>
 
-NAMESPACE_BEGIN(sway)
-NAMESPACE_BEGIN(ui)
-NAMESPACE_BEGIN(widget)
+NS_BEGIN_SWAY()
+NS_BEGIN(ui)
+NS_BEGIN(widget)
 
 enum class WidgetEventType : u32_t { MOUSE_OVER = 50, MOUSE_OUT, POINTER_ENTER, POINTER_LEAVE };
 
-NAMESPACE_END(widget)
-NAMESPACE_END(ui)
-NAMESPACE_END(sway)
+NS_END()  // namespace widget
+NS_END()  // namespace ui
+NS_END()  // namespace sway
 
 #endif  // SWAY_UI_WIDGET_WIDGETEVENTTYPES_HPP

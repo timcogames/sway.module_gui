@@ -1,7 +1,7 @@
 #include <sway/ui/widget/element.hpp>
 
-NAMESPACE_BEGIN(sway)
-NAMESPACE_BEGIN(ui)
+NS_BEGIN_SWAY()
+NS_BEGIN(ui)
 
 Element::Element()
     : position_(ElementPosition::RELATIVE)
@@ -88,5 +88,5 @@ void Element::handleAddNode(core::foundation::Event::Ptr_t evt) {
   recursiveUpdate(std::static_pointer_cast<Element>(this->getChildNode(evtdata->nodeidx)));
 }
 
-NAMESPACE_END(ui)
-NAMESPACE_END(sway)
+NS_END()  // namespace ui
+NS_END()  // namespace sway

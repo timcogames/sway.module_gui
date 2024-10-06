@@ -10,9 +10,9 @@
 #include <memory>
 #include <string>
 
-NAMESPACE_BEGIN(sway)
-NAMESPACE_BEGIN(ui)
-NAMESPACE_BEGIN(widget)
+NS_BEGIN_SWAY()
+NS_BEGIN(ui)
+NS_BEGIN(widget)
 
 class Label : public Widget {
   DECLARE_CLASS_POINTER_ALIASES(Label)
@@ -54,8 +54,8 @@ private:
   // bool uppercase_;
 };
 
-NAMESPACE_END(widget)
-NAMESPACE_END(ui)
-NAMESPACE_END(sway)
+NS_END()  // namespace widget
+NS_END()  // namespace ui
+NS_END()  // namespace sway
 
 #endif  // SWAY_UI_WIDGET_LABEL_HPP

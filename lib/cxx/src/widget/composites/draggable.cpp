@@ -4,9 +4,9 @@
 #include <sway/ui/widget/composites/draggable.hpp>
 #include <sway/ui/zindex.hpp>
 
-NAMESPACE_BEGIN(sway)
-NAMESPACE_BEGIN(ui)
-NAMESPACE_BEGIN(widget)
+NS_BEGIN_SWAY()
+NS_BEGIN(ui)
+NS_BEGIN(widget)
 
 Draggable::Draggable(BuilderPtr_t builder)
     : Widget(builder)
@@ -70,6 +70,6 @@ void Draggable::repaint(Painter::SharedPtr_t painter) {
   Widget::repaint(painter);
 }
 
-NAMESPACE_END(widget)
-NAMESPACE_END(ui)
-NAMESPACE_END(sway)
+NS_END()  // namespace widget
+NS_END()  // namespace ui
+NS_END()  // namespace sway

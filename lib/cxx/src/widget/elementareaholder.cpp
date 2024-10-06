@@ -2,8 +2,8 @@
 #include <sway/ui/widget/areas/contentarea.hpp>
 #include <sway/ui/widget/elementareaholder.hpp>
 
-NAMESPACE_BEGIN(sway)
-NAMESPACE_BEGIN(ui)
+NS_BEGIN_SWAY()
+NS_BEGIN(ui)
 
 // clang-format off
 ElementAreaHolder::ElementAreaHolder()
@@ -43,5 +43,5 @@ auto ElementAreaHolder::getContentSize() const -> math::size2f_t {
   return cnt.value()->getSize();
 }
 
-NAMESPACE_END(ui)
-NAMESPACE_END(sway)
+NS_END()  // namespace ui
+NS_END()  // namespace sway

@@ -4,8 +4,8 @@
 #include <sway/core.hpp>
 #include <sway/ui/orientations.hpp>
 
-NAMESPACE_BEGIN(sway)
-NAMESPACE_BEGIN(ui)
+NS_BEGIN_SWAY()
+NS_BEGIN(ui)
 
 class Orientable {
 public:
@@ -23,7 +23,7 @@ private:
   Orientation orientation_;
 };
 
-NAMESPACE_END(ui)
-NAMESPACE_END(sway)
+NS_END()  // namespace ui
+NS_END()  // namespace sway
 
 #endif  // SWAY_UI_ORIENTABLE_HPP

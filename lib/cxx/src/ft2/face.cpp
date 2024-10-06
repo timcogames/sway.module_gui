@@ -1,9 +1,9 @@
 #include <sway/ui/ft2/errormacros.hpp>
 #include <sway/ui/ft2/face.hpp>
 
-NAMESPACE_BEGIN(sway)
-NAMESPACE_BEGIN(ui)
-NAMESPACE_BEGIN(ft2)
+NS_BEGIN_SWAY()
+NS_BEGIN(ui)
+NS_BEGIN(ft2)
 
 Face::Face(FT_Library lib, lpcstr_t filepath, u32_t idx)
     : face_(nullptr) {
@@ -28,6 +28,6 @@ Face::~Face() {
   face_ = nullptr;
 }
 
-NAMESPACE_END(ft2)
-NAMESPACE_END(ui)
-NAMESPACE_END(sway)
+NS_END()  // namespace ft2
+NS_END()  // namespace ui
+NS_END()  // namespace sway

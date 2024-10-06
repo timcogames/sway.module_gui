@@ -11,9 +11,9 @@
 #include <string>
 #include <unordered_map>
 
-NAMESPACE_BEGIN(sway)
-NAMESPACE_BEGIN(ui)
-NAMESPACE_BEGIN(ft2)
+NS_BEGIN_SWAY()
+NS_BEGIN(ui)
+NS_BEGIN(ft2)
 
 class FontManager {
 public:
@@ -49,8 +49,8 @@ private:
   std::unordered_map<std::string, Font::SharedPtr_t> fonts_;
 };
 
-NAMESPACE_END(ft2)
-NAMESPACE_END(ui)
-NAMESPACE_END(sway)
+NS_END()  // namespace ft2
+NS_END()  // namespace ui
+NS_END()  // namespace sway
 
 #endif  // SWAY_UI_FT2_FONTMANAGER_HPP

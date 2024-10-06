@@ -11,8 +11,8 @@
 #include <iostream>  // std::ostream
 #include <memory>
 
-NAMESPACE_BEGIN(sway)
-NAMESPACE_BEGIN(ui)
+NS_BEGIN_SWAY()
+NS_BEGIN(ui)
 
 class BoxArea : public Area {
   DECLARE_CLASS_POINTER_ALIASES(BoxArea)
@@ -34,13 +34,13 @@ public:
 
   void resetEdges();
 
-  void set(math::RectEdge edge, f32_t val);
+  void set(math::RectEdge::Enum edge, f32_t val);
 
   void set(f32_t l, f32_t t, f32_t r, f32_t b);
 
-  auto at(math::RectEdge edge) const -> const f32_t &;
+  auto at(math::RectEdge::Enum edge) const -> const f32_t &;
 
-  auto at(math::RectEdge edge) -> f32_t &;
+  auto at(math::RectEdge::Enum edge) -> f32_t &;
 
   [[nodiscard]]
   auto getL() const -> f32_t;
@@ -73,7 +73,7 @@ private:
   std::array<f32_t, NUM_OF_EDGES> edges_;
 };
 
-NAMESPACE_END(ui)
-NAMESPACE_END(sway)
+NS_END()  // namespace ui
+NS_END()  // namespace sway
 
 #endif  // SWAY_UI_WIDGETS_AREAS_BOXAREA_HPP

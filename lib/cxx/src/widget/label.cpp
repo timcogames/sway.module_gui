@@ -2,9 +2,9 @@
 #include <sway/ui/widget/label.hpp>
 #include <sway/ui/zindex.hpp>
 
-NAMESPACE_BEGIN(sway)
-NAMESPACE_BEGIN(ui)
-NAMESPACE_BEGIN(widget)
+NS_BEGIN_SWAY()
+NS_BEGIN(ui)
+NS_BEGIN(widget)
 
 Label::Label(BuilderPtr_t builder, const std::string &text)
     : Widget(builder)
@@ -49,6 +49,6 @@ void Label::repaint(Painter::SharedPtr_t painter) {
 
 void Label::setText(const std::string &text) { text_ = text; }
 
-NAMESPACE_END(widget)
-NAMESPACE_END(ui)
-NAMESPACE_END(sway)
+NS_END()  // namespace widget
+NS_END()  // namespace ui
+NS_END()  // namespace sway

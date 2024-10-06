@@ -11,8 +11,8 @@
 #include <memory>
 #include <optional>
 
-NAMESPACE_BEGIN(sway)
-NAMESPACE_BEGIN(ui)
+NS_BEGIN_SWAY()
+NS_BEGIN(ui)
 
 class ElementAreaHolder : public AreaHolder_t {
   DECLARE_CLASS_POINTER_ALIASES(ElementAreaHolder)
@@ -36,16 +36,16 @@ public:
   template <AreaType TYPE, typename OUT = OutputAreaType_t<TYPE>>
   auto getArea() const -> std::optional<std::shared_ptr<OUT>>;
 
-  template <AreaType TYPE, math::RectEdge EDGE>
+  template <AreaType TYPE, math::RectEdge::Enum EDGE>
   void setEdge(f32_t size);
 
-  // template <math::RectEdge EDGE>
+  // template <math::RectEdge::Enum EDGE>
   // auto getEdge(std::optional<BoxArea::SharedPtr_t> area) const -> f32_t;
 
-  template <math::RectEdge EDGE>
+  template <math::RectEdge::Enum EDGE>
   auto getEdge(Area::SharedPtr_t area) const -> f32_t;
 
-  template <AreaType TYPE, math::RectEdge EDGE>
+  template <AreaType TYPE, math::RectEdge::Enum EDGE>
   auto getEdge() const -> f32_t;
 
   template <AreaType TYPE>
@@ -58,8 +58,8 @@ public:
   auto getContentSize() const -> math::size2f_t;
 };
 
-NAMESPACE_END(ui)
-NAMESPACE_END(sway)
+NS_END()  // namespace ui
+NS_END()  // namespace sway
 
 #include <sway/ui/widget/elementareaholder.inl>
 

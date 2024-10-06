@@ -5,9 +5,9 @@
 #include <sway/ui/widget/areatypes.hpp>
 #include <sway/ui/widget/widget.hpp>
 
-NAMESPACE_BEGIN(sway)
-NAMESPACE_BEGIN(ui)
-NAMESPACE_BEGIN(widget)
+NS_BEGIN_SWAY()
+NS_BEGIN(ui)
+NS_BEGIN(widget)
 
 Widget::Widget(BuilderPtr_t builder)
     : builder_(builder)
@@ -168,6 +168,6 @@ void Widget::setAlignment(math::Alignment alignment) { alignment_ = alignment; }
 //   // this->builder_->getEventBus()->addToQueue(std::move(event));
 // }
 
-NAMESPACE_END(widget)
-NAMESPACE_END(ui)
-NAMESPACE_END(sway)
+NS_END()  // namespace widget
+NS_END()  // namespace ui
+NS_END()  // namespace sway

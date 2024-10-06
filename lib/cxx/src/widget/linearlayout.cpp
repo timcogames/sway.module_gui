@@ -1,9 +1,9 @@
 #include <sway/ui/builder.hpp>
 #include <sway/ui/widget/linearlayout.hpp>
 
-NAMESPACE_BEGIN(sway)
-NAMESPACE_BEGIN(ui)
-NAMESPACE_BEGIN(widget)
+NS_BEGIN_SWAY()
+NS_BEGIN(ui)
+NS_BEGIN(widget)
 
 LinearLayout::LinearLayout(BuilderPtr_t builder, Orientation orien)
     : Layout(builder, orien) {}
@@ -27,6 +27,6 @@ void LinearLayout::build() {
   }
 }
 
-NAMESPACE_END(widget)
-NAMESPACE_END(ui)
-NAMESPACE_END(sway)
+NS_END()  // namespace widget
+NS_END()  // namespace ui
+NS_END()  // namespace sway

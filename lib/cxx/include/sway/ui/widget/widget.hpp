@@ -15,8 +15,8 @@
 #include <memory>
 #include <optional>
 
-NAMESPACE_BEGIN(sway)
-NAMESPACE_BEGIN(ui)
+NS_BEGIN_SWAY()
+NS_BEGIN(ui)
 
 #define COL4F_RED math::col4f_t(0.85F, 0.33F, 0.17F, 1.0F)
 #define COL4F_GREEN math::col4f_t(0.5F, 0.6F, 0.43F, 1.0F)
@@ -27,7 +27,7 @@ NAMESPACE_BEGIN(ui)
 
 #define COL4F_PURPLE 0x9900FFFF
 
-NAMESPACE_BEGIN(widget)
+NS_BEGIN(widget)
 
 class Widget : public Element {
   DECLARE_CLASS_POINTER_ALIASES(Widget)
@@ -111,8 +111,8 @@ protected:
   bool needsRepainting_;
 };
 
-NAMESPACE_END(widget)
-NAMESPACE_END(ui)
-NAMESPACE_END(sway)
+NS_END()  // namespace widget
+NS_END()  // namespace ui
+NS_END()  // namespace sway
 
 #endif  // SWAY_UI_WIDGET_WIDGET_HPP

@@ -6,9 +6,9 @@
 
 #include <array>
 
-NAMESPACE_BEGIN(sway)
-NAMESPACE_BEGIN(ui)
-NAMESPACE_BEGIN(widget)
+NS_BEGIN_SWAY()
+NS_BEGIN(ui)
+NS_BEGIN(widget)
 
 enum class WidgetColorState : u32_t { NONE = 0, NORM, HOVERED, FOCUSED, Latest };
 enum class WidgetColorGroup : u32_t { NONE = 0, INACTIVE, ACTIVE, DISABLED, Latest };
@@ -22,8 +22,8 @@ struct Appearance {
   Group_t border;
 };
 
-NAMESPACE_END(widget)
-NAMESPACE_END(ui)
-NAMESPACE_END(sway)
+NS_END()  // namespace widget
+NS_END()  // namespace ui
+NS_END()  // namespace sway
 
 #endif  // SWAY_UI_WIDGET_APPEARANCE_HPP

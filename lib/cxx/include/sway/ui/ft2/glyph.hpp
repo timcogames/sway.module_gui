@@ -11,9 +11,9 @@
 #include <ft2build.h>
 #include <optional>
 
-NAMESPACE_BEGIN(sway)
-NAMESPACE_BEGIN(ui)
-NAMESPACE_BEGIN(ft2)
+NS_BEGIN_SWAY()
+NS_BEGIN(ui)
+NS_BEGIN(ft2)
 
 struct FontGlyphId {
   u32_t idx;
@@ -44,8 +44,8 @@ private:
   std::shared_ptr<Face> face_;
 };
 
-NAMESPACE_END(ft2)
-NAMESPACE_END(ui)
-NAMESPACE_END(sway)
+NS_END()  // namespace ft2
+NS_END()  // namespace ui
+NS_END()  // namespace sway
 
 #endif  // SWAY_UI_FT2_GLYPH_HPP

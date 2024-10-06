@@ -1,9 +1,9 @@
 #include <sway/ui/ft2/faceloader.hpp>
 #include <sway/ui/ft2/fontmanager.hpp>
 
-NAMESPACE_BEGIN(sway)
-NAMESPACE_BEGIN(ui)
-NAMESPACE_BEGIN(ft2)
+NS_BEGIN_SWAY()
+NS_BEGIN(ui)
+NS_BEGIN(ft2)
 
 FontManager::FontManager()
     : lib_(nullptr)
@@ -69,6 +69,6 @@ auto FontManager::find(const std::string &name) -> Font::SharedPtr_t {
 
 void FontManager::removeFont() { fonts_.clear(); }
 
-NAMESPACE_END(ft2)
-NAMESPACE_END(ui)
-NAMESPACE_END(sway)
+NS_END()  // namespace ft2
+NS_END()  // namespace ui
+NS_END()  // namespace sway

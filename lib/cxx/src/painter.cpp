@@ -2,8 +2,8 @@
 #include <sway/ui/ft2/fontshader.hpp>
 #include <sway/ui/painter.hpp>
 
-NAMESPACE_BEGIN(sway)
-NAMESPACE_BEGIN(ui)
+NS_BEGIN_SWAY()
+NS_BEGIN(ui)
 
 static int maxCharTall = 0;
 static math::point2i_t pos;
@@ -19,29 +19,29 @@ void Painter::initialize(ft2::Font::SharedPtr_t font, render::RenderSubsystem::S
 
   font_ = font;
 
-  subqueue_ = subsys->getQueueByPriority(core::detail::toBase(core::intrusive::Priority::VERY_LOW))
+  subqueue_ = subsys->getQueueByPriority(core::detail::toBase(core::intrusive::Priority::Enum::LOW))
                   ->getSubqueues(render::RenderSubqueueGroup::OPAQUE)[0];
 
-  const std::unordered_map<gapi::ShaderType, std::string> shaderSources = {
-      {gapi::ShaderType::VERT, "layout (location = 0) in vec3 attrib_pos;"
-                               "layout (location = 1) in vec4 attrib_col;"
-                               "uniform mat4 mat_view_proj;"
-                               "uniform mat4 mat_model;"
-                               "out vec4 vtx_col;"
-                               "void main() {"
-                               "    gl_Position = mat_view_proj * mat_model * vec4(attrib_pos, 1.0);"
-                               "    gl_Position.y = -gl_Position.y;"
-                               "    vtx_col = attrib_col;"
-                               "}"},
-      {gapi::ShaderType::FRAG, "in vec4 vtx_col;"
-                               "out vec4 out_col;"
-                               "void main() {"
-                               "    vec4 final = vec4(vtx_col.rgb, vtx_col.a);"
-                               //  "    if (final.a < 0.1) {"
-                               //  "        discard;"
-                               //  "    }"
-                               "    out_col = final;"
-                               "}"}};
+  const std::unordered_map<gapi::ShaderType::Enum, std::string> shaderSources = {
+      {gapi::ShaderType::Enum::VERT, "layout (location = 0) in vec3 attrib_pos;"
+                                     "layout (location = 1) in vec4 attrib_col;"
+                                     "uniform mat4 mat_view_proj;"
+                                     "uniform mat4 mat_model;"
+                                     "out vec4 vtx_col;"
+                                     "void main() {"
+                                     "    gl_Position = mat_view_proj * mat_model * vec4(attrib_pos, 1.0);"
+                                     "    gl_Position.y = -gl_Position.y;"
+                                     "    vtx_col = attrib_col;"
+                                     "}"},
+      {gapi::ShaderType::Enum::FRAG, "in vec4 vtx_col;"
+                                     "out vec4 out_col;"
+                                     "void main() {"
+                                     "    vec4 final = vec4(vtx_col.rgb, vtx_col.a);"
+                                     //  "    if (final.a < 0.1) {"
+                                     //  "        discard;"
+                                     //  "    }"
+                                     "    out_col = final;"
+                                     "}"}};
 
   rectMtrl_ = std::make_shared<render::Material>("material_ui_rect", imgResMngr, glslResMngr);
   rectMtrl_->setSubsys(subsys.get());
@@ -55,11 +55,11 @@ void Painter::initialize(ft2::Font::SharedPtr_t font, render::RenderSubsystem::S
   materialMngr->addMaterial(textMtrl_);
 
   gapi::TextureCreateInfo texCreateInfo;
-  texCreateInfo.target = gapi::TextureTarget::TEX_2D;
+  texCreateInfo.target = gapi::TextureTarget::Enum::TEX_2D;
   texCreateInfo.size = font->getAtlasSize();
   texCreateInfo.format = gapi::PixelFormat::LUMINANCE_ALPHA;
   texCreateInfo.internalFormat = gapi::PixelFormat::LUMINANCE_ALPHA;
-  texCreateInfo.dataType = core::ValueDataType::UBYTE;
+  texCreateInfo.dataType = core::ValueDataType::Enum::UBYTE;
   texCreateInfo.pixels = nullptr;
   texCreateInfo.mipLevels = 0;
   auto image = textMtrl_->addImage(texCreateInfo, "text_glyph_sampler");
@@ -84,7 +84,7 @@ void Painter::initialize(ft2::Font::SharedPtr_t font, render::RenderSubsystem::S
     texSubdataDesc.offset.setY(texSubdataDesc.offset.getY() + halfGlyphY);
     texSubdataDesc.size = font_->maxSize_;
     texSubdataDesc.format = gapi::PixelFormat::LUMINANCE_ALPHA;
-    texSubdataDesc.type = core::ValueDataType::UBYTE;
+    texSubdataDesc.type = core::ValueDataType::Enum::UBYTE;
     texSubdataDesc.pixels = bi.data.get();
 
     image->getTexture()->updateSubdata(texSubdataDesc);
@@ -117,13 +117,13 @@ void Painter::createRectGeom(std::shared_ptr<render::RenderSubsystem> subsys, u3
 
   render::GeometryCreateInfo rectGeomCreateInfo;
   rectGeomCreateInfo.indexed = true;
-  rectGeomCreateInfo.topology = gapi::TopologyType::TRIANGLE_LIST;
-  rectGeomCreateInfo.bo[render::Constants::IDX_VBO].desc.usage = gapi::BufferUsage::DYNAMIC;
+  rectGeomCreateInfo.topology = gapi::TopologyType::Enum::TRIANGLE_LIST;
+  rectGeomCreateInfo.bo[render::Constants::IDX_VBO].desc.usage = gapi::BufferUsage::Enum::DYNAMIC;
   rectGeomCreateInfo.bo[render::Constants::IDX_VBO].desc.byteStride = sizeof(math::VertexColor);
   rectGeomCreateInfo.bo[render::Constants::IDX_VBO].desc.capacity = 4 * rectGeomDataDivisor_->getInstSize();
   rectGeomCreateInfo.bo[render::Constants::IDX_VBO].data = nullptr;
 
-  rectGeomCreateInfo.bo[render::Constants::IDX_EBO].desc.usage = gapi::BufferUsage::STATIC;
+  rectGeomCreateInfo.bo[render::Constants::IDX_EBO].desc.usage = gapi::BufferUsage::Enum::STATIC;
   rectGeomCreateInfo.bo[render::Constants::IDX_EBO].desc.byteStride = sizeof(u32_t);
   auto rectIdxs = rectGeomDataDivisor_->getIndices<MAX_UI_RECT>();
   rectGeomCreateInfo.bo[render::Constants::IDX_EBO].desc.capacity = rectIdxs.size();
@@ -140,13 +140,13 @@ void Painter::createTextGeom(std::shared_ptr<render::RenderSubsystem> subsys, u3
 
   render::GeometryCreateInfo textGeomCreateInfo;
   textGeomCreateInfo.indexed = true;
-  textGeomCreateInfo.topology = gapi::TopologyType::TRIANGLE_LIST;
-  textGeomCreateInfo.bo[render::Constants::IDX_VBO].desc.usage = gapi::BufferUsage::DYNAMIC;
+  textGeomCreateInfo.topology = gapi::TopologyType::Enum::TRIANGLE_LIST;
+  textGeomCreateInfo.bo[render::Constants::IDX_VBO].desc.usage = gapi::BufferUsage::Enum::DYNAMIC;
   textGeomCreateInfo.bo[render::Constants::IDX_VBO].desc.byteStride = sizeof(math::VertexTexCoord);
   textGeomCreateInfo.bo[render::Constants::IDX_VBO].desc.capacity = 4 * textGeomDataDivisor_->getInstSize();
   textGeomCreateInfo.bo[render::Constants::IDX_VBO].data = nullptr;
 
-  textGeomCreateInfo.bo[render::Constants::IDX_EBO].desc.usage = gapi::BufferUsage::STATIC;
+  textGeomCreateInfo.bo[render::Constants::IDX_EBO].desc.usage = gapi::BufferUsage::Enum::STATIC;
   textGeomCreateInfo.bo[render::Constants::IDX_EBO].desc.byteStride = sizeof(u32_t);
   auto textIdxs = textGeomDataDivisor_->getIndices<MAX_UI_TEXT>();
   textGeomCreateInfo.bo[render::Constants::IDX_EBO].desc.capacity = textIdxs.size();
@@ -294,25 +294,25 @@ void Painter::onUpdate(math::mat4f_t tfrm, math::mat4f_t proj, math::mat4f_t vie
     rectCmd.stage = core::detail::toBase(render::RenderStage::IDX_COLOR);
     rectCmd.blendDesc.enabled = true;
     rectCmd.blendDesc.mask = false;
-    rectCmd.blendDesc.src = gapi::BlendFn::SRC_ALPHA;
-    rectCmd.blendDesc.dst = gapi::BlendFn::ONE_MINUS_SRC_ALPHA;
+    rectCmd.blendDesc.src = gapi::BlendFn::Enum::SRC_ALPHA;
+    rectCmd.blendDesc.dst = gapi::BlendFn::Enum::ONE_MINUS_SRC_ALPHA;
     // rectCmd.rasterizerDesc.mode = gapi::CullFace::BACK;
     // rectCmd.rasterizerDesc.ccw = false;
     rectCmd.depthDesc.enabled = false;
-    rectCmd.depthDesc.func = gapi::CompareFn::LESS;
+    rectCmd.depthDesc.func = gapi::CompareFn::Enum::LESS;
     // rectCmd.depthDesc.mask = false;
     // rectCmd.depthDesc.near = 0;
     // rectCmd.depthDesc.far = 0;
     rectCmd.stencilDesc.enabled = false;
-    rectCmd.stencilDesc.front.func = gapi::CompareFn::ALWAYS;
-    rectCmd.stencilDesc.front.fail = gapi::StencilOp::KEEP;
-    rectCmd.stencilDesc.front.depthFail = gapi::StencilOp::KEEP;
-    rectCmd.stencilDesc.front.depthPass = gapi::StencilOp::REPLACE;
+    rectCmd.stencilDesc.front.func = gapi::CompareFn::Enum::ALWAYS;
+    rectCmd.stencilDesc.front.fail = gapi::StencilOp::Enum::KEEP;
+    rectCmd.stencilDesc.front.depthFail = gapi::StencilOp::Enum::KEEP;
+    rectCmd.stencilDesc.front.depthPass = gapi::StencilOp::Enum::REPLACE;
     rectCmd.stencilDesc.front.rmask = 0xFFFFFF;
     rectCmd.stencilDesc.front.wmask = rectCmd.stencilDesc.front.rmask;
     rectCmd.stencilDesc.front.reference = 1;
     rectCmd.stencilDesc.back = rectCmd.stencilDesc.front;
-    rectCmd.topology = gapi::TopologyType::TRIANGLE_LIST;
+    rectCmd.topology = gapi::TopologyType::Enum::TRIANGLE_LIST;
     rectCmd.geom = rectGeom_;
     rectCmd.mtrl = rectMtrl_;
     rectCmd.tfrm = math::mat4f_t();
@@ -335,26 +335,26 @@ void Painter::onUpdate(math::mat4f_t tfrm, math::mat4f_t proj, math::mat4f_t vie
     textCmd.stage = core::detail::toBase(render::RenderStage::IDX_COLOR);
     textCmd.blendDesc.enabled = false;
     textCmd.blendDesc.mask = false;
-    textCmd.blendDesc.src = gapi::BlendFn::SRC_ALPHA;
-    textCmd.blendDesc.dst = gapi::BlendFn::ONE_MINUS_SRC_ALPHA;
+    textCmd.blendDesc.src = gapi::BlendFn::Enum::SRC_ALPHA;
+    textCmd.blendDesc.dst = gapi::BlendFn::Enum::ONE_MINUS_SRC_ALPHA;
     // textCmd.rasterizerDesc.mode = gapi::CullFace::BACK;
     // textCmd.rasterizerDesc.ccw = false;
     textCmd.depthDesc.enabled = false;
-    textCmd.depthDesc.func = gapi::CompareFn::LESS;
+    textCmd.depthDesc.func = gapi::CompareFn::Enum::LESS;
     // textCmd.depthDesc.mask = true;
     // textCmd.depthDesc.near = 0;
     // textCmd.depthDesc.far = 0;
     textCmd.stencilDesc.enabled = false;
-    textCmd.stencilDesc.front.func = gapi::CompareFn::ALWAYS;
-    textCmd.stencilDesc.front.fail = gapi::StencilOp::KEEP;
-    textCmd.stencilDesc.front.depthFail = gapi::StencilOp::KEEP;
-    textCmd.stencilDesc.front.depthPass = gapi::StencilOp::REPLACE;
+    textCmd.stencilDesc.front.func = gapi::CompareFn::Enum::ALWAYS;
+    textCmd.stencilDesc.front.fail = gapi::StencilOp::Enum::KEEP;
+    textCmd.stencilDesc.front.depthFail = gapi::StencilOp::Enum::KEEP;
+    textCmd.stencilDesc.front.depthPass = gapi::StencilOp::Enum::REPLACE;
     textCmd.stencilDesc.front.rmask = 0xFFFFFF;
     textCmd.stencilDesc.front.wmask = textCmd.stencilDesc.front.rmask;
     textCmd.stencilDesc.front.reference = 1;
     textCmd.stencilDesc.back = textCmd.stencilDesc.front;
     textCmd.geom = textGeom_;
-    textCmd.topology = gapi::TopologyType::TRIANGLE_LIST;
+    textCmd.topology = gapi::TopologyType::Enum::TRIANGLE_LIST;
 
     ft2::FontShader::setLayer(textMtrl_->getEffect(), 1);
     ft2::FontShader::setColor(textMtrl_->getEffect(), math::col4f_t(0.7F, 0.8F, 1.0F, 1.0F));
@@ -402,5 +402,5 @@ void Painter::finalUpdate() {
   }
 }
 
-NAMESPACE_END(ui)
-NAMESPACE_END(sway)
+NS_END()  // namespace ui
+NS_END()  // namespace sway

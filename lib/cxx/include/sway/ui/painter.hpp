@@ -17,8 +17,8 @@
 constexpr std::size_t MAX_UI_RECT = {20};
 constexpr std::size_t MAX_UI_TEXT = {100};
 
-NAMESPACE_BEGIN(sway)
-NAMESPACE_BEGIN(ui)
+NS_BEGIN_SWAY()
+NS_BEGIN(ui)
 
 enum class GeometryBatchChunkType : u32_t { RECT, TEXT, IMG };
 
@@ -147,7 +147,7 @@ private:
   int nextTextIdx_;
 };
 
-NAMESPACE_END(ui)
-NAMESPACE_END(sway)
+NS_END()  // namespace ui
+NS_END()  // namespace sway
 
 #endif  // SWAY_UI_PAINTER_HPP

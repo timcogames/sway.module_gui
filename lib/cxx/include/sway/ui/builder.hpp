@@ -11,8 +11,8 @@
 
 #include <memory>
 
-NAMESPACE_BEGIN(sway)
-NAMESPACE_BEGIN(ui)
+NS_BEGIN_SWAY()
+NS_BEGIN(ui)
 
 class Builder : public core::foundation::Object {
   DECLARE_CLASS_METADATA(Builder, core::foundation::Object)
@@ -70,7 +70,7 @@ private:
   Cursor cursor_;
 };
 
-NAMESPACE_END(ui)
-NAMESPACE_END(sway)
+NS_END()  // namespace ui
+NS_END()  // namespace sway
 
 #endif  // SWAY_UI_BUILDER_HPP

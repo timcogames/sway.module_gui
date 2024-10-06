@@ -9,8 +9,8 @@
 #include <memory>
 #include <optional>
 
-NAMESPACE_BEGIN(sway)
-NAMESPACE_BEGIN(ui)
+NS_BEGIN_SWAY()
+NS_BEGIN(ui)
 
 template <AreaType TYPE>
 auto ElementAreaHolder::getAreaIndex() const -> i32_t {
@@ -27,7 +27,7 @@ auto ElementAreaHolder::getArea() const -> std::optional<std::shared_ptr<OUT>> {
   // clang-format on
 }
 
-template <AreaType TYPE, math::RectEdge EDGE>
+template <AreaType TYPE, math::RectEdge::Enum EDGE>
 void ElementAreaHolder::setEdge(f32_t size) {
   auto area = getArea<TYPE>();
   if (!area.has_value()) {
@@ -37,17 +37,17 @@ void ElementAreaHolder::setEdge(f32_t size) {
   area.value()->set(EDGE, size);
 }
 
-// template <math::RectEdge EDGE>
+// template <math::RectEdge::Enum EDGE>
 // auto ElementAreaHolder::getEdge(std::optional<BoxArea::SharedPtr_t> area) const -> f32_t {
 //   return area.value()->at(EDGE);
 // }
 
-template <math::RectEdge EDGE>
+template <math::RectEdge::Enum EDGE>
 auto ElementAreaHolder::getEdge(Area::SharedPtr_t area) const -> f32_t {
   return std::static_pointer_cast<BoxArea>(area)->at(EDGE);
 }
 
-template <AreaType TYPE, math::RectEdge EDGE>
+template <AreaType TYPE, math::RectEdge::Enum EDGE>
 auto ElementAreaHolder::getEdge() const -> f32_t {
   auto area = getArea<TYPE>();
   if (!area.has_value()) {
@@ -71,7 +71,7 @@ auto ElementAreaHolder::getPosition() const -> math::vec2f_t {
       // TODO:
     } else {
       auto val = area.value();
-      result += math::vec2f_t(getEdge<math::RectEdge::IDX_L>(val), getEdge<math::RectEdge::IDX_T>(val));
+      result += math::vec2f_t(getEdge<math::RectEdge::Enum::IDX_L>(val), getEdge<math::RectEdge::Enum::IDX_T>(val));
     }
   }
 
@@ -88,13 +88,13 @@ auto ElementAreaHolder::getSize() const -> math::size2f_t {
       // TODO:
     } else {
       auto val = area.value();
-      result += math::vec2f_t(getEdge<math::RectEdge::IDX_L>(val) + getEdge<math::RectEdge::IDX_R>(val),
-          getEdge<math::RectEdge::IDX_T>(val) + getEdge<math::RectEdge::IDX_B>(val));
+      result += math::vec2f_t(getEdge<math::RectEdge::Enum::IDX_L>(val) + getEdge<math::RectEdge::Enum::IDX_R>(val),
+          getEdge<math::RectEdge::Enum::IDX_T>(val) + getEdge<math::RectEdge::Enum::IDX_B>(val));
     }
   }
 
   return result;
 }
 
-NAMESPACE_END(ui)
-NAMESPACE_END(sway)
+NS_END()  // namespace ui
+NS_END()  // namespace sway

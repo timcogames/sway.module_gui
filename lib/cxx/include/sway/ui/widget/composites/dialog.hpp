@@ -11,9 +11,9 @@
 #include <memory>
 #include <string>
 
-NAMESPACE_BEGIN(sway)
-NAMESPACE_BEGIN(ui)
-NAMESPACE_BEGIN(widget)
+NS_BEGIN_SWAY()
+NS_BEGIN(ui)
+NS_BEGIN(widget)
 
 class Dialog : public Popup {
   DECLARE_CLASS_POINTER_ALIASES(Dialog)
@@ -53,8 +53,8 @@ private:
   bool resizable_;
 };
 
-NAMESPACE_END(widget)
-NAMESPACE_END(ui)
-NAMESPACE_END(sway)
+NS_END()  // namespace widget
+NS_END()  // namespace ui
+NS_END()  // namespace sway
 
 #endif  // SWAY_UI_WIDGET_DIALOG_HPP

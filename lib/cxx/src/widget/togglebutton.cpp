@@ -1,9 +1,9 @@
 #include <sway/ui/builder.hpp>
 #include <sway/ui/widget/togglebutton.hpp>
 
-NAMESPACE_BEGIN(sway)
-NAMESPACE_BEGIN(ui)
-NAMESPACE_BEGIN(widget)
+NS_BEGIN_SWAY()
+NS_BEGIN(ui)
+NS_BEGIN(widget)
 
 ToggleButton::ToggleButton(BuilderPtr_t builder, const std::string &text)
     : Button(builder, text)
@@ -13,6 +13,6 @@ void ToggleButton::update() { Button::update(); }
 
 void ToggleButton::repaint(Painter::SharedPtr_t painter) { Button::repaint(painter); }
 
-NAMESPACE_END(widget)
-NAMESPACE_END(ui)
-NAMESPACE_END(sway)
+NS_END()  // namespace widget
+NS_END()  // namespace ui
+NS_END()  // namespace sway

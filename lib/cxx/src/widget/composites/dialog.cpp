@@ -7,9 +7,9 @@
 #include <string>
 #include <unordered_map>
 
-NAMESPACE_BEGIN(sway)
-NAMESPACE_BEGIN(ui)
-NAMESPACE_BEGIN(widget)
+NS_BEGIN_SWAY()
+NS_BEGIN(ui)
+NS_BEGIN(widget)
 
 Dialog::Dialog(BuilderPtr_t builder)
     : Popup(builder)
@@ -52,6 +52,6 @@ void Dialog::repaint(Painter::SharedPtr_t painter) {
   Popup::repaint(painter);
 }
 
-NAMESPACE_END(widget)
-NAMESPACE_END(ui)
-NAMESPACE_END(sway)
+NS_END()  // namespace widget
+NS_END()  // namespace ui
+NS_END()  // namespace sway

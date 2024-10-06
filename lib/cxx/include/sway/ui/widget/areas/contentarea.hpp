@@ -11,8 +11,8 @@
 #include <iostream>  // std::ostream
 #include <memory>
 
-NAMESPACE_BEGIN(sway)
-NAMESPACE_BEGIN(ui)
+NS_BEGIN_SWAY()
+NS_BEGIN(ui)
 
 class ContentArea : public Area {
   DECLARE_CLASS_POINTER_ALIASES(ContentArea)
@@ -48,7 +48,7 @@ private:
   math::size2f_t size_;
 };
 
-NAMESPACE_END(ui)
-NAMESPACE_END(sway)
+NS_END()  // namespace ui
+NS_END()  // namespace sway
 
 #endif  // SWAY_UI_WIDGETS_AREAS_CONTENTAREA_HPP

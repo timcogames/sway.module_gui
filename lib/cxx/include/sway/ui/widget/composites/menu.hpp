@@ -13,9 +13,9 @@
 #include <string>
 #include <unordered_map>
 
-NAMESPACE_BEGIN(sway)
-NAMESPACE_BEGIN(ui)
-NAMESPACE_BEGIN(widget)
+NS_BEGIN_SWAY()
+NS_BEGIN(ui)
+NS_BEGIN(widget)
 
 class Menu : public LinearLayout {
   DECLARE_CLASS_POINTER_ALIASES(Menu)
@@ -44,8 +44,8 @@ private:
   int selectedItem_;
 };
 
-NAMESPACE_END(widget)
-NAMESPACE_END(ui)
-NAMESPACE_END(sway)
+NS_END()  // namespace widget
+NS_END()  // namespace ui
+NS_END()  // namespace sway
 
 #endif  // SWAY_UI_WIDGET_MENU_HPP

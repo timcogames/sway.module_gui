@@ -4,8 +4,8 @@
 #include <sway/ois/web/emsmouse.hpp>
 #include <sway/ui/builder.hpp>
 
-NAMESPACE_BEGIN(sway)
-NAMESPACE_BEGIN(ui)
+NS_BEGIN_SWAY()
+NS_BEGIN(ui)
 
 struct WidgetEventHandler : public core::evts::EventHandler {
   WidgetEventHandler(Builder::Ptr_t builder)
@@ -91,5 +91,5 @@ void Builder::handleMouseClick(u32_t state) {
   }
 }
 
-NAMESPACE_END(ui)
-NAMESPACE_END(sway)
+NS_END()  // namespace ui
+NS_END()  // namespace sway

@@ -11,12 +11,12 @@
 #include <memory>
 #include <string>
 
-NAMESPACE_BEGIN(sway)
-NAMESPACE_BEGIN(ui)
+NS_BEGIN_SWAY()
+NS_BEGIN(ui)
 
 class Builder;
 
-NAMESPACE_BEGIN(widget)
+NS_BEGIN(widget)
 
 class MenuItem : public Item {
   DECLARE_CLASS_POINTER_ALIASES(MenuItem)
@@ -48,8 +48,8 @@ private:
   Button::SharedPtr_t button_;
 };
 
-NAMESPACE_END(widget)
-NAMESPACE_END(ui)
-NAMESPACE_END(sway)
+NS_END()  // namespace widget
+NS_END()  // namespace ui
+NS_END()  // namespace sway
 
 #endif  // SWAY_UI_WIDGET_MENUITEM_HPP

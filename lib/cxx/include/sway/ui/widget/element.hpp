@@ -7,8 +7,8 @@
 #include <sway/ui/widget/elementpositions.hpp>
 #include <sway/ui/widget/typedefs.hpp>
 
-NAMESPACE_BEGIN(sway)
-NAMESPACE_BEGIN(ui)
+NS_BEGIN_SWAY()
+NS_BEGIN(ui)
 
 struct ElementOffset {
   math::point2f_t original;
@@ -81,7 +81,7 @@ private:
   ElementOffset offset_;
 };
 
-NAMESPACE_END(ui)
-NAMESPACE_END(sway)
+NS_END()  // namespace ui
+NS_END()  // namespace sway
 
 #endif  // SWAY_UI_WIDGETS_ELEMENT_HPP

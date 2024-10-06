@@ -7,9 +7,9 @@
 #include <freetype/fttypes.h>
 #include <stdio.h>
 
-NAMESPACE_BEGIN(sway)
-NAMESPACE_BEGIN(ui)
-NAMESPACE_BEGIN(ft2)
+NS_BEGIN_SWAY()
+NS_BEGIN(ui)
+NS_BEGIN(ft2)
 
 #define CHECK_RESULT(error)                                                                 \
   ({                                                                                        \
@@ -21,8 +21,8 @@ NAMESPACE_BEGIN(ft2)
     true;                                                                                   \
   })
 
-NAMESPACE_END(ft2)
-NAMESPACE_END(ui)
-NAMESPACE_END(sway)
+NS_END()  // namespace ft2
+NS_END()  // namespace ui
+NS_END()  // namespace sway
 
 #endif  // SWAY_UI_FT2_ERRORMACROS_HPP

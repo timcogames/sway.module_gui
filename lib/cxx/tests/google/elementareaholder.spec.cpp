@@ -51,35 +51,35 @@ TEST(ElementAreaHolderTest, setter_getter) {
   util::foreacher<NUM_OF_AREAS - 1 /* exclude AreaType::IDX_CNT */>([&](auto idx) {
     constexpr auto type = core::detail::toEnum<ui::AreaType>(idx + 0);
 
-    holder.setEdge<type, math::RectEdge::IDX_L>(1.0F);
-    holder.setEdge<type, math::RectEdge::IDX_T>(2.0F);
-    holder.setEdge<type, math::RectEdge::IDX_R>(3.0F);
-    holder.setEdge<type, math::RectEdge::IDX_B>(4.0F);
+    holder.setEdge<type, math::RectEdge::Enum::IDX_L>(1.0F);
+    holder.setEdge<type, math::RectEdge::Enum::IDX_T>(2.0F);
+    holder.setEdge<type, math::RectEdge::Enum::IDX_R>(3.0F);
+    holder.setEdge<type, math::RectEdge::Enum::IDX_B>(4.0F);
 
     auto area = holder.getArea<type>().value();
-    ASSERT_EQ(holder.getEdge<math::RectEdge::IDX_L>(area), 1.0F);
-    ASSERT_EQ(holder.getEdge<math::RectEdge::IDX_T>(area), 2.0F);
-    ASSERT_EQ(holder.getEdge<math::RectEdge::IDX_R>(area), 3.0F);
-    ASSERT_EQ(holder.getEdge<math::RectEdge::IDX_B>(area), 4.0F);
+    ASSERT_EQ(holder.getEdge<math::RectEdge::Enum::IDX_L>(area), 1.0F);
+    ASSERT_EQ(holder.getEdge<math::RectEdge::Enum::IDX_T>(area), 2.0F);
+    ASSERT_EQ(holder.getEdge<math::RectEdge::Enum::IDX_R>(area), 3.0F);
+    ASSERT_EQ(holder.getEdge<math::RectEdge::Enum::IDX_B>(area), 4.0F);
   });
 }
 
 TEST(ElementAreaHolderTest, get_position) {
   ui::ElementAreaHolder holder;
-  holder.setEdge<ui::AreaType::IDX_MRG, math::RectEdge::IDX_L>(4.0F);
-  holder.setEdge<ui::AreaType::IDX_MRG, math::RectEdge::IDX_R>(4.0F);
-  holder.setEdge<ui::AreaType::IDX_MRG, math::RectEdge::IDX_T>(0.0F);
-  holder.setEdge<ui::AreaType::IDX_MRG, math::RectEdge::IDX_B>(0.0F);
+  holder.setEdge<ui::AreaType::IDX_MRG, math::RectEdge::Enum::IDX_L>(4.0F);
+  holder.setEdge<ui::AreaType::IDX_MRG, math::RectEdge::Enum::IDX_R>(4.0F);
+  holder.setEdge<ui::AreaType::IDX_MRG, math::RectEdge::Enum::IDX_T>(0.0F);
+  holder.setEdge<ui::AreaType::IDX_MRG, math::RectEdge::Enum::IDX_B>(0.0F);
 
-  holder.setEdge<ui::AreaType::IDX_BRD, math::RectEdge::IDX_L>(1.0F);
-  holder.setEdge<ui::AreaType::IDX_BRD, math::RectEdge::IDX_R>(1.0F);
-  holder.setEdge<ui::AreaType::IDX_BRD, math::RectEdge::IDX_T>(1.0F);
-  holder.setEdge<ui::AreaType::IDX_BRD, math::RectEdge::IDX_B>(1.0F);
+  holder.setEdge<ui::AreaType::IDX_BRD, math::RectEdge::Enum::IDX_L>(1.0F);
+  holder.setEdge<ui::AreaType::IDX_BRD, math::RectEdge::Enum::IDX_R>(1.0F);
+  holder.setEdge<ui::AreaType::IDX_BRD, math::RectEdge::Enum::IDX_T>(1.0F);
+  holder.setEdge<ui::AreaType::IDX_BRD, math::RectEdge::Enum::IDX_B>(1.0F);
 
-  holder.setEdge<ui::AreaType::IDX_PAD, math::RectEdge::IDX_L>(2.0F);
-  holder.setEdge<ui::AreaType::IDX_PAD, math::RectEdge::IDX_R>(2.0F);
-  holder.setEdge<ui::AreaType::IDX_PAD, math::RectEdge::IDX_T>(2.0F);
-  holder.setEdge<ui::AreaType::IDX_PAD, math::RectEdge::IDX_B>(2.0F);
+  holder.setEdge<ui::AreaType::IDX_PAD, math::RectEdge::Enum::IDX_L>(2.0F);
+  holder.setEdge<ui::AreaType::IDX_PAD, math::RectEdge::Enum::IDX_R>(2.0F);
+  holder.setEdge<ui::AreaType::IDX_PAD, math::RectEdge::Enum::IDX_T>(2.0F);
+  holder.setEdge<ui::AreaType::IDX_PAD, math::RectEdge::Enum::IDX_B>(2.0F);
 
   auto position = holder.getPosition<ui::AreaType::IDX_CNT>();
   ASSERT_EQ(position.getX(), 7.0F);

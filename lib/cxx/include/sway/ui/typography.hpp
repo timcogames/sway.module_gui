@@ -3,14 +3,14 @@
 
 #include <sway/core.hpp>
 
-NAMESPACE_BEGIN(sway)
-NAMESPACE_BEGIN(ui)
-NAMESPACE_BEGIN(typography)
+NS_BEGIN_SWAY()
+NS_BEGIN(ui)
+NS_BEGIN(typography)
 
 using col_t = math::col4f_t;
 
-NAMESPACE_END(typography)
-NAMESPACE_END(ui)
-NAMESPACE_END(sway)
+NS_END()  // namespace typography
+NS_END()  // namespace ui
+NS_END()  // namespace sway
 
 #endif  // SWAY_UI_TYPOGRAPHY_HPP
