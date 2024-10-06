@@ -1,5 +1,6 @@
 #include <sway/ui/builder.hpp>
 #include <sway/ui/widget/label.hpp>
+#include <sway/ui/zindex.hpp>
 
 NAMESPACE_BEGIN(sway)
 NAMESPACE_BEGIN(ui)
@@ -39,9 +40,11 @@ void Label::resize() {
 void Label::update() {}
 
 void Label::repaint(Painter::SharedPtr_t painter) {
+  auto zindex = getZIndex(2);
   auto offset = this->getOffset().computed;
+
   painter->drawText(
-      math::rect4f_t(offset.getX(), offset.getY(), this->getSize()), this->getForegroundColor(), text_.c_str());
+      math::rect4f_t(offset.getX(), offset.getY(), this->getSize()), this->getForegroundColor(), text_.c_str(), zindex);
 }
 
 void Label::setText(const std::string &text) { text_ = text; }

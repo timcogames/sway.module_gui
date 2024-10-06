@@ -1,5 +1,6 @@
 #include <sway/ui/builder.hpp>
 #include <sway/ui/widget/button.hpp>
+#include <sway/ui/zindex.hpp>
 
 NAMESPACE_BEGIN(sway)
 NAMESPACE_BEGIN(ui)
@@ -29,13 +30,14 @@ void Button::update() {
 }
 
 void Button::repaint(Painter::SharedPtr_t painter) {
+  auto zindex = getZIndex(1);
   auto offset = this->getOffset().computed;
 
   labelWidget_->setAlignment(math::Alignment::CENTER);
   labelWidget_->setOffset(offset);
   labelWidget_->setSize(this->getSize());
 
-  painter->drawRect(math::rect4f_t(offset.getX(), offset.getY(), this->getSize()), this->getBackgroundColor());
+  painter->drawRect(math::rect4f_t(offset.getX(), offset.getY(), this->getSize()), this->getBackgroundColor(), zindex);
 
   Widget::repaint(painter);
 }

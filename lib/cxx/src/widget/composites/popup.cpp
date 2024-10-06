@@ -22,7 +22,7 @@ void Popup::update() {}
 void Popup::repaint(Painter::SharedPtr_t painter) {
   auto offset = this->getOffset().computed;
   painter->drawRect(math::rect4f_t(offset.getX(), offset.getY(), this->getSize()), this->getBackgroundColor(),
-      getZIndex((f32_t)core::detail::toBase(ZIndex::DIALOG)));
+      getZIndex((i32_t)core::detail::toBase(ZIndex::DIALOG)));
 
   Widget::repaint(painter);
 }

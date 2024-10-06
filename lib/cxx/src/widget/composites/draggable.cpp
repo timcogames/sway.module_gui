@@ -65,7 +65,7 @@ void Draggable::repaint(Painter::SharedPtr_t painter) {
 
   auto offset = this->getOffset().computed;
   painter->drawRect(math::rect4f_t(offset.getX(), offset.getY(), this->getSize()), this->getBackgroundColor(),
-      getZIndex((f32_t)core::detail::toBase(ZIndex::DLG_HEAD)));
+      getZIndex((i32_t)core::detail::toBase(ZIndex::DLG_HEAD)));
 
   Widget::repaint(painter);
 }

@@ -37,18 +37,20 @@ void Painter::initialize(ft2::Font::SharedPtr_t font, render::RenderSubsystem::S
                                "out vec4 out_col;"
                                "void main() {"
                                "    vec4 final = vec4(vtx_col.rgb, vtx_col.a);"
-                               "    if (final.a < 0.1) {"
-                               "        discard;"
-                               "    }"
+                               //  "    if (final.a < 0.1) {"
+                               //  "        discard;"
+                               //  "    }"
                                "    out_col = final;"
                                "}"}};
 
   rectMtrl_ = std::make_shared<render::Material>("material_ui_rect", imgResMngr, glslResMngr);
+  rectMtrl_->setSubsys(subsys.get());
   rectMtrl_->addEffect(shaderSources);
   // rectMtrl_->addEffect({"ui_rect_vs", "ui_rect_fs"});
   materialMngr->addMaterial(rectMtrl_);
 
   textMtrl_ = std::make_shared<render::Material>("material_ui_text", imgResMngr, glslResMngr);
+  textMtrl_->setSubsys(subsys.get());
   textMtrl_->addEffect((std::array<std::string, 2>){"ui_text_vs", "ui_text_fs"});
   materialMngr->addMaterial(textMtrl_);
 
@@ -178,7 +180,7 @@ void Painter::drawRect(const math::rect4f_t &rect, math::col4f_t col, f32_t zind
   drawRect(rect.getL(), rect.getT(), rect.getR(), rect.getB(), col, zindex);
 }
 
-void Painter::drawText(f32_t x, f32_t y, f32_t w, f32_t h, math::col4f_t col, lpcstr_t text) {
+void Painter::drawText(f32_t x, f32_t y, f32_t w, f32_t h, math::col4f_t col, lpcstr_t text, f32_t zindex) {
   if (geomBatchChunkSize_ >= GEOMERTY_BATCH_CHUNK_SIZE) {
     return;
   }
@@ -189,12 +191,13 @@ void Painter::drawText(f32_t x, f32_t y, f32_t w, f32_t h, math::col4f_t col, lp
   chunk.text.y = y;
   // chunk.text.w = w;
   // chunk.text.h = h;
+  chunk.text.zindex = zindex;
   chunk.text.color = col;
   chunk.text.text = text;
 }
 
-void Painter::drawText(const math::rect4f_t &rect, math::col4f_t col, lpcstr_t text) {
-  drawText(rect.getL(), rect.getT(), rect.getR(), rect.getB(), col, text);
+void Painter::drawText(const math::rect4f_t &rect, math::col4f_t col, lpcstr_t text, f32_t zindex) {
+  drawText(rect.getL(), rect.getT(), rect.getR(), rect.getB(), col, text, zindex);
 }
 
 void Painter::onUpdateBatchChunks() {
@@ -253,7 +256,8 @@ void Painter::onUpdateBatchChunks() {
             auto dY = 1.0F / getScreenHalfHgt();
 
             inst->setPosDataAttrib(
-                math::rect4f_t(textPos.getL() * dX, textPos.getT() * dY, textPos.getR() * dX, textPos.getB() * dY));
+                math::rect4f_t(textPos.getL() * dX, textPos.getT() * dY, textPos.getR() * dX, textPos.getB() * dY),
+                chunk.text.zindex);
             inst->setColDataAttrib(chunk.text.color);
             inst->setTexDataAttrib(charInfo.value().rect);
             nextTextIdx_ += 1;
@@ -287,19 +291,19 @@ void Painter::onUpdate(math::mat4f_t tfrm, math::mat4f_t proj, math::mat4f_t vie
 
   render::pipeline::ForwardRenderCommand rectCmd;
   if (rectGeom_ != nullptr) {
-    rectCmd.stage = 0;
+    rectCmd.stage = core::detail::toBase(render::RenderStage::IDX_COLOR);
     rectCmd.blendDesc.enabled = true;
+    rectCmd.blendDesc.mask = false;
     rectCmd.blendDesc.src = gapi::BlendFn::SRC_ALPHA;
-    rectCmd.blendDesc.dst = gapi::BlendFn::ONE;
-    rectCmd.blendDesc.mask = true;
-    rectCmd.rasterizerDesc.mode = gapi::CullFace::BACK;
-    rectCmd.rasterizerDesc.ccw = false;
-    rectCmd.depthDesc.enabled = true;
+    rectCmd.blendDesc.dst = gapi::BlendFn::ONE_MINUS_SRC_ALPHA;
+    // rectCmd.rasterizerDesc.mode = gapi::CullFace::BACK;
+    // rectCmd.rasterizerDesc.ccw = false;
+    rectCmd.depthDesc.enabled = false;
     rectCmd.depthDesc.func = gapi::CompareFn::LESS;
-    rectCmd.depthDesc.mask = true;
-    rectCmd.depthDesc.near = 0;
-    rectCmd.depthDesc.far = 0;
-    rectCmd.stencilDesc.enabled = true;
+    // rectCmd.depthDesc.mask = false;
+    // rectCmd.depthDesc.near = 0;
+    // rectCmd.depthDesc.far = 0;
+    rectCmd.stencilDesc.enabled = false;
     rectCmd.stencilDesc.front.func = gapi::CompareFn::ALWAYS;
     rectCmd.stencilDesc.front.fail = gapi::StencilOp::KEEP;
     rectCmd.stencilDesc.front.depthFail = gapi::StencilOp::KEEP;
@@ -310,14 +314,14 @@ void Painter::onUpdate(math::mat4f_t tfrm, math::mat4f_t proj, math::mat4f_t vie
     rectCmd.stencilDesc.back = rectCmd.stencilDesc.front;
     rectCmd.topology = gapi::TopologyType::TRIANGLE_LIST;
     rectCmd.geom = rectGeom_;
-    rectCmd.material = rectMtrl_;
+    rectCmd.mtrl = rectMtrl_;
     rectCmd.tfrm = math::mat4f_t();
     // clang-format off
     rectCmd.proj.setData(math::Projection((struct math::ProjectionDescription) {
       .rect = {{ -1.0F /* L */, 1.0F /* B->T */, 1.0F /* R */, -1.0F /* T->B */ }},
       .fov = 0,
       .aspect = getScreenSize().getW() / getScreenSize().getH(),
-      .znear = 1.0F,
+      .znear = 0.0F,
       .zfar = 10.0F
     }).makeOrtho());
     rectCmd.view = math::xform3f_t::translate(rectCmd.view, -1.0F, -1.0F, 0.0F);
@@ -328,19 +332,19 @@ void Painter::onUpdate(math::mat4f_t tfrm, math::mat4f_t proj, math::mat4f_t vie
 
   render::pipeline::ForwardRenderCommand textCmd;
   if (textGeom_ != nullptr) {
-    textCmd.stage = 0;
-    textCmd.blendDesc.enabled = true;
+    textCmd.stage = core::detail::toBase(render::RenderStage::IDX_COLOR);
+    textCmd.blendDesc.enabled = false;
+    textCmd.blendDesc.mask = false;
     textCmd.blendDesc.src = gapi::BlendFn::SRC_ALPHA;
     textCmd.blendDesc.dst = gapi::BlendFn::ONE_MINUS_SRC_ALPHA;
-    textCmd.blendDesc.mask = true;
-    textCmd.rasterizerDesc.mode = gapi::CullFace::BACK;
-    textCmd.rasterizerDesc.ccw = false;
-    textCmd.depthDesc.enabled = true;
+    // textCmd.rasterizerDesc.mode = gapi::CullFace::BACK;
+    // textCmd.rasterizerDesc.ccw = false;
+    textCmd.depthDesc.enabled = false;
     textCmd.depthDesc.func = gapi::CompareFn::LESS;
-    textCmd.depthDesc.mask = true;
-    textCmd.depthDesc.near = 0;
-    textCmd.depthDesc.far = 0;
-    textCmd.stencilDesc.enabled = true;
+    // textCmd.depthDesc.mask = true;
+    // textCmd.depthDesc.near = 0;
+    // textCmd.depthDesc.far = 0;
+    textCmd.stencilDesc.enabled = false;
     textCmd.stencilDesc.front.func = gapi::CompareFn::ALWAYS;
     textCmd.stencilDesc.front.fail = gapi::StencilOp::KEEP;
     textCmd.stencilDesc.front.depthFail = gapi::StencilOp::KEEP;
@@ -355,14 +359,14 @@ void Painter::onUpdate(math::mat4f_t tfrm, math::mat4f_t proj, math::mat4f_t vie
     ft2::FontShader::setLayer(textMtrl_->getEffect(), 1);
     ft2::FontShader::setColor(textMtrl_->getEffect(), math::col4f_t(0.7F, 0.8F, 1.0F, 1.0F));
 
-    textCmd.material = textMtrl_;
+    textCmd.mtrl = textMtrl_;
     textCmd.tfrm = math::mat4f_t();
     // clang-format off
     textCmd.proj.setData(math::Projection((struct math::ProjectionDescription) {
       .rect = {{ -1.0F /* L */, 1.0F /* B->T */, 1.0F /* R */, -1.0F /* T->B */ }},
       .fov = 0,
       .aspect = getScreenSize().getW() / getScreenSize().getH(),
-      .znear = 1.0F,
+      .znear = 0.0F,
       .zfar = 10.0F
     }).makeOrtho());
     textCmd.view = math::xform3f_t::translate(textCmd.view, -1.0F, -1.0F, 0.0F);

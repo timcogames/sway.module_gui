@@ -30,6 +30,7 @@ struct GeometryBatchChunkRect {
 
 struct GeometryBatchChunkText {
   f32_t x, y, w, h;
+  f32_t zindex;
   math::col4f_t color;
   lpcstr_t text;
 };
@@ -72,9 +73,9 @@ public:
 
   void drawRect(const math::rect4f_t &rect, math::col4f_t col, f32_t zindex = 0.0F);
 
-  void drawText(f32_t x, f32_t y, f32_t w, f32_t h, math::col4f_t col, lpcstr_t text);
+  void drawText(f32_t x, f32_t y, f32_t w, f32_t h, math::col4f_t col, lpcstr_t text, f32_t zindex = 0.0F);
 
-  void drawText(const math::rect4f_t &rect, math::col4f_t col, lpcstr_t text);
+  void drawText(const math::rect4f_t &rect, math::col4f_t col, lpcstr_t text, f32_t zindex = 0.0F);
 
   void onUpdateBatchChunks();
 
