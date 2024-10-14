@@ -6,8 +6,8 @@
 NS_BEGIN_SWAY()
 NS_BEGIN(ui)
 
-DECLARE_CLASS_POINTER_TYPES(Builder)
-DECLARE_CLASS_POINTER_TYPES(Painter)
+DECLARE_PTR_TYPES(Builder)
+DECLARE_PTR_TYPES(Painter)
 
 NS_END()  // namespace ui
 NS_END()  // namespace sway

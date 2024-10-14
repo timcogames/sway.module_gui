@@ -15,7 +15,7 @@ NS_BEGIN_SWAY()
 NS_BEGIN(ui)
 
 class ElementAreaHolder : public AreaHolder_t {
-  DECLARE_CLASS_POINTER_ALIASES(ElementAreaHolder)
+  DECLARE_PTR_ALIASES(ElementAreaHolder)
 
 public:
 #pragma region "Ctors/Dtor"

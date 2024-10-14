@@ -24,7 +24,7 @@ struct ElementOffset {
 };
 
 class Element : public core::container::Node {
-  DECLARE_CLASS_POINTER_ALIASES(Element)
+  DECLARE_PTR_ALIASES(Element)
 
 public:
 #pragma region "Ctors/Dtor"

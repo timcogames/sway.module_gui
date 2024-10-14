@@ -11,7 +11,7 @@ Label::Label(BuilderPtr_t builder, const std::string &text)
     , text_(text)
     , font_("")
     , fontSize_(12) {
-  setMouseFilter(ois::MouseFilter::IGNORE);
+  setMouseFilter(ois::MouseFilter::Enum::IGNORE);
 
   resize();
 }

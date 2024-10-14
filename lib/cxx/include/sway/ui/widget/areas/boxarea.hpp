@@ -15,7 +15,7 @@ NS_BEGIN_SWAY()
 NS_BEGIN(ui)
 
 class BoxArea : public Area {
-  DECLARE_CLASS_POINTER_ALIASES(BoxArea)
+  DECLARE_PTR_ALIASES(BoxArea)
 
 public:
 #pragma region "Ctors/Dtor"

@@ -8,7 +8,7 @@ NS_BEGIN(widget)
 Layout::Layout(BuilderPtr_t builder, Orientation orien)
     : Widget(builder)
     , Orientable(orien) {
-  setMouseFilter(ois::MouseFilter::PASS);
+  setMouseFilter(ois::MouseFilter::Enum::PASS);
 }
 
 NS_END()  // namespace widget

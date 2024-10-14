@@ -129,8 +129,8 @@ void Painter::createRectGeom(std::shared_ptr<render::RenderSubsystem> subsys, u3
   rectGeomCreateInfo.bo[render::Constants::IDX_EBO].desc.capacity = rectIdxs.size();
   rectGeomCreateInfo.bo[render::Constants::IDX_EBO].data = rectIdxs.data();
 
-  geomBuilder_->createInstance<render::procedurals::prims::Quadrilateral<math::VertexColor>>(
-      geomIdx, rectGeomDataDivisor_, rectGeomCreateInfo, rectMtrl_->getEffect());
+  rectId_ = geomBuilder_->createInstance<render::procedurals::prims::Quadrilateral<math::VertexColor>>(
+      /*geomIdx,*/ rectGeomDataDivisor_, rectGeomCreateInfo, rectMtrl_->getEffect());
 }
 
 void Painter::createTextGeom(std::shared_ptr<render::RenderSubsystem> subsys, u32_t geomIdx) {
@@ -153,7 +153,7 @@ void Painter::createTextGeom(std::shared_ptr<render::RenderSubsystem> subsys, u3
   textGeomCreateInfo.bo[render::Constants::IDX_EBO].data = textIdxs.data();
 
   textId_ = geomBuilder_->createInstance<render::procedurals::prims::Quadrilateral<math::VertexTexCoord>>(
-      geomIdx, textGeomDataDivisor_, textGeomCreateInfo, textMtrl_->getEffect());
+      /*geomIdx,*/ textGeomDataDivisor_, textGeomCreateInfo, textMtrl_->getEffect());
 }
 
 void Painter::clear() {
@@ -280,10 +280,10 @@ void Painter::onUpdateBatchChunks() {
 
 void Painter::onUpdate(math::mat4f_t tfrm, math::mat4f_t proj, math::mat4f_t view, f32_t dtime) {
   rectGeom_ = static_cast<render::GeomInstance<render::procedurals::prims::Quadrilateral<math::VertexColor>> *>(
-      geomBuilder_->getGeometry(0));
+      geomBuilder_->getGeometry(rectId_));
 
   textGeom_ = static_cast<render::GeomInstance<render::procedurals::prims::Quadrilateral<math::VertexTexCoord>> *>(
-      geomBuilder_->getGeometry(1));
+      geomBuilder_->getGeometry(textId_));
 
   this->onUpdateBatchChunks();
 
@@ -291,14 +291,14 @@ void Painter::onUpdate(math::mat4f_t tfrm, math::mat4f_t proj, math::mat4f_t vie
 
   render::pipeline::ForwardRenderCommand rectCmd;
   if (rectGeom_ != nullptr) {
-    rectCmd.stage = core::detail::toBase(render::RenderStage::IDX_COLOR);
+    rectCmd.stage = 0;  // core::detail::toBase(render::RenderStage::IDX_COLOR);
     rectCmd.blendDesc.enabled = true;
     rectCmd.blendDesc.mask = false;
     rectCmd.blendDesc.src = gapi::BlendFn::Enum::SRC_ALPHA;
     rectCmd.blendDesc.dst = gapi::BlendFn::Enum::ONE_MINUS_SRC_ALPHA;
     // rectCmd.rasterizerDesc.mode = gapi::CullFace::BACK;
     // rectCmd.rasterizerDesc.ccw = false;
-    rectCmd.depthDesc.enabled = false;
+    rectCmd.depthDesc.enabled = true;
     rectCmd.depthDesc.func = gapi::CompareFn::Enum::LESS;
     // rectCmd.depthDesc.mask = false;
     // rectCmd.depthDesc.near = 0;
@@ -332,14 +332,14 @@ void Painter::onUpdate(math::mat4f_t tfrm, math::mat4f_t proj, math::mat4f_t vie
 
   render::pipeline::ForwardRenderCommand textCmd;
   if (textGeom_ != nullptr) {
-    textCmd.stage = core::detail::toBase(render::RenderStage::IDX_COLOR);
-    textCmd.blendDesc.enabled = false;
+    textCmd.stage = 0;  // core::detail::toBase(render::RenderStage::IDX_COLOR);
+    textCmd.blendDesc.enabled = true;
     textCmd.blendDesc.mask = false;
     textCmd.blendDesc.src = gapi::BlendFn::Enum::SRC_ALPHA;
     textCmd.blendDesc.dst = gapi::BlendFn::Enum::ONE_MINUS_SRC_ALPHA;
     // textCmd.rasterizerDesc.mode = gapi::CullFace::BACK;
     // textCmd.rasterizerDesc.ccw = false;
-    textCmd.depthDesc.enabled = false;
+    textCmd.depthDesc.enabled = true;
     textCmd.depthDesc.func = gapi::CompareFn::Enum::LESS;
     // textCmd.depthDesc.mask = true;
     // textCmd.depthDesc.near = 0;

@@ -30,7 +30,7 @@ NS_BEGIN(ui)
 NS_BEGIN(widget)
 
 class Widget : public Element {
-  DECLARE_CLASS_POINTER_ALIASES(Widget)
+  DECLARE_PTR_ALIASES(Widget)
   DECLARE_EVENT(EVT_POINTER_ENTER, PointerEnter)
   DECLARE_EVENT(EVT_POINTER_LEAVE, PointerLeave)
   DECLARE_EVENT(EVT_MOUSE_CLICKED, MouseClicked)
@@ -92,16 +92,16 @@ public:
 
   void setEventFilter(core::evts::EventHandler::Ptr_t hdl);
 
-  void setMouseFilter(ois::MouseFilter filter);
+  void setMouseFilter(ois::MouseFilter::Enum filter);
 
   [[nodiscard]]
-  auto getMouseFilter() const -> ois::MouseFilter;
+  auto getMouseFilter() const -> ois::MouseFilter::Enum;
 
   void setAlignment(math::Alignment alignment);
 
 protected:
   BuilderPtr_t builder_;
-  ois::MouseFilter mouseFilter_;
+  ois::MouseFilter::Enum mouseFilter_;
   core::evts::EventHandler::Ptr_t eventFilter_;
   // math::rect4f_t innerRect_;  // wdt/hgt, padding
   // math::rect4f_t outerRect_;  // wdt/hgt, margin, border, padding

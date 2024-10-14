@@ -14,7 +14,7 @@ NS_BEGIN(ui)
 NS_BEGIN(widget)
 
 class Button : public Widget {
-  DECLARE_CLASS_POINTER_ALIASES(Button)
+  DECLARE_PTR_ALIASES(Button)
 
 public:
 #pragma region "Ctors/Dtor"

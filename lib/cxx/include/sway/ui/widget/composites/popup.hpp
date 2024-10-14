@@ -14,7 +14,7 @@ NS_BEGIN(ui)
 NS_BEGIN(widget)
 
 class Popup : public Widget {
-  DECLARE_CLASS_POINTER_ALIASES(Popup)
+  DECLARE_PTR_ALIASES(Popup)
 
 public:
 #pragma region "Ctors/Dtor"

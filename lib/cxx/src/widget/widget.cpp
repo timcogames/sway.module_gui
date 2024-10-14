@@ -12,7 +12,7 @@ NS_BEGIN(widget)
 Widget::Widget(BuilderPtr_t builder)
     : builder_(builder)
     , eventFilter_(nullptr)
-    , mouseFilter_(ois::MouseFilter::STOP)
+    , mouseFilter_(ois::MouseFilter::Enum::STOP)
     , containsPointer_(false)
     , needsRepainting_(false) {
   setBackgroundColor(COL4F_GRAY1);
@@ -135,7 +135,7 @@ auto Widget::getChildAtPoint(const math::point2f_t &pnt) -> Widget::Ptr_t {
 
     if (auto *const widget = child->getChildAtPoint(pnt)) {
       return widget;
-    } else if (childRect.contains(pnt) && child->getMouseFilter() != ois::MouseFilter::IGNORE) {
+    } else if (childRect.contains(pnt) && child->getMouseFilter() != ois::MouseFilter::Enum::IGNORE) {
       return child.get();
     }
   }
@@ -145,9 +145,9 @@ auto Widget::getChildAtPoint(const math::point2f_t &pnt) -> Widget::Ptr_t {
 
 void Widget::setEventFilter(core::evts::EventHandler::Ptr_t hdl) { eventFilter_ = hdl; }
 
-void Widget::setMouseFilter(ois::MouseFilter filter) { mouseFilter_ = filter; }
+void Widget::setMouseFilter(ois::MouseFilter::Enum filter) { mouseFilter_ = filter; }
 
-auto Widget::getMouseFilter() const -> ois::MouseFilter { return mouseFilter_; }
+auto Widget::getMouseFilter() const -> ois::MouseFilter::Enum { return mouseFilter_; }
 
 void Widget::setAlignment(math::Alignment alignment) { alignment_ = alignment; }
 

@@ -50,7 +50,7 @@ struct GeometryBatchChunk {
 
 class Painter : public render::RenderComponent, public render::FinalUpdatable {
   DECLARE_CLASS_METADATA(Painter, RenderComponent)
-  DECLARE_CLASS_POINTER_ALIASES(Painter)
+  DECLARE_PTR_ALIASES(Painter)
 
 public:
 #pragma region "Ctors/Dtor"
@@ -136,6 +136,8 @@ private:
   render::GeomInstanceDataDivisor<render::procedurals::prims::Quadrilateral<math::VertexTexCoord>>
       *textGeomDataDivisor_;
   render::GeomInstance<render::procedurals::prims::Quadrilateral<math::VertexTexCoord>> *textGeom_;
+
+  u32_t rectId_;
   u32_t textId_;
 
   ft2::Font::SharedPtr_t font_;

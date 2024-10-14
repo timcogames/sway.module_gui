@@ -16,7 +16,7 @@ NS_BEGIN(ui)
 
 class Builder : public core::foundation::Object {
   DECLARE_CLASS_METADATA(Builder, core::foundation::Object)
-  DECLARE_CLASS_POINTER_ALIASES(Builder)
+  DECLARE_PTR_ALIASES(Builder)
 
 public:
   using ElementUnderPointer_t = widget::Widget::Ptr_t;

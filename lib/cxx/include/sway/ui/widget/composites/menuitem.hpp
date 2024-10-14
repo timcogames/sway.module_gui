@@ -19,7 +19,7 @@ class Builder;
 NS_BEGIN(widget)
 
 class MenuItem : public Item {
-  DECLARE_CLASS_POINTER_ALIASES(MenuItem)
+  DECLARE_PTR_ALIASES(MenuItem)
 
 public:
 #pragma region "Ctors/Dtor"

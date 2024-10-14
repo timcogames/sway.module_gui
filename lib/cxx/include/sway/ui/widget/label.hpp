@@ -15,7 +15,7 @@ NS_BEGIN(ui)
 NS_BEGIN(widget)
 
 class Label : public Widget {
-  DECLARE_CLASS_POINTER_ALIASES(Label)
+  DECLARE_PTR_ALIASES(Label)
 
 public:
 #pragma region "Ctors/Dtor"

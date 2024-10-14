@@ -15,7 +15,7 @@ NS_BEGIN(widget)
 
 // pseudo-element
 class Backdrop : public Widget {
-  DECLARE_CLASS_POINTER_ALIASES(Backdrop)
+  DECLARE_PTR_ALIASES(Backdrop)
 
 public:
 #pragma region "Ctors/Dtor"

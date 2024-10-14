@@ -16,7 +16,7 @@ NS_BEGIN(widget)
 class DropSource {};
 
 class DropTarget : public Widget {
-  DECLARE_CLASS_POINTER_ALIASES(DropTarget)
+  DECLARE_PTR_ALIASES(DropTarget)
 
 public:
 #pragma region "Ctors/Dtor"

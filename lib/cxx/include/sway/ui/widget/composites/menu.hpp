@@ -18,7 +18,7 @@ NS_BEGIN(ui)
 NS_BEGIN(widget)
 
 class Menu : public LinearLayout {
-  DECLARE_CLASS_POINTER_ALIASES(Menu)
+  DECLARE_PTR_ALIASES(Menu)
 
 public:
 #pragma region "Ctors/Dtor"

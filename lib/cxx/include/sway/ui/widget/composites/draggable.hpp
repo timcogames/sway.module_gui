@@ -14,7 +14,7 @@ NS_BEGIN(ui)
 NS_BEGIN(widget)
 
 class Draggable : public Widget {
-  DECLARE_CLASS_POINTER_ALIASES(Draggable)
+  DECLARE_PTR_ALIASES(Draggable)
 
 public:
 #pragma region "Ctors/Dtor"
