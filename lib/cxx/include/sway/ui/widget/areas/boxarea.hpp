@@ -22,7 +22,7 @@ public:
 
   BoxArea(AreaType type);
 
-  virtual ~BoxArea() = default;
+  DTOR_VIRTUAL_DEFAULT(BoxArea);
 
 #pragma endregion
 
@@ -42,23 +42,21 @@ public:
 
   auto at(math::RectEdge::Enum edge) -> f32_t &;
 
-  [[nodiscard]]
-  auto getL() const -> f32_t;
+#pragma region "Getters/Setters"
 
-  [[nodiscard]]
-  auto getT() const -> f32_t;
+  [[nodiscard]] auto getL() const -> f32_t;
 
-  [[nodiscard]]
-  auto getR() const -> f32_t;
+  [[nodiscard]] auto getT() const -> f32_t;
 
-  [[nodiscard]]
-  auto getB() const -> f32_t;
+  [[nodiscard]] auto getR() const -> f32_t;
 
-  [[nodiscard]]
-  auto getLR() const -> f32_t;
+  [[nodiscard]] auto getB() const -> f32_t;
 
-  [[nodiscard]]
-  auto getTB() const -> f32_t;
+  [[nodiscard]] auto getLR() const -> f32_t;
+
+  [[nodiscard]] auto getTB() const -> f32_t;
+
+#pragma endregion
 
   friend auto operator<<(std::ostream &out, const BoxArea &area) -> std::ostream & {
     return out << std::fixed << std::setprecision(3) << "{"

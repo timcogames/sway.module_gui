@@ -62,7 +62,7 @@ public:
 #pragma endregion
 
   void initialize(ft2::Font::SharedPtr_t font, render::RenderSubsystem::SharedPtr_t subsys,
-      render::MaterialManagerSharedPtr_t materialMngr, std::shared_ptr<rms::ImageResourceManager> imgResMngr,
+      render::MaterialManagerTypedefs::SharedPtr_t materialMngr, std::shared_ptr<rms::ImageResourceManager> imgResMngr,
       std::shared_ptr<rms::GLSLResourceManager> glslResMngr);
 
   void createRectGeom(render::RenderSubsystem::SharedPtr_t subsys, u32_t geomIdx);
@@ -128,11 +128,11 @@ private:
   render::RenderSubqueue::SharedPtr_t subqueue_;
   render::GeomBuilder::SharedPtr_t geomBuilder_;
 
-  render::Material::SharedPtr_t rectMtrl_;
+  render::MaterialTypedefs::SharedPtr_t rectMtrl_;
   render::GeomInstanceDataDivisor<render::procedurals::prims::Quadrilateral<math::VertexColor>> *rectGeomDataDivisor_;
   render::GeomInstance<render::procedurals::prims::Quadrilateral<math::VertexColor>> *rectGeom_;  // mapped
 
-  render::Material::SharedPtr_t textMtrl_;
+  render::MaterialTypedefs::SharedPtr_t textMtrl_;
   render::GeomInstanceDataDivisor<render::procedurals::prims::Quadrilateral<math::VertexTexCoord>>
       *textGeomDataDivisor_;
   render::GeomInstance<render::procedurals::prims::Quadrilateral<math::VertexTexCoord>> *textGeom_;

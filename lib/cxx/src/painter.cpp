@@ -14,7 +14,7 @@ Painter::Painter()
 Painter::~Painter() {}
 
 void Painter::initialize(ft2::Font::SharedPtr_t font, render::RenderSubsystem::SharedPtr_t subsys,
-    render::MaterialManagerSharedPtr_t materialMngr, std::shared_ptr<rms::ImageResourceManager> imgResMngr,
+    render::MaterialManagerTypedefs::SharedPtr_t materialMngr, std::shared_ptr<rms::ImageResourceManager> imgResMngr,
     std::shared_ptr<rms::GLSLResourceManager> glslResMngr) {
 
   font_ = font;
@@ -115,7 +115,7 @@ void Painter::createRectGeom(std::shared_ptr<render::RenderSubsystem> subsys, u3
       new render::GeomInstanceDataDivisor<render::procedurals::prims::Quadrilateral<math::VertexColor>>(
           {gapi::VertexSemantic::POS, gapi::VertexSemantic::COL}, MAX_UI_RECT);
 
-  render::GeometryCreateInfo rectGeomCreateInfo;
+  render::GeomCreateInfo rectGeomCreateInfo;
   rectGeomCreateInfo.indexed = true;
   rectGeomCreateInfo.topology = gapi::TopologyType::Enum::TRIANGLE_LIST;
   rectGeomCreateInfo.bo[render::Constants::IDX_VBO].desc.usage = gapi::BufferUsage::Enum::DYNAMIC;
@@ -138,7 +138,7 @@ void Painter::createTextGeom(std::shared_ptr<render::RenderSubsystem> subsys, u3
       new render::GeomInstanceDataDivisor<render::procedurals::prims::Quadrilateral<math::VertexTexCoord>>(
           {gapi::VertexSemantic::POS, gapi::VertexSemantic::COL, gapi::VertexSemantic::TEXCOORD_0}, MAX_UI_TEXT);
 
-  render::GeometryCreateInfo textGeomCreateInfo;
+  render::GeomCreateInfo textGeomCreateInfo;
   textGeomCreateInfo.indexed = true;
   textGeomCreateInfo.topology = gapi::TopologyType::Enum::TRIANGLE_LIST;
   textGeomCreateInfo.bo[render::Constants::IDX_VBO].desc.usage = gapi::BufferUsage::Enum::DYNAMIC;

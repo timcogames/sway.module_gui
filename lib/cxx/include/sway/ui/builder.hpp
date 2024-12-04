@@ -25,11 +25,11 @@ public:
 
   Builder(core::foundation::Context::Ptr_t context, Painter::SharedPtr_t painter);
 
-  virtual ~Builder() = default;
+  DTOR_VIRTUAL_DEFAULT(Builder);
 
 #pragma endregion
 
-  void initialize(ft2::Font::SharedPtr_t font, render::MaterialManagerSharedPtr_t materialMngr,
+  void initialize(ft2::Font::SharedPtr_t font, render::MaterialManagerTypedefs::SharedPtr_t materialMngr,
       std::shared_ptr<rms::ImageResourceManager> imgResMngr, std::shared_ptr<rms::GLSLResourceManager> glslResMngr);
 
   void deinit();

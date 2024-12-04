@@ -21,7 +21,7 @@ public:
 
   Draggable(BuilderPtr_t builder);
 
-  virtual ~Draggable();
+  DTOR_VIRTUAL(Draggable);
 
 #pragma endregion
 

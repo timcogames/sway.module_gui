@@ -22,7 +22,7 @@ public:
 
   ContentArea(const math::size2f_t &size = math::size2f_zero);
 
-  virtual ~ContentArea() = default;
+  DTOR_VIRTUAL_DEFAULT(ContentArea);
 
 #pragma endregion
 
@@ -34,8 +34,7 @@ public:
 
   void setSize(const math::size2f_t &size);
 
-  [[nodiscard]]
-  auto getSize() const -> math::size2f_t;
+  [[nodiscard]] auto getSize() const -> math::size2f_t;
 
   friend auto operator<<(std::ostream &out, const ContentArea::SharedPtr_t &area) -> std::ostream & {
     const auto size = area->getSize();

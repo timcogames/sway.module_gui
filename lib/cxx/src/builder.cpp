@@ -47,7 +47,7 @@ Builder::Builder(core::foundation::Context::Ptr_t context, Painter::SharedPtr_t 
   root_ = std::make_shared<widget::Widget>(this);
 }
 
-void Builder::initialize(ft2::Font::SharedPtr_t font, render::MaterialManagerSharedPtr_t materialMngr,
+void Builder::initialize(ft2::Font::SharedPtr_t font, render::MaterialManagerTypedefs::SharedPtr_t materialMngr,
     std::shared_ptr<rms::ImageResourceManager> imgResMngr, std::shared_ptr<rms::GLSLResourceManager> glslResMngr) {
   auto renderSubsystemOpt = this->getContext()->getSubsystem<render::RenderSubsystem>("RenderSubsystem");
   if (!renderSubsystemOpt) {

@@ -23,7 +23,7 @@ public:
 
   Dialog(BuilderPtr_t builder);
 
-  virtual ~Dialog();
+  DTOR_VIRTUAL(Dialog);
 
 #pragma endregion
 

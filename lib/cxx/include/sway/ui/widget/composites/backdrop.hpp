@@ -22,7 +22,7 @@ public:
 
   Backdrop(BuilderPtr_t builder);
 
-  virtual ~Backdrop();
+  DTOR_VIRTUAL(Backdrop);
 
 #pragma endregion
 

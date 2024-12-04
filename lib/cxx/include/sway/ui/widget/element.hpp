@@ -39,8 +39,7 @@ public:
 
   void setPosition(ElementPosition pos);
 
-  [[nodiscard]]
-  auto getPosition() const -> ElementPosition;
+  [[nodiscard]] auto getPosition() const -> ElementPosition;
 
 #pragma endregion
 
@@ -58,17 +57,13 @@ public:
 
   void recursiveUpdate(Element::SharedPtr_t elem);
 
-  [[nodiscard]]
-  auto getAreaHolder() const -> ElementAreaHolder;
+  [[nodiscard]] auto getAreaHolder() const -> ElementAreaHolder;
 
-  [[nodiscard]]
-  auto getInnerSize() const -> math::size2f_t;
+  [[nodiscard]] auto getInnerSize() const -> math::size2f_t;
 
-  [[nodiscard]]
-  auto getOuterSize() const -> math::size2f_t;
+  [[nodiscard]] auto getOuterSize() const -> math::size2f_t;
 
-  [[nodiscard]]
-  auto getOuterSizeWithMargin() const -> math::size2f_t;
+  [[nodiscard]] auto getOuterSizeWithMargin() const -> math::size2f_t;
 
   void handleAddNode(core::foundation::Event::Ptr_t evt);
 
