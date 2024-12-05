@@ -2,6 +2,7 @@
 #define SWAY_UI_WIDGET_PROGRESSBAR_HPP
 
 #include <sway/core.hpp>
+#include <sway/ui/widget/progress/progressmodes.hpp>
 #include <sway/ui/widget/widget.hpp>
 
 NS_BEGIN_SWAY()
@@ -14,7 +15,7 @@ public:
 
   ProgressBar(BuilderPtr_t builder);
 
-  virtual ~ProgressBar() = default;
+  DTOR_VIRTUAL_DEFAULT(ProgressBar);
 
 #pragma endregion
 
@@ -30,8 +31,18 @@ public:
 
   void addProgress(f32_t val);
 
+#pragma region "Getters/Setters"
+
+  [[nodiscard]] auto getMode() const -> ProgressMode::Enum { return mode_; }
+
+  void setMode(ProgressMode::Enum mode) { mode_ = mode; }
+
+#pragma endregion
+
 private:
+  ProgressMode::Enum mode_;
   f32_t current_;
+  f32_t total_;
 };
 
 NS_END()  // namespace widget

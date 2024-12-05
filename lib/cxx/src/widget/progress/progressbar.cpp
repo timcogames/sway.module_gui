@@ -1,5 +1,5 @@
 #include <sway/ui/builder.hpp>
-#include <sway/ui/widget/progressbar.hpp>
+#include <sway/ui/widget/progress/progressbar.hpp>
 #include <sway/ui/zindex.hpp>
 
 #include <algorithm>
@@ -10,9 +10,32 @@ NS_BEGIN(widget)
 
 ProgressBar::ProgressBar(BuilderPtr_t builder)
     : Widget(builder)
-    , current_(0.0F) {}
+    , mode_(ProgressMode::Enum::PERCENTAGE)
+    , current_(0.0F)
+    , total_(1.0F) {}
 
-void ProgressBar::update() {}
+void ProgressBar::update() {
+  std::string text = "";
+  switch (mode_) {
+    case ProgressMode::Enum::FRACTION: {
+      std::ostringstream fractionString;
+      fractionString << current_ << "/" << total_;
+      text += fractionString.str();
+      break;
+    }
+    case ProgressMode::Enum::PERCENTAGE: {
+      std::ostringstream percentageString;
+      percentageString << (f32_t)current_ * 100 / total_ << "%";
+      text += percentageString.str();
+      break;
+    }
+    case ProgressMode::Enum::NONE:
+    default:
+      break;
+  }
+
+  std::cout << text << std::endl;
+}
 
 void ProgressBar::repaint(Painter::SharedPtr_t painter) {
   const auto offset = this->getOffset().computed;
@@ -32,7 +55,7 @@ void ProgressBar::setProgress(f32_t val) {
     return;
   }
 
-  current_ = std::clamp(val, 0.0F, 1.0F);
+  current_ = std::clamp(val, 0.0F, total_);
 }
 
 void ProgressBar::addProgress(f32_t val) { this->setProgress(current_ + val); }

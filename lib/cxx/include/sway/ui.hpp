@@ -32,7 +32,8 @@
 #include <sway/ui/widget/label.hpp>
 #include <sway/ui/widget/layout.hpp>
 #include <sway/ui/widget/linearlayout.hpp>
-#include <sway/ui/widget/progressbar.hpp>
+#include <sway/ui/widget/progress/progressbar.hpp>
+#include <sway/ui/widget/progress/progressmodes.hpp>
 #include <sway/ui/widget/radiobutton.hpp>
 #include <sway/ui/widget/radiobuttongroup.hpp>
 #include <sway/ui/widget/togglebutton.hpp>
