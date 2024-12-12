@@ -8,7 +8,7 @@ NS_BEGIN_SWAY()
 NS_BEGIN(ui)
 
 struct WidgetEventHandler : public core::evts::EventHandler {
-  WidgetEventHandler(Builder::Ptr_t builder)
+  WidgetEventHandler(BuilderTypedefs::Ptr_t builder)
       : core::evts::EventHandler()
       , builder_(builder) {}
 
@@ -37,24 +37,16 @@ struct WidgetEventHandler : public core::evts::EventHandler {
   }
 
 private:
-  Builder::Ptr_t builder_;
+  BuilderTypedefs::Ptr_t builder_;
 };
 
-Builder::Builder(core::foundation::Context::Ptr_t context, Painter::SharedPtr_t painter)
+Builder::Builder(core::foundation::Context::Ptr_t context)
     : core::foundation::Object(context)
     , currWidgetUnderPointer_(nullptr)
-    , painter_(painter) {
+    , painter_(nullptr) {}
+
+void Builder::initialize() {
   root_ = std::make_shared<widget::Widget>(this);
-}
-
-void Builder::initialize(ft2::Font::SharedPtr_t font, render::MaterialManagerTypedefs::SharedPtr_t materialMngr,
-    std::shared_ptr<rms::ImageResourceManager> imgResMngr, std::shared_ptr<rms::GLSLResourceManager> glslResMngr) {
-  auto renderSubsystemOpt = this->getContext()->getSubsystem<render::RenderSubsystem>("RenderSubsystem");
-  if (!renderSubsystemOpt) {
-    // TODO
-  }
-
-  painter_->initialize(font, renderSubsystemOpt.value(), materialMngr, imgResMngr, glslResMngr);
   subscriber_ = evtbus_->subscribe(new WidgetEventHandler(this));
 
   // root_->setAbsolutePosition(0, 0);

@@ -26,7 +26,7 @@ public:
 
 #pragma endregion
 
-#pragma region "Override Area methods"
+#pragma region "Overridden Area methods"
 
   MTHD_OVERRIDE(auto type() const -> AreaType);
 

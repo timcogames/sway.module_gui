@@ -22,30 +22,30 @@ void Painter::initialize(ft2::Font::SharedPtr_t font, render::RenderSubsystem::S
   subqueue_ = subsys->getQueueByPriority(core::detail::toBase(core::intrusive::Priority::Enum::LOW))
                   ->getSubqueues(render::RenderSubqueueGroup::OPAQUE)[0];
 
-  const std::unordered_map<gapi::ShaderType::Enum, std::string> shaderSources = {
-      {gapi::ShaderType::Enum::VERT, "layout (location = 0) in vec3 attrib_pos;"
-                                     "layout (location = 1) in vec4 attrib_col;"
-                                     "uniform mat4 mat_view_proj;"
-                                     "uniform mat4 mat_model;"
-                                     "out vec4 vtx_col;"
-                                     "void main() {"
-                                     "    gl_Position = mat_view_proj * mat_model * vec4(attrib_pos, 1.0);"
-                                     "    gl_Position.y = -gl_Position.y;"
-                                     "    vtx_col = attrib_col;"
-                                     "}"},
-      {gapi::ShaderType::Enum::FRAG, "in vec4 vtx_col;"
-                                     "out vec4 out_col;"
-                                     "void main() {"
-                                     "    vec4 final = vec4(vtx_col.rgb, vtx_col.a);"
-                                     //  "    if (final.a < 0.1) {"
-                                     //  "        discard;"
-                                     //  "    }"
-                                     "    out_col = final;"
-                                     "}"}};
+  render::ShaderTypedefs::SourcePair_t shaderSources;
+  shaderSources[0] = "layout (location = 0) in vec3 attrib_pos;"
+                     "layout (location = 1) in vec4 attrib_col;"
+                     "uniform mat4 mat_view_proj;"
+                     "uniform mat4 mat_model;"
+                     "out vec4 vtx_col;"
+                     "void main() {"
+                     "    gl_Position = mat_view_proj * mat_model * vec4(attrib_pos, 1.0);"
+                     "    gl_Position.y = -gl_Position.y;"
+                     "    vtx_col = attrib_col;"
+                     "}",
+  shaderSources[1] = "in vec4 vtx_col;"
+                     "out vec4 out_col;"
+                     "void main() {"
+                     "    vec4 final = vec4(vtx_col.rgb, vtx_col.a);"
+                     //  "    if (final.a < 0.1) {"
+                     //  "        discard;"
+                     //  "    }"
+                     "    out_col = final;"
+                     "}";
 
   rectMtrl_ = std::make_shared<render::Material>("material_ui_rect", imgResMngr, glslResMngr);
   rectMtrl_->setSubsys(subsys.get());
-  rectMtrl_->addEffect(shaderSources);
+  rectMtrl_->addEffectSource(shaderSources);
   // rectMtrl_->addEffect({"ui_rect_vs", "ui_rect_fs"});
   materialMngr->addMaterial(rectMtrl_);
 

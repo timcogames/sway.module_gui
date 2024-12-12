@@ -13,17 +13,17 @@ class ProgressBar : public Widget {
 public:
 #pragma region "Ctors/Dtor"
 
-  ProgressBar(BuilderPtr_t builder);
+  ProgressBar(BuilderTypedefs::Ptr_t builder);
 
   DTOR_VIRTUAL_DEFAULT(ProgressBar);
 
 #pragma endregion
 
-#pragma region "Override Widget methods"
+#pragma region "Overridden Widget methods"
 
   MTHD_VIRTUAL(void update());
 
-  MTHD_VIRTUAL(void repaint(Painter::SharedPtr_t painter));
+  MTHD_VIRTUAL(void repaint(PainterTypedefs::SharedPtr_t painter));
 
 #pragma endregion
 

@@ -9,7 +9,7 @@ NS_BEGIN_SWAY()
 NS_BEGIN(ui)
 NS_BEGIN(widget)
 
-Widget::Widget(BuilderPtr_t builder)
+Widget::Widget(BuilderTypedefs::Ptr_t builder)
     : builder_(builder)
     , eventFilter_(nullptr)
     , mouseFilter_(ois::MouseFilter::Enum::STOP)
@@ -25,7 +25,7 @@ void Widget::update() {
   }
 }
 
-void Widget::repaint(Painter::SharedPtr_t painter) {
+void Widget::repaint(PainterTypedefs::SharedPtr_t painter) {
   if (!this->isVisible()) {
     return;
   }

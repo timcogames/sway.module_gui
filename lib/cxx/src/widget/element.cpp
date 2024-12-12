@@ -23,7 +23,12 @@ void Element::setOffset(f32_t x, f32_t y) { setOffset(math::point2f_t(x, y)); }
 
 auto Element::getOffset() -> ElementOffset & { return offset_; }
 
-void Element::updateOffset() {
+void Element::updateOffset(Element::SharedPtr_t prev) {
+  auto prevElemOffset = math::point2f_zero;
+  if (prev != nullptr) {
+    prevElemOffset = prev->getOffset().computed;
+  }
+
   if (offset_.dirty) {
     if (position_ == ElementPosition::RELATIVE) {
       auto parentOpt = this->getParentNode();
@@ -35,7 +40,8 @@ void Element::updateOffset() {
         auto parentAreaPosition = parent->getAreaHolder().getPosition<ui::AreaType::IDX_CNT>();
         auto parentAreaSize = parent->getAreaHolder().getContentSize();
 
-        offset_.computed = math::point2f_t(parentOffset.getX(), parentOffset.getY());
+        offset_.computed =
+            math::point2f_t(prevElemOffset.getX() + parentOffset.getX(), prevElemOffset.getY() + parentOffset.getY());
 
         auto x = 0.0F;
         auto y = 0.0F;
@@ -67,11 +73,27 @@ void Element::updateOffset() {
   }
 }
 
-void Element::recursiveUpdate(Element::SharedPtr_t elem) {
-  std::static_pointer_cast<Element>(elem)->updateOffset();
+void Element::recursiveUpdate(Element::SharedPtr_t lhs, Element::SharedPtr_t rhs) {
+  std::static_pointer_cast<Element>(rhs)->updateOffset(lhs);
 
-  for (const auto &item : elem->getChildNodes()) {
-    recursiveUpdate(std::static_pointer_cast<Element>(item));
+  for (auto i = 0; i < rhs->getChildNodes().size(); i++) {
+    Element::SharedPtr_t prev = nullptr;
+    auto prevOpt = rhs->getChildAt(i - 1);
+    if (!prevOpt.has_value()) {
+      // TODO
+    } else {
+      prev = std::static_pointer_cast<Element>(prevOpt.value());
+    }
+
+    Element::SharedPtr_t curr = nullptr;
+    auto currOpt = rhs->getChildAt(i);
+    if (!currOpt.has_value()) {
+      // TODO
+    } else {
+      curr = std::static_pointer_cast<Element>(currOpt.value());
+    }
+
+    recursiveUpdate(prev, curr);
   }
 }
 
@@ -85,7 +107,18 @@ auto Element::getOuterSizeWithMargin() const -> math::size2f_t { return holder_.
 
 void Element::handleAddNode(core::foundation::Event::Ptr_t evt) {
   auto evtdata = static_cast<core::container::NodeEventData *>(evt->data());
-  recursiveUpdate(std::static_pointer_cast<Element>(this->getChildNode(evtdata->nodeidx)));
+
+  auto currNodeIdx = evtdata->nodeidx;
+  auto currIdx = currNodeIdx.getIdxAt(currNodeIdx.getDepth() - 1);
+  auto currElem = std::static_pointer_cast<Element>(this->getChildNode(currNodeIdx));
+
+  core::container::NodeIdx::ChainVec_t prevNodeChain = currNodeIdx.getChain();
+  prevNodeChain.pop_back();
+  auto prevElemNodeIdx = core::container::NodeIdx();
+  prevElemNodeIdx.setChain(prevNodeChain, currIdx - 1);
+  auto prevElem = std::static_pointer_cast<Element>(this->getChildNode(prevElemNodeIdx));
+
+  recursiveUpdate(prevElem, currElem);
 }
 
 NS_END()  // namespace ui

@@ -16,11 +16,11 @@ public:
 
   OverlayEventFilter() {}
 
-  virtual ~OverlayEventFilter() override = default;
+  DTOR_VIRTUAL_DEFAULT(OverlayEventFilter);
 
 #pragma endregion
 
-#pragma region "Override EventHandler methods"
+#pragma region "Overridden EventHandler methods"
 
   MTHD_OVERRIDE(auto invoke(const core::foundation::Event::UniquePtr_t &evt) -> bool) final { return true; }
 

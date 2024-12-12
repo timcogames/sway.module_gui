@@ -9,15 +9,16 @@ NS_BEGIN(ui)
 
 class Orientable {
 public:
+#pragma region "Ctors/Dtor"
+
   Orientable(Orientation orien)
       : orientation_(orien) {}
 
-  ~Orientable() = default;
+  DTOR_DEFAULT(Orientable);
 
-  [[nodiscard]]
-  auto getOrientation() const -> Orientation {
-    return orientation_;
-  }
+#pragma endregion
+
+  [[nodiscard]] auto getOrientation() const -> Orientation { return orientation_; }
 
 private:
   Orientation orientation_;

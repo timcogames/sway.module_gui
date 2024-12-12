@@ -4,24 +4,12 @@
 #include <sway/core.hpp>
 #include <sway/math.hpp>
 #include <sway/ui/widget/elementareaholder.hpp>
+#include <sway/ui/widget/elementoffset.hpp>
 #include <sway/ui/widget/elementpositions.hpp>
 #include <sway/ui/widget/typedefs.hpp>
 
 NS_BEGIN_SWAY()
 NS_BEGIN(ui)
-
-struct ElementOffset {
-  math::point2f_t original;
-  math::point2f_t computed;
-  bool dirty;
-
-  ElementOffset()
-      : original(math::point2f_zero)
-      , computed(math::point2f_zero)
-      , dirty(false) {}
-
-  void markAsDirty() { dirty = true; }
-};
 
 class Element : public core::container::Node {
   DECLARE_PTR_ALIASES(Element)
@@ -31,7 +19,7 @@ public:
 
   Element();
 
-  ~Element() = default;
+  DTOR_DEFAULT(Element);
 
 #pragma endregion
 
@@ -45,17 +33,28 @@ public:
 
 #pragma region "Getters/Setters Offset"
 
+  /**
+   * \~russian @brief Устанавливает оригинальное положение.
+   * @param[in] pnt Новое оригинальное положение.
+   * @sa setOffset(f32_t, f32_t)
+   */
   void setOffset(const math::point2f_t &pnt);
 
+  /**
+   * \~russian @brief Устанавливает оригинальное положение.
+   * @param[in] x Значение координаты по оси X.
+   * @param[in] y Значение координаты по оси Y.
+   * @sa setOffset(const math::point2f_t &)
+   */
   void setOffset(f32_t x, f32_t y);
 
   auto getOffset() -> ElementOffset &;
 
 #pragma endregion
 
-  void updateOffset();
+  void updateOffset(Element::SharedPtr_t prev);
 
-  void recursiveUpdate(Element::SharedPtr_t elem);
+  void recursiveUpdate(Element::SharedPtr_t lhs, Element::SharedPtr_t rhs);
 
   [[nodiscard]] auto getAreaHolder() const -> ElementAreaHolder;
 

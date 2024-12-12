@@ -19,17 +19,17 @@ class Button : public Widget {
 public:
 #pragma region "Ctors/Dtor"
 
-  Button(BuilderPtr_t builder, const std::string &text);
+  Button(BuilderTypedefs::Ptr_t builder, const std::string &text);
 
-  virtual ~Button() = default;
+  DTOR_VIRTUAL(Button);
 
 #pragma endregion
 
-#pragma region "Override Widget methods"
+#pragma region "Overridden Widget methods"
 
   MTHD_VIRTUAL(void update());
 
-  MTHD_VIRTUAL(void repaint(Painter::SharedPtr_t painter));
+  MTHD_VIRTUAL(void repaint(PainterTypedefs::SharedPtr_t painter));
 
 #pragma endregion
 

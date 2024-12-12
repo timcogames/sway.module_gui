@@ -23,7 +23,7 @@ constexpr void foreacher(FUNC &&func) {
 }
 }  // namespace util
 
-using namespace sway;
+NS_SHORT_SWAY()
 
 TEST(ElementAreaHolderTest, ctor_comps) {}
 

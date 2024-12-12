@@ -3,10 +3,10 @@
 
 #include <sway/core.hpp>
 #include <sway/math.hpp>
+#include <sway/ui/_typedefs.hpp>
 #include <sway/ui/cursor.hpp>
 #include <sway/ui/ft2/fontmanager.hpp>
 #include <sway/ui/painter.hpp>
-#include <sway/ui/types.hpp>
 #include <sway/ui/widget/widget.hpp>
 
 #include <memory>
@@ -16,21 +16,19 @@ NS_BEGIN(ui)
 
 class Builder : public core::foundation::Object {
   DECLARE_CLASS_METADATA(Builder, core::foundation::Object)
-  DECLARE_PTR_ALIASES(Builder)
 
 public:
   using ElementUnderPointer_t = widget::Widget::Ptr_t;
 
 #pragma region "Ctors/Dtor"
 
-  Builder(core::foundation::Context::Ptr_t context, Painter::SharedPtr_t painter);
+  Builder(core::foundation::Context::Ptr_t context);
 
   DTOR_VIRTUAL_DEFAULT(Builder);
 
 #pragma endregion
 
-  void initialize(ft2::Font::SharedPtr_t font, render::MaterialManagerTypedefs::SharedPtr_t materialMngr,
-      std::shared_ptr<rms::ImageResourceManager> imgResMngr, std::shared_ptr<rms::GLSLResourceManager> glslResMngr);
+  void initialize();
 
   void deinit();
 
@@ -52,13 +50,15 @@ public:
 
   void handleMouseClick(u32_t state);
 
-  auto getPainter() -> Painter::SharedPtr_t { return painter_; }
+  void setPainter(PainterTypedefs::SharedPtr_t painter) { painter_ = painter; }
+
+  auto getPainter() -> PainterTypedefs::SharedPtr_t { return painter_; }
 
 private:
   core::evts::EventBus::SharedPtr_t evtbus_;
   core::evts::EventBus::Subscriber_t subscriber_;
   ft2::FontManager::SharedPtr_t fontMngr_;
-  Painter::SharedPtr_t painter_;
+  PainterTypedefs::SharedPtr_t painter_;
   widget::Widget::SharedPtr_t root_;
 
   struct ElementUnderPointerInfo {

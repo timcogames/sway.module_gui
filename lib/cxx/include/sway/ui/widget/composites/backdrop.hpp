@@ -20,17 +20,17 @@ class Backdrop : public Widget {
 public:
 #pragma region "Ctors/Dtor"
 
-  Backdrop(BuilderPtr_t builder);
+  Backdrop(BuilderTypedefs::Ptr_t builder);
 
-  DTOR_VIRTUAL(Backdrop);
+  DTOR_VIRTUAL_DEFAULT(Backdrop);
 
 #pragma endregion
 
-#pragma region "Override Widget methods"
+#pragma region "Overridden Widget methods"
 
   MTHD_OVERRIDE(void update());
 
-  MTHD_OVERRIDE(void repaint(Painter::SharedPtr_t painter));
+  MTHD_OVERRIDE(void repaint(PainterTypedefs::SharedPtr_t painter));
 
 #pragma endregion
 };

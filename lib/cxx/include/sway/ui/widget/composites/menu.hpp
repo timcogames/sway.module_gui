@@ -23,17 +23,17 @@ class Menu : public LinearLayout {
 public:
 #pragma region "Ctors/Dtor"
 
-  Menu(BuilderPtr_t builder, Orientation orien);
+  Menu(BuilderTypedefs::Ptr_t builder, Orientation orien);
 
-  virtual ~Menu();
+  DTOR_VIRTUAL(Menu);
 
 #pragma endregion
 
-#pragma region "Override Widget methods"
+#pragma region "Overridden Widget methods"
 
   MTHD_OVERRIDE(void update());
 
-  MTHD_OVERRIDE(void repaint(Painter::SharedPtr_t painter));
+  MTHD_OVERRIDE(void repaint(PainterTypedefs::SharedPtr_t painter));
 
 #pragma endregion
 

@@ -13,10 +13,10 @@ NS_BEGIN(widget)
 
 class Item : public Widget {
 public:
-  Item(BuilderPtr_t builder)
+  Item(BuilderTypedefs::Ptr_t builder)
       : Widget(builder) {}
 
-  virtual ~Item() = default;
+  DTOR_VIRTUAL_DEFAULT(Item);
 
   void select() {}
 

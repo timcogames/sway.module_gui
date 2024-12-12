@@ -7,7 +7,7 @@
 
 #include <memory>
 
-using namespace sway;
+NS_SHORT_SWAY()
 
 TEST(FontTest, ctor_def) {
   auto fontMngr = std::make_shared<ui::ft2::FontManager>();

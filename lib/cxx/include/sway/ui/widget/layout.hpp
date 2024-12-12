@@ -14,9 +14,9 @@ class Layout : public Widget, public Orientable {
 public:
 #pragma region "Ctors/Dtor"
 
-  Layout(BuilderPtr_t builder, Orientation orien);
+  Layout(BuilderTypedefs::Ptr_t builder, Orientation orien);
 
-  virtual ~Layout() = default;
+  DTOR_VIRTUAL_DEFAULT(Layout);
 
 #pragma endregion
 };

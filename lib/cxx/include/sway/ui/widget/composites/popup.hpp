@@ -19,17 +19,17 @@ class Popup : public Widget {
 public:
 #pragma region "Ctors/Dtor"
 
-  Popup(BuilderPtr_t builder);
+  Popup(BuilderTypedefs::Ptr_t builder);
 
-  virtual ~Popup();
+  DTOR_VIRTUAL(Popup);
 
 #pragma endregion
 
-#pragma region "Override Widget methods"
+#pragma region "Overridden Widget methods"
 
   MTHD_OVERRIDE(void update());
 
-  MTHD_OVERRIDE(void repaint(Painter::SharedPtr_t painter));
+  MTHD_OVERRIDE(void repaint(PainterTypedefs::SharedPtr_t painter));
 
 #pragma endregion
 

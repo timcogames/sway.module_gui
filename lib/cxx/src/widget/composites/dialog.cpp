@@ -11,7 +11,7 @@ NS_BEGIN_SWAY()
 NS_BEGIN(ui)
 NS_BEGIN(widget)
 
-Dialog::Dialog(BuilderPtr_t builder)
+Dialog::Dialog(BuilderTypedefs::Ptr_t builder)
     : Popup(builder)
     , backdrop_(nullptr)
     , draghead_(nullptr) {
@@ -38,7 +38,7 @@ void Dialog::hide() {}
 
 void Dialog::update() {}
 
-void Dialog::repaint(Painter::SharedPtr_t painter) {
+void Dialog::repaint(PainterTypedefs::SharedPtr_t painter) {
   auto offset = this->getOffset().computed;
   auto contentSize = this->getAreaHolder().getContentSize();
 

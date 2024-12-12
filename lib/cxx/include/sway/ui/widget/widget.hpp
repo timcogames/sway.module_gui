@@ -4,8 +4,8 @@
 #include <sway/core.hpp>
 #include <sway/math.hpp>
 #include <sway/ois.hpp>
+#include <sway/ui/_typedefs.hpp>
 #include <sway/ui/painter.hpp>
-#include <sway/ui/types.hpp>
 #include <sway/ui/widget/appearance.hpp>
 #include <sway/ui/widget/element.hpp>
 #include <sway/ui/widget/typedefs.hpp>
@@ -44,9 +44,9 @@ class Widget : public Element {
 public:
 #pragma region "Ctors/Dtor"
 
-  Widget(BuilderPtr_t builder);
+  Widget(BuilderTypedefs::Ptr_t builder);
 
-  virtual ~Widget() = default;
+  DTOR_VIRTUAL_DEFAULT(Widget);
 
 #pragma endregion
 
@@ -54,7 +54,7 @@ public:
 
   MTHD_VIRTUAL(void update());
 
-  MTHD_VIRTUAL(void repaint(Painter::SharedPtr_t painter));
+  MTHD_VIRTUAL(void repaint(PainterTypedefs::SharedPtr_t painter));
 
   MTHD_VIRTUAL(void onCursorPointerEnter());
 
@@ -64,8 +64,7 @@ public:
 
 #pragma endregion
 
-  [[nodiscard]]
-  auto hasRelated() -> bool;
+  [[nodiscard]] auto hasRelated() -> bool;
 
 #pragma region "Getters/Setters Size"
 
@@ -73,20 +72,17 @@ public:
 
   void setSize(f32_t wdt, f32_t hgt);
 
-  [[nodiscard]]
-  auto getSize() const -> math::size2f_t;
+  [[nodiscard]] auto getSize() const -> math::size2f_t;
 
 #pragma endregion
 
   void setBackgroundColor(const math::col4f_t &col);
 
-  [[nodiscard]]
-  auto getBackgroundColor() const -> math::col4f_t;
+  [[nodiscard]] auto getBackgroundColor() const -> math::col4f_t;
 
   void setForegroundColor(const math::col4f_t &col);
 
-  [[nodiscard]]
-  auto getForegroundColor() const -> math::col4f_t;
+  [[nodiscard]] auto getForegroundColor() const -> math::col4f_t;
 
   auto getChildAtPoint(const math::point2f_t &point) -> Widget *;
 
@@ -94,13 +90,12 @@ public:
 
   void setMouseFilter(ois::MouseFilter::Enum filter);
 
-  [[nodiscard]]
-  auto getMouseFilter() const -> ois::MouseFilter::Enum;
+  [[nodiscard]] auto getMouseFilter() const -> ois::MouseFilter::Enum;
 
   void setAlignment(math::Alignment alignment);
 
 protected:
-  BuilderPtr_t builder_;
+  BuilderTypedefs::Ptr_t builder_;
   ois::MouseFilter::Enum mouseFilter_;
   core::evts::EventHandler::Ptr_t eventFilter_;
   // math::rect4f_t innerRect_;  // wdt/hgt, padding

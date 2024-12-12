@@ -5,7 +5,7 @@ NS_BEGIN_SWAY()
 NS_BEGIN(ui)
 NS_BEGIN(widget)
 
-LinearLayout::LinearLayout(BuilderPtr_t builder, Orientation orien)
+LinearLayout::LinearLayout(BuilderTypedefs::Ptr_t builder, Orientation orien)
     : Layout(builder, orien) {}
 
 void LinearLayout::build() {

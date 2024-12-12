@@ -6,8 +6,8 @@
 #include <sway/math.hpp>
 #include <sway/render.hpp>
 #include <sway/render/updatable.hpp>
+#include <sway/ui/_typedefs.hpp>
 #include <sway/ui/ft2/font.hpp>
-#include <sway/ui/types.hpp>
 
 #include <array>
 #include <memory>
@@ -50,14 +50,13 @@ struct GeometryBatchChunk {
 
 class Painter : public render::RenderComponent, public render::FinalUpdatable {
   DECLARE_CLASS_METADATA(Painter, RenderComponent)
-  DECLARE_PTR_ALIASES(Painter)
 
 public:
 #pragma region "Ctors/Dtor"
 
   Painter();
 
-  ~Painter();
+  DTOR(Painter);
 
 #pragma endregion
 
@@ -79,13 +78,13 @@ public:
 
   void onUpdateBatchChunks();
 
-#pragma region "Override RenderComponent methods"
+#pragma region "Overridden RenderComponent methods"
 
   MTHD_OVERRIDE(void onUpdate(math::mat4f_t tfrm, math::mat4f_t proj, math::mat4f_t view, f32_t dtime));
 
 #pragma endregion
 
-#pragma region "Override FinalUpdatable methods"
+#pragma region "Overridden FinalUpdatable methods"
 
   MTHD_OVERRIDE(void finalUpdate());
 
@@ -97,36 +96,21 @@ public:
 
   void setEnvironment(const core::misc::Dictionary &env) { environment_ = env; }
 
-  [[nodiscard]]
-  auto getScreenWdt() -> f32_t {
-    return (f32_t)environment_.getIntegerOrDefault("screen_wdt", 800);
-  }
+  [[nodiscard]] auto getScreenWdt() -> f32_t { return (f32_t)environment_.getIntegerOrDefault("screen_wdt", 800); }
 
-  [[nodiscard]]
-  auto getScreenHgt() -> f32_t {
-    return (f32_t)environment_.getIntegerOrDefault("screen_hgt", 600);
-  }
+  [[nodiscard]] auto getScreenHgt() -> f32_t { return (f32_t)environment_.getIntegerOrDefault("screen_hgt", 600); }
 
-  [[nodiscard]]
-  auto getScreenSize() -> math::size2f_t {
-    return math::size2f_t(getScreenWdt(), getScreenHgt());
-  }
+  [[nodiscard]] auto getScreenSize() -> math::size2f_t { return math::size2f_t(getScreenWdt(), getScreenHgt()); }
 
-  [[nodiscard]]
-  auto getScreenHalfWdt() -> f32_t {
-    return getScreenWdt() / 2.0F;
-  }
+  [[nodiscard]] auto getScreenHalfWdt() -> f32_t { return getScreenWdt() / 2.0F; }
 
-  [[nodiscard]]
-  auto getScreenHalfHgt() -> f32_t {
-    return getScreenHgt() / 2.0F;
-  }
+  [[nodiscard]] auto getScreenHalfHgt() -> f32_t { return getScreenHgt() / 2.0F; }
 
 private:
   core::misc::Dictionary environment_;
   render::RenderQueue::SharedPtr_t queue_;
   render::RenderSubqueue::SharedPtr_t subqueue_;
-  render::GeomBuilder::SharedPtr_t geomBuilder_;
+  render::GeomBuilderTypedefs::SharedPtr_t geomBuilder_;
 
   render::MaterialTypedefs::SharedPtr_t rectMtrl_;
   render::GeomInstanceDataDivisor<render::procedurals::prims::Quadrilateral<math::VertexColor>> *rectGeomDataDivisor_;

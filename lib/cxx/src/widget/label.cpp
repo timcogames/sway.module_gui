@@ -6,14 +6,18 @@ NS_BEGIN_SWAY()
 NS_BEGIN(ui)
 NS_BEGIN(widget)
 
-Label::Label(BuilderPtr_t builder, const std::string &text)
+Label::Label(BuilderTypedefs::Ptr_t builder, const std::string &text)
     : Widget(builder)
     , text_(text)
     , font_("")
     , fontSize_(12) {
   setMouseFilter(ois::MouseFilter::Enum::IGNORE);
 
+#ifdef UI_USE_GMOCK
+  // TODO
+#else
   resize();
+#endif
 }
 
 void Label::resize() {
@@ -39,7 +43,7 @@ void Label::resize() {
 
 void Label::update() {}
 
-void Label::repaint(Painter::SharedPtr_t painter) {
+void Label::repaint(PainterTypedefs::SharedPtr_t painter) {
   auto zindex = getZIndex(2);
   auto offset = this->getOffset().computed;
 

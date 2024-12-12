@@ -10,7 +10,7 @@
 #include <type_traits>
 #include <utility>
 
-using namespace sway;
+NS_SHORT_SWAY()
 
 TEST(ElementTest, ctor_def) {
   ui::Element elem;
@@ -33,7 +33,7 @@ TEST(ElementTest, offset) {
   absElem->setPosition(ui::ElementPosition::ABSOLUTE);
   absElem->setOffset(1.0F, 2.0F);
   ASSERT_TRUE(absElem->getOffset().dirty);
-  absElem->updateOffset();
+  absElem->updateOffset(nullptr);
   ASSERT_FALSE(absElem->getOffset().dirty);
   ASSERT_EQ(absElem->getOffset().computed, math::point2f_t(1.0F, 2.0F));
 
@@ -41,7 +41,7 @@ TEST(ElementTest, offset) {
   relElem->setPosition(ui::ElementPosition::RELATIVE);
   relElem->setOffset(3.0F, 4.0F);
   ASSERT_TRUE(relElem->getOffset().dirty);
-  relElem->updateOffset();
+  relElem->updateOffset(nullptr);
   ASSERT_FALSE(relElem->getOffset().dirty);
 
   relElem->getOffset().markAsDirty();

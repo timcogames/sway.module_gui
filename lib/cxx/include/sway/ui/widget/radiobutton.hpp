@@ -19,17 +19,17 @@ public:
 
 #pragma region "Ctors/Dtor"
 
-  RadioButton(BuilderPtr_t builder, const std::string &text);
+  RadioButton(BuilderTypedefs::Ptr_t builder, const std::string &text);
 
-  virtual ~RadioButton() = default;
+  DTOR_VIRTUAL_DEFAULT(RadioButton);
 
 #pragma endregion
 
-#pragma region "Override ToggleButton methods"
+#pragma region "Overridden ToggleButton methods"
 
   MTHD_VIRTUAL(void update());
 
-  MTHD_VIRTUAL(void repaint(Painter::SharedPtr_t painter));
+  MTHD_VIRTUAL(void repaint(PainterTypedefs::SharedPtr_t painter));
 
 #pragma endregion
 };

@@ -19,9 +19,9 @@ public:
 
 #pragma region "Ctors/Dtor"
 
-  LinearLayout(BuilderPtr_t builder, Orientation orien);
+  LinearLayout(BuilderTypedefs::Ptr_t builder, Orientation orien);
 
-  virtual ~LinearLayout() = default;
+  DTOR_VIRTUAL_DEFAULT(LinearLayout);
 
 #pragma endregion
 

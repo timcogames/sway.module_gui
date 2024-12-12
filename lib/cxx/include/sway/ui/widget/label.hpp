@@ -20,17 +20,17 @@ class Label : public Widget {
 public:
 #pragma region "Ctors/Dtor"
 
-  Label(BuilderPtr_t builder, const std::string &text);
+  Label(BuilderTypedefs::Ptr_t builder, const std::string &text);
 
-  virtual ~Label() = default;
+  DTOR_VIRTUAL_DEFAULT(Label);
 
 #pragma endregion
 
-#pragma region "Override Widget methods"
+#pragma region "Overridden Widget methods"
 
   MTHD_VIRTUAL(void update());
 
-  MTHD_VIRTUAL(void repaint(Painter::SharedPtr_t painter));
+  MTHD_VIRTUAL(void repaint(PainterTypedefs::SharedPtr_t painter));
 
 #pragma endregion
 

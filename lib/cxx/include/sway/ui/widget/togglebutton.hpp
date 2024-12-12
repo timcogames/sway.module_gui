@@ -13,17 +13,17 @@ class ToggleButton : public Button {
 public:
 #pragma region "Ctors/Dtor"
 
-  ToggleButton(BuilderPtr_t builder, const std::string &text);
+  ToggleButton(BuilderTypedefs::Ptr_t builder, const std::string &text);
 
-  virtual ~ToggleButton() = default;
+  DTOR_VIRTUAL_DEFAULT(ToggleButton);
 
 #pragma endregion
 
-#pragma region "Override Button methods"
+#pragma region "Overridden Button methods"
 
   MTHD_VIRTUAL(void update());
 
-  MTHD_VIRTUAL(void repaint(Painter::SharedPtr_t painter));
+  MTHD_VIRTUAL(void repaint(PainterTypedefs::SharedPtr_t painter));
 
 #pragma endregion
 

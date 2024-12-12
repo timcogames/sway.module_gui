@@ -24,17 +24,17 @@ class MenuItem : public Item {
 public:
 #pragma region "Ctors/Dtor"
 
-  MenuItem(BuilderPtr_t builder, const std::string &text);
+  MenuItem(BuilderTypedefs::Ptr_t builder, const std::string &text);
 
-  virtual ~MenuItem() = default;
+  DTOR_VIRTUAL_DEFAULT(MenuItem);
 
 #pragma endregion
 
-#pragma region "Override Item methods"
+#pragma region "Overridden Item methods"
 
   MTHD_OVERRIDE(void update());
 
-  MTHD_OVERRIDE(void repaint(Painter::SharedPtr_t painter));
+  MTHD_OVERRIDE(void repaint(PainterTypedefs::SharedPtr_t painter));
 
 #pragma endregion
 

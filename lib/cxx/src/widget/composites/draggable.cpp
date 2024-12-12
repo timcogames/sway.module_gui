@@ -8,7 +8,7 @@ NS_BEGIN_SWAY()
 NS_BEGIN(ui)
 NS_BEGIN(widget)
 
-Draggable::Draggable(BuilderPtr_t builder)
+Draggable::Draggable(BuilderTypedefs::Ptr_t builder)
     : Widget(builder)
     , hovering_(false)
     , dragging_(false) {
@@ -49,18 +49,18 @@ void Draggable::update() {
           math::point2f_t(cursor.pnt.getX() - mouseDownOffset_.getX(), cursor.pnt.getY() - mouseDownOffset_.getY()));
       parent->getOffset().markAsDirty();
 
-      parent->updateOffset();
+      parent->updateOffset(nullptr);
 
       for (const auto &item : parent->getChildNodes()) {
         auto elem = std::static_pointer_cast<Element>(item);
         elem->getOffset().markAsDirty();
-        recursiveUpdate(elem);
+        recursiveUpdate(nullptr, elem);
       }
     }
   }
 }
 
-void Draggable::repaint(Painter::SharedPtr_t painter) {
+void Draggable::repaint(PainterTypedefs::SharedPtr_t painter) {
   update();
 
   auto offset = this->getOffset().computed;

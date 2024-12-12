@@ -11,7 +11,6 @@
 #include <sway/ui/orientable.hpp>
 #include <sway/ui/orientations.hpp>
 #include <sway/ui/painter.hpp>
-#include <sway/ui/types.hpp>
 #include <sway/ui/typography.hpp>
 #include <sway/ui/widget/area.hpp>
 #include <sway/ui/widget/areas/boxarea.hpp>

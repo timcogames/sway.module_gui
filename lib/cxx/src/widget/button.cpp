@@ -6,12 +6,14 @@ NS_BEGIN_SWAY()
 NS_BEGIN(ui)
 NS_BEGIN(widget)
 
-Button::Button(BuilderPtr_t builder, const std::string &text)
+Button::Button(BuilderTypedefs::Ptr_t builder, const std::string &text)
     : Widget(builder)
     , hovering_(false) {
-  labelWidget_ = std::make_shared<Label>(this->builder_, text);
+  labelWidget_ = std::make_shared<Label>(builder, text);
   this->addChildNode(labelWidget_);
 }
+
+Button::~Button() { this->removeChildNode(labelWidget_); }
 
 void Button::update() {
   const auto oldState = hovering_;
@@ -29,7 +31,7 @@ void Button::update() {
   }
 }
 
-void Button::repaint(Painter::SharedPtr_t painter) {
+void Button::repaint(PainterTypedefs::SharedPtr_t painter) {
   auto zindex = getZIndex(1);
   auto offset = this->getOffset().computed;
 
