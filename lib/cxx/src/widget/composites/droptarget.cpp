@@ -5,7 +5,6 @@
 
 NS_BEGIN_SWAY()
 NS_BEGIN(ui)
-NS_BEGIN(widget)
 
 DropTarget::DropTarget(BuilderTypedefs::Ptr_t builder)
     : Widget(builder) {}
@@ -14,6 +13,5 @@ void DropTarget::update() {}
 
 void DropTarget::repaint(PainterTypedefs::SharedPtr_t painter) {}
 
-NS_END()  // namespace widget
 NS_END()  // namespace ui
 NS_END()  // namespace sway

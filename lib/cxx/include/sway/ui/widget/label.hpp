@@ -12,7 +12,6 @@
 
 NS_BEGIN_SWAY()
 NS_BEGIN(ui)
-NS_BEGIN(widget)
 
 class Label : public Widget {
   DECLARE_PTR_ALIASES(Label)
@@ -54,7 +53,6 @@ private:
   // bool uppercase_;
 };
 
-NS_END()  // namespace widget
 NS_END()  // namespace ui
 NS_END()  // namespace sway
 

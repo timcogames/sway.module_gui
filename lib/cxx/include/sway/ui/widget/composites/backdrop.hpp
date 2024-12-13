@@ -11,7 +11,6 @@
 
 NS_BEGIN_SWAY()
 NS_BEGIN(ui)
-NS_BEGIN(widget)
 
 // pseudo-element
 class Backdrop : public Widget {
@@ -35,7 +34,6 @@ public:
 #pragma endregion
 };
 
-NS_END()  // namespace widget
 NS_END()  // namespace ui
 NS_END()  // namespace sway
 

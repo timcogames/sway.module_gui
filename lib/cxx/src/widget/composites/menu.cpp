@@ -5,7 +5,7 @@
 #include <sway/ui/widget/composites/menu.hpp>
 #include <sway/ui/widget/composites/menueventhandler.hpp>
 #include <sway/ui/widget/composites/menuitem.hpp>
-#include <sway/ui/widget/linearlayout.hpp>
+#include <sway/ui/widget/layout/linearlayout.hpp>
 
 #include <memory>
 #include <string>
@@ -13,7 +13,6 @@
 
 NS_BEGIN_SWAY()
 NS_BEGIN(ui)
-NS_BEGIN(widget)
 
 Menu::Menu(BuilderTypedefs::Ptr_t builder, Orientation orien)
     : LinearLayout(builder, orien) {
@@ -34,6 +33,5 @@ void Menu::update() {}
 
 void Menu::repaint(PainterTypedefs::SharedPtr_t painter) {}
 
-NS_END()  // namespace widget
 NS_END()  // namespace ui
 NS_END()  // namespace sway

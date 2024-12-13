@@ -4,8 +4,8 @@
 #include <sway/core.hpp>
 #include <sway/math.hpp>
 #include <sway/ui/_typedefs.hpp>
+#include <sway/ui/controls/button/button.hpp>
 #include <sway/ui/painter.hpp>
-#include <sway/ui/widget/button.hpp>
 #include <sway/ui/widget/composites/item.hpp>
 #include <sway/ui/widget/typedefs.hpp>
 
@@ -14,7 +14,6 @@
 
 NS_BEGIN_SWAY()
 NS_BEGIN(ui)
-NS_BEGIN(widget)
 
 class MenuItem : public Item {
   DECLARE_PTR_ALIASES(MenuItem)
@@ -46,7 +45,6 @@ private:
   Button::SharedPtr_t button_;
 };
 
-NS_END()  // namespace widget
 NS_END()  // namespace ui
 NS_END()  // namespace sway
 

@@ -9,7 +9,6 @@
 
 NS_BEGIN_SWAY()
 NS_BEGIN(ui)
-NS_BEGIN(widget)
 
 Dialog::Dialog(BuilderTypedefs::Ptr_t builder)
     : Popup(builder)
@@ -52,6 +51,5 @@ void Dialog::repaint(PainterTypedefs::SharedPtr_t painter) {
   Popup::repaint(painter);
 }
 
-NS_END()  // namespace widget
 NS_END()  // namespace ui
 NS_END()  // namespace sway

@@ -16,16 +16,16 @@ TEST(LayoutTest, ctor_def) {
   builder->setEventBus(eventBus);
   builder->initialize();
 
-  auto mainLayout = std::make_shared<ui::widget::LinearLayout>(builder.get(), ui::Orientation::HORZ);
+  auto mainLayout = std::make_shared<ui::LinearLayout>(builder.get(), ui::Orientation::HORZ);
   EXPECT_NE(mainLayout, nullptr);
 
-  auto btn1 = std::make_shared<ui::widget::Button>(builder.get(), "btn1");
+  auto btn1 = std::make_shared<ui::Button>(builder.get(), "btn1");
   btn1->setAlignment(math::Alignment::CENTER);
   btn1->setOffset(0.0F, 0.0F);
   btn1->setSize(100.0F, 30.0F);
   mainLayout->addChildNode(btn1);
 
-  auto btn2 = std::make_shared<ui::widget::Button>(builder.get(), "btn2");
+  auto btn2 = std::make_shared<ui::Button>(builder.get(), "btn2");
   btn2->setAlignment(math::Alignment::CENTER);
   btn2->setOffset(0.0F, 0.0F);
   btn2->setSize(150.0F, 70.0F);

@@ -4,13 +4,12 @@
 #include <sway/core.hpp>
 #include <sway/ui/orientations.hpp>
 #include <sway/ui/painter.hpp>
-#include <sway/ui/widget/layout.hpp>
+#include <sway/ui/widget/layout/layout.hpp>
 
 #include <memory>
 
 NS_BEGIN_SWAY()
 NS_BEGIN(ui)
-NS_BEGIN(widget)
 
 class LinearLayout : public Layout {
 public:
@@ -28,7 +27,6 @@ public:
   void build();
 };
 
-NS_END()  // namespace widget
 NS_END()  // namespace ui
 NS_END()  // namespace sway
 

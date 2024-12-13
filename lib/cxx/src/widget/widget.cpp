@@ -7,7 +7,6 @@
 
 NS_BEGIN_SWAY()
 NS_BEGIN(ui)
-NS_BEGIN(widget)
 
 Widget::Widget(BuilderTypedefs::Ptr_t builder)
     : builder_(builder)
@@ -168,6 +167,5 @@ void Widget::setAlignment(math::Alignment alignment) { alignment_ = alignment; }
 //   // this->builder_->getEventBus()->addToQueue(std::move(event));
 // }
 
-NS_END()  // namespace widget
 NS_END()  // namespace ui
 NS_END()  // namespace sway

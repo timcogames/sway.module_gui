@@ -13,7 +13,6 @@
 
 NS_BEGIN_SWAY()
 NS_BEGIN(ui)
-NS_BEGIN(widget)
 
 class Dialog : public Popup {
   DECLARE_PTR_ALIASES(Dialog)
@@ -53,7 +52,6 @@ private:
   bool resizable_;
 };
 
-NS_END()  // namespace widget
 NS_END()  // namespace ui
 NS_END()  // namespace sway
 

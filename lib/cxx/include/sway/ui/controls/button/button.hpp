@@ -1,9 +1,9 @@
-#ifndef SWAY_UI_WIDGET_BUTTON_HPP
-#define SWAY_UI_WIDGET_BUTTON_HPP
+#ifndef SWAY_UI_BUTTON_HPP
+#define SWAY_UI_BUTTON_HPP
 
 #include <sway/core.hpp>
+#include <sway/ui/controls/button/button.hpp>
 #include <sway/ui/painter.hpp>
-#include <sway/ui/widget/button.hpp>
 #include <sway/ui/widget/label.hpp>
 
 #include <memory>
@@ -11,7 +11,6 @@
 
 NS_BEGIN_SWAY()
 NS_BEGIN(ui)
-NS_BEGIN(widget)
 
 class Button : public Widget {
   DECLARE_PTR_ALIASES(Button)
@@ -40,8 +39,7 @@ private:
   bool hovering_;
 };
 
-NS_END()  // namespace widget
 NS_END()  // namespace ui
 NS_END()  // namespace sway
 
-#endif  // SWAY_UI_WIDGET_BUTTON_HPP
+#endif  // SWAY_UI_BUTTON_HPP

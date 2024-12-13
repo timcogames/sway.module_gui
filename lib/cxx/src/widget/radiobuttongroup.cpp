@@ -4,7 +4,6 @@
 
 NS_BEGIN_SWAY()
 NS_BEGIN(ui)
-NS_BEGIN(widget)
 
 RadioButtonGroup::RadioButtonGroup(BuilderTypedefs::Ptr_t builder, Orientation orien)
     : LinearLayout(builder, orien)
@@ -42,7 +41,7 @@ void RadioButtonGroup::handleClickedEvent(core::foundation::EventPtr_t evt) {
   for (auto const &child : this->getChildNodes()) {
     auto radioBtn = std::static_pointer_cast<RadioButton>(child);
     auto radioBtnIdx = radioBtn->getNodeIdx();
-    auto radioBtnEvtData = static_cast<ui::widget::MouseClickEventData *>(evt->data());
+    auto radioBtnEvtData = static_cast<MouseClickEventData *>(evt->data());
 
     radioBtn->setChecked(false);
 
@@ -58,6 +57,5 @@ void RadioButtonGroup::handleClickedEvent(core::foundation::EventPtr_t evt) {
   }
 }
 
-NS_END()  // namespace widget
 NS_END()  // namespace ui
 NS_END()  // namespace sway

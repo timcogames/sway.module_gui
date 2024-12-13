@@ -6,7 +6,6 @@
 
 NS_BEGIN_SWAY()
 NS_BEGIN(ui)
-NS_BEGIN(widget)
 
 struct PointerEnterEventData : public core::foundation::EventData {
   MTHD_OVERRIDE(auto serialize() const -> std::string) { return ""; }
@@ -29,7 +28,6 @@ struct MouseClickEventData : public core::foundation::EventData {
   MTHD_OVERRIDE(void deserialize(const std::string &jdata)) {}
 };
 
-NS_END()  // namespace widget
 NS_END()  // namespace ui
 NS_END()  // namespace sway
 

@@ -3,6 +3,7 @@
 
 #include <sway/core.hpp>
 #include <sway/math.hpp>
+#include <sway/ui/widget/_typedefs.hpp>
 #include <sway/ui/widget/elementareaholder.hpp>
 #include <sway/ui/widget/elementoffset.hpp>
 #include <sway/ui/widget/elementpositions.hpp>
@@ -63,6 +64,21 @@ public:
   [[nodiscard]] auto getOuterSize() const -> math::size2f_t;
 
   [[nodiscard]] auto getOuterSizeWithMargin() const -> math::size2f_t;
+
+  template <typename TYPE>
+  auto cast(Node::SharedPtr_t ptr) -> std::shared_ptr<TYPE> {
+    return std::static_pointer_cast<TYPE>(ptr);
+  }
+
+  template <typename TYPE>
+  auto cast(std::optional<Node::SharedPtr_t> ptr) -> std::shared_ptr<TYPE> {
+    return std::static_pointer_cast<TYPE>(ptr.value());
+  }
+
+  template <typename TYPE>
+  auto getChild(const core::container::NodeIdx &idx) -> std::shared_ptr<TYPE> {
+    return cast<TYPE>(getChildNode(idx));
+  }
 
   void handleAddNode(core::foundation::Event::Ptr_t evt);
 

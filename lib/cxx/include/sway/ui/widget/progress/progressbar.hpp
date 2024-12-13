@@ -7,7 +7,6 @@
 
 NS_BEGIN_SWAY()
 NS_BEGIN(ui)
-NS_BEGIN(widget)
 
 class ProgressBar : public Widget {
 public:
@@ -45,7 +44,6 @@ private:
   f32_t total_;
 };
 
-NS_END()  // namespace widget
 NS_END()  // namespace ui
 NS_END()  // namespace sway
 

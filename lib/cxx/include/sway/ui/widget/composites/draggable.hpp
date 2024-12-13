@@ -11,7 +11,6 @@
 
 NS_BEGIN_SWAY()
 NS_BEGIN(ui)
-NS_BEGIN(widget)
 
 class Draggable : public Widget {
   DECLARE_PTR_ALIASES(Draggable)
@@ -46,7 +45,6 @@ private:
   bool mouseIsDown_ = false;
 };
 
-NS_END()  // namespace widget
 NS_END()  // namespace ui
 NS_END()  // namespace sway
 

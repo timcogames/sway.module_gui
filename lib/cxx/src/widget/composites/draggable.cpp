@@ -6,7 +6,6 @@
 
 NS_BEGIN_SWAY()
 NS_BEGIN(ui)
-NS_BEGIN(widget)
 
 Draggable::Draggable(BuilderTypedefs::Ptr_t builder)
     : Widget(builder)
@@ -70,6 +69,5 @@ void Draggable::repaint(PainterTypedefs::SharedPtr_t painter) {
   Widget::repaint(painter);
 }
 
-NS_END()  // namespace widget
 NS_END()  // namespace ui
 NS_END()  // namespace sway

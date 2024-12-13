@@ -1,10 +1,9 @@
 #include <sway/ui/builder.hpp>
-#include <sway/ui/widget/button.hpp>
+#include <sway/ui/controls/button/button.hpp>
 #include <sway/ui/zindex.hpp>
 
 NS_BEGIN_SWAY()
 NS_BEGIN(ui)
-NS_BEGIN(widget)
 
 Button::Button(BuilderTypedefs::Ptr_t builder, const std::string &text)
     : Widget(builder)
@@ -44,6 +43,5 @@ void Button::repaint(PainterTypedefs::SharedPtr_t painter) {
   Widget::repaint(painter);
 }
 
-NS_END()  // namespace widget
 NS_END()  // namespace ui
 NS_END()  // namespace sway

@@ -18,7 +18,7 @@ class Builder : public core::foundation::Object {
   DECLARE_CLASS_METADATA(Builder, core::foundation::Object)
 
 public:
-  using ElementUnderPointer_t = widget::Widget::Ptr_t;
+  using ElementUnderPointer_t = Widget::Ptr_t;
 
 #pragma region "Ctors/Dtor"
 
@@ -34,7 +34,7 @@ public:
 
   void update();
 
-  auto getRootWidget() -> widget::Widget::SharedPtr_t { return root_; }
+  auto getRootWidget() -> Widget::SharedPtr_t { return root_; }
 
   void setEventBus(core::evts::EventBus::SharedPtr_t evtbus) { evtbus_ = evtbus; }
 
@@ -59,7 +59,7 @@ private:
   core::evts::EventBus::Subscriber_t subscriber_;
   ft2::FontManager::SharedPtr_t fontMngr_;
   PainterTypedefs::SharedPtr_t painter_;
-  widget::Widget::SharedPtr_t root_;
+  Widget::SharedPtr_t root_;
 
   struct ElementUnderPointerInfo {
     ElementUnderPointer_t element;

@@ -3,7 +3,6 @@
 
 NS_BEGIN_SWAY()
 NS_BEGIN(ui)
-NS_BEGIN(widget)
 
 ToggleButton::ToggleButton(BuilderTypedefs::Ptr_t builder, const std::string &text)
     : Button(builder, text)
@@ -13,6 +12,5 @@ void ToggleButton::update() { Button::update(); }
 
 void ToggleButton::repaint(PainterTypedefs::SharedPtr_t painter) { Button::repaint(painter); }
 
-NS_END()  // namespace widget
 NS_END()  // namespace ui
 NS_END()  // namespace sway

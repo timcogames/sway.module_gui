@@ -28,20 +28,22 @@ void Element::updateOffset(Element::SharedPtr_t prev) {
     return;
   }
 
-  auto prevElemOffset = prev ? prev->getOffset().computed : math::point2f_zero;
+  // auto prevElemOffset = prev ? prev->getOffset().computed : math::point2f_zero;
 
   if (position_ == ElementPosition::RELATIVE) {
     auto parentOpt = this->getParentNode();
     if (!parentOpt.has_value()) {
       // TODO
     } else {
-      auto parent = std::static_pointer_cast<Element>(parentOpt.value());
+      auto parent = cast<Element>(parentOpt);
       auto parentOffset = parent->getOffset().computed;
-      auto parentAreaPosition = parent->getAreaHolder().getPosition<ui::AreaType::IDX_CNT>();
-      auto parentContentSize = parent->getAreaHolder().getContentSize();
+      auto parentAreaHolder = parent->getAreaHolder();
+      auto parentAreaPosition = parentAreaHolder.getPosition<ui::AreaType::IDX_CNT>();
+      auto parentContentSize = parentAreaHolder.getContentSize();
 
-      offset_.computed =
-          math::point2f_t(prevElemOffset.getX() + parentOffset.getX(), prevElemOffset.getY() + parentOffset.getY());
+      // offset_.computed =
+      //     math::point2f_t(prevElemOffset.getX() + parentOffset.getX(), prevElemOffset.getY() + parentOffset.getY());
+      offset_.computed = math::point2f_t(parentOffset.getX(), parentOffset.getY());
 
       auto x = 0.0F, y = 0.0F;
       auto alignmentBase = core::detail::toBase<math::Alignment>(alignment_);
@@ -72,15 +74,15 @@ void Element::updateOffset(Element::SharedPtr_t prev) {
 }
 
 void Element::recursiveUpdate(Element::SharedPtr_t lhs, Element::SharedPtr_t rhs) {
-  std::static_pointer_cast<Element>(rhs)->updateOffset(lhs);
+  rhs->updateOffset(lhs);
 
   for (auto i = 0; i < rhs->getChildNodes().size(); i++) {
-    Element::SharedPtr_t prev = nullptr;
+    auto prev = (Element::SharedPtr_t) nullptr;
     auto prevOpt = rhs->getChildAt(i - 1);
     if (!prevOpt.has_value()) {
       // TODO
     } else {
-      prev = std::static_pointer_cast<Element>(prevOpt.value());
+      prev = cast<Element>(prevOpt);
     }
 
     Element::SharedPtr_t curr = nullptr;
@@ -88,7 +90,7 @@ void Element::recursiveUpdate(Element::SharedPtr_t lhs, Element::SharedPtr_t rhs
     if (!currOpt.has_value()) {
       // TODO
     } else {
-      curr = std::static_pointer_cast<Element>(currOpt.value());
+      curr = cast<Element>(currOpt);
     }
 
     recursiveUpdate(prev, curr);
@@ -103,25 +105,46 @@ auto Element::getOuterSize() const -> math::size2f_t { return holder_.getSize<Ar
 
 auto Element::getOuterSizeWithMargin() const -> math::size2f_t { return holder_.getSize<AreaType::IDX_MRG>(); }
 
-void Element::handleAddNode(core::foundation::Event::Ptr_t evt) {
-  auto evtdata = static_cast<core::container::NodeEventData *>(evt->data());
+/**
+ * \~russian @brief Возвращает последний сегмент в индексе целевого узла.
+ *
+ * @param[in] target Целевой индекс узла.
+ * @return core::container::NodeIdx::ChainItemIndex_t
+ */
+auto getLastNodeIndexSegment(const core::container::NodeIdx &target) -> core::container::NodeIdx::ChainItemIndex_t {
+  return target.getIdxAt(target.getDepth() - 1);
+}
 
-  auto currNodeIdx = evtdata->nodeidx;
-  auto currIdx = currNodeIdx.getIdxAt(currNodeIdx.getDepth() - 1);
-  auto currElem = std::static_pointer_cast<Element>(this->getChildNode(currNodeIdx));
-
-  std::shared_ptr<Element> prevElem = nullptr;
-  if (currIdx > 0) {
-    auto prevNodeChain = currNodeIdx.getChain();
-    auto prevNodeChainIter = prevNodeChain.end();
-    prevNodeChain.pop_back();
-
-    auto prevElemNodeIdx = core::container::NodeIdx();
-    prevElemNodeIdx.setChain(prevNodeChain, currIdx - 1);
-    prevElem = std::static_pointer_cast<Element>(this->getChildNode(prevElemNodeIdx));
+/**
+ * \~russian @brief Возвращает индекс предыдущего узла в цепочке.
+ *
+ * @param[in] target Целевой индекс узла.
+ * @return std::optional<core::container::NodeIdx>
+ */
+auto getPrevChainItem(const core::container::NodeIdx &target) -> std::optional<core::container::NodeIdx> {
+  if (auto lastSegment = getLastNodeIndexSegment(target); lastSegment > GLOB_NULL) {
+    auto prev = core::container::NodeIdx();
+    prev.setChain(target.getParent(), lastSegment - 1);
+    return prev;
   }
 
-  recursiveUpdate(prevElem, currElem);
+  return std::nullopt;
+}
+
+void Element::handleAddNode(core::foundation::Event::Ptr_t evt) {
+  auto *nodeEventData = static_cast<core::container::NodeEventData *>(evt->data());
+
+  auto currElement = getChild<Element>(nodeEventData->nodeidx);
+  auto prevElement = (ElementTypedefs::SharedPtr_t) nullptr;
+
+  auto prevNodeIndex = getPrevChainItem(nodeEventData->nodeidx);
+  if (!prevNodeIndex.has_value()) {
+    // TODO
+  } else {
+    prevElement = getChild<Element>(prevNodeIndex.value());
+  }
+
+  recursiveUpdate(prevElement, currElement);
 }
 
 NS_END()  // namespace ui

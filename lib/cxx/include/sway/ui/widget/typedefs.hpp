@@ -21,7 +21,6 @@ using AreaHolder_t = std::array<AreaSharedPtr_t, NUM_OF_AREAS>;
 template <AreaType TYPE>
 using OutputAreaType_t = typename std::conditional<TYPE == AreaType::IDX_CNT, ContentArea, BoxArea>::type;
 
-NS_BEGIN(widget)
 DECLARE_PTR_TYPES(Widget)
 DECLARE_PTR_TYPES(Label)
 DECLARE_PTR_TYPES(Button)
@@ -32,7 +31,6 @@ DECLARE_PTR_TYPES(Backdrop)
 DECLARE_PTR_TYPES(DropTarget)
 DECLARE_PTR_TYPES(Menu)
 DECLARE_PTR_TYPES(MenuItem)
-NS_END()  // namespace widget
 
 NS_END()  // namespace ui
 NS_END()  // namespace sway

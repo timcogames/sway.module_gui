@@ -27,8 +27,6 @@ NS_BEGIN(ui)
 
 #define COL4F_PURPLE 0x9900FFFF
 
-NS_BEGIN(widget)
-
 class Widget : public Element {
   DECLARE_PTR_ALIASES(Widget)
   DECLARE_EVENT(EVT_POINTER_ENTER, PointerEnter)
@@ -104,9 +102,9 @@ protected:
 
   bool containsPointer_;
   bool needsRepainting_;
+  bool needToUpdate_;
 };
 
-NS_END()  // namespace widget
 NS_END()  // namespace ui
 NS_END()  // namespace sway
 

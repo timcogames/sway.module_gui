@@ -4,7 +4,6 @@
 
 NS_BEGIN_SWAY()
 NS_BEGIN(ui)
-NS_BEGIN(widget)
 
 Label::Label(BuilderTypedefs::Ptr_t builder, const std::string &text)
     : Widget(builder)
@@ -53,6 +52,5 @@ void Label::repaint(PainterTypedefs::SharedPtr_t painter) {
 
 void Label::setText(const std::string &text) { text_ = text; }
 
-NS_END()  // namespace widget
 NS_END()  // namespace ui
 NS_END()  // namespace sway

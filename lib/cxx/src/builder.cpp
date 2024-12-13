@@ -46,7 +46,7 @@ Builder::Builder(core::foundation::Context::Ptr_t context)
     , painter_(nullptr) {}
 
 void Builder::initialize() {
-  root_ = std::make_shared<widget::Widget>(this);
+  root_ = std::make_shared<Widget>(this);
   subscriber_ = evtbus_->subscribe(new WidgetEventHandler(this));
 
   // root_->setAbsolutePosition(0, 0);

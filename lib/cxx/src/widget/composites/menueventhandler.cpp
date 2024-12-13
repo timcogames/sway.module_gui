@@ -8,7 +8,6 @@
 
 NS_BEGIN_SWAY()
 NS_BEGIN(ui)
-NS_BEGIN(widget)
 
 MenuEventHandler::MenuEventHandler(Menu *menu)
     : core::evts::EventHandler()
@@ -42,6 +41,5 @@ void MenuEventHandler::onKeyEvent(ois::KeyEvent::Ptr_t evt) {
   }
 }
 
-NS_END()  // namespace widget
 NS_END()  // namespace ui
 NS_END()  // namespace sway

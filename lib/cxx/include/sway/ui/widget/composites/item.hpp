@@ -7,7 +7,6 @@
 
 NS_BEGIN_SWAY()
 NS_BEGIN(ui)
-NS_BEGIN(widget)
 
 class Item : public Widget {
 public:
@@ -23,7 +22,6 @@ public:
   void toggle() {}
 };
 
-NS_END()  // namespace widget
 NS_END()  // namespace ui
 NS_END()  // namespace sway
 

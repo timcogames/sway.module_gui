@@ -6,7 +6,7 @@
 #include <sway/ui/painter.hpp>
 #include <sway/ui/widget/composites/menueventhandler.hpp>
 #include <sway/ui/widget/composites/menuitem.hpp>
-#include <sway/ui/widget/linearlayout.hpp>
+#include <sway/ui/widget/layout/linearlayout.hpp>
 #include <sway/ui/widget/typedefs.hpp>
 
 #include <memory>
@@ -15,7 +15,6 @@
 
 NS_BEGIN_SWAY()
 NS_BEGIN(ui)
-NS_BEGIN(widget)
 
 class Menu : public LinearLayout {
   DECLARE_PTR_ALIASES(Menu)
@@ -44,7 +43,6 @@ private:
   int selectedItem_;
 };
 
-NS_END()  // namespace widget
 NS_END()  // namespace ui
 NS_END()  // namespace sway
 

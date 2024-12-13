@@ -8,7 +8,6 @@
 
 NS_BEGIN_SWAY()
 NS_BEGIN(ui)
-NS_BEGIN(widget)
 
 class Layout : public Widget, public Orientable {
 public:
@@ -21,7 +20,6 @@ public:
 #pragma endregion
 };
 
-NS_END()  // namespace widget
 NS_END()  // namespace ui
 NS_END()  // namespace sway
 

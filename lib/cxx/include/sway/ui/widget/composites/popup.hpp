@@ -11,7 +11,6 @@
 
 NS_BEGIN_SWAY()
 NS_BEGIN(ui)
-NS_BEGIN(widget)
 
 class Popup : public Widget {
   DECLARE_PTR_ALIASES(Popup)
@@ -37,7 +36,6 @@ private:
   core::evts::EventBus::Subscriber_t subscriber_;
 };
 
-NS_END()  // namespace widget
 NS_END()  // namespace ui
 NS_END()  // namespace sway
 

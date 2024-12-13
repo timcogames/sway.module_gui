@@ -5,11 +5,9 @@
 
 NS_BEGIN_SWAY()
 NS_BEGIN(ui)
-NS_BEGIN(widget)
 
 DECLARE_ENUM(ProgressMode, FRACTION, PERCENTAGE);
 
-NS_END()  // namespace widget
 NS_END()  // namespace ui
 NS_END()  // namespace sway
 

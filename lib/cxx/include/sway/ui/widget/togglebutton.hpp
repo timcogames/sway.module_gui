@@ -2,12 +2,11 @@
 #define SWAY_UI_WIDGET_TOGGLEBUTTON_HPP
 
 #include <sway/core.hpp>
+#include <sway/ui/controls/button/button.hpp>
 #include <sway/ui/painter.hpp>
-#include <sway/ui/widget/button.hpp>
 
 NS_BEGIN_SWAY()
 NS_BEGIN(ui)
-NS_BEGIN(widget)
 
 class ToggleButton : public Button {
 public:
@@ -38,7 +37,6 @@ protected:
   bool checked_;
 };
 
-NS_END()  // namespace widget
 NS_END()  // namespace ui
 NS_END()  // namespace sway
 

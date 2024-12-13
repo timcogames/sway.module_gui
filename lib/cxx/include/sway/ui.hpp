@@ -2,6 +2,7 @@
 #define SWAY_UI_HPP
 
 #include <sway/ui/builder.hpp>
+#include <sway/ui/controls/button/button.hpp>
 #include <sway/ui/ft2/face.hpp>
 #include <sway/ui/ft2/faceloader.hpp>
 #include <sway/ui/ft2/font.hpp>
@@ -16,7 +17,6 @@
 #include <sway/ui/widget/areas/boxarea.hpp>
 #include <sway/ui/widget/areas/contentarea.hpp>
 #include <sway/ui/widget/areatypes.hpp>
-#include <sway/ui/widget/button.hpp>
 #include <sway/ui/widget/composites/backdrop.hpp>
 #include <sway/ui/widget/composites/dialog.hpp>
 #include <sway/ui/widget/composites/draggable.hpp>
@@ -29,8 +29,8 @@
 #include <sway/ui/widget/elementareaholder.hpp>
 #include <sway/ui/widget/elementpositions.hpp>
 #include <sway/ui/widget/label.hpp>
-#include <sway/ui/widget/layout.hpp>
-#include <sway/ui/widget/linearlayout.hpp>
+#include <sway/ui/widget/layout/layout.hpp>
+#include <sway/ui/widget/layout/linearlayout.hpp>
 #include <sway/ui/widget/progress/progressbar.hpp>
 #include <sway/ui/widget/progress/progressmodes.hpp>
 #include <sway/ui/widget/radiobutton.hpp>

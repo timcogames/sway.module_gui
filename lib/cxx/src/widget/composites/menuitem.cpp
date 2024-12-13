@@ -2,7 +2,6 @@
 
 NS_BEGIN_SWAY()
 NS_BEGIN(ui)
-NS_BEGIN(widget)
 
 MenuItem::MenuItem(BuilderTypedefs::Ptr_t builder, const std::string &text)
     : Item(builder) {
@@ -44,6 +43,5 @@ void MenuItem::focusLost() {
   this->needsRepainting_ = true;
 }
 
-NS_END()  // namespace widget
 NS_END()  // namespace ui
 NS_END()  // namespace sway
