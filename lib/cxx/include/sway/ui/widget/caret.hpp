@@ -11,9 +11,9 @@ NS_BEGIN(ui)
 DECLARE_ENUM(TextModeType, VIEW, EDIT, EXPR)
 
 struct Caret {
-  math::rect4f_t rect;  ///< Прямоугольник курсора (позиция, размер).
-  CaretSelectionRange range;  ///< Диапазон выделенного текста.
-  bool visibled;  ///< Видимость курсора.
+  math::rect4f_t rect; /*< Прямоугольник курсора (позиция, размер). */
+  CaretSelectionRange range; /*< Диапазон выделенного текста. */
+  bool visibled; /*< Видимость курсора. */
 };
 
 NS_END()  // namespace ui

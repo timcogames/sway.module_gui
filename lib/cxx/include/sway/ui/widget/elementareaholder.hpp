@@ -22,7 +22,7 @@ public:
 
   ElementAreaHolder();
 
-  ~ElementAreaHolder() = default;
+  DTOR_DEFAULT(ElementAreaHolder);
 
 #pragma endregion
 
@@ -54,8 +54,7 @@ public:
   template <AreaType TYPE>
   auto getSize() const -> math::size2f_t;
 
-  [[nodiscard]]
-  auto getContentSize() const -> math::size2f_t;
+  [[nodiscard]] auto getContentSize() const -> math::size2f_t;
 };
 
 NS_END()  // namespace ui

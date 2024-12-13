@@ -22,7 +22,7 @@ TEST(LayoutTest, ctor_def) {
   auto btn1 = std::make_shared<ui::widget::Button>(builder.get(), "btn1");
   btn1->setAlignment(math::Alignment::CENTER);
   btn1->setOffset(0.0F, 0.0F);
-  btn1->setSize(150.0F, 70.0F);
+  btn1->setSize(100.0F, 30.0F);
   mainLayout->addChildNode(btn1);
 
   auto btn2 = std::make_shared<ui::widget::Button>(builder.get(), "btn2");

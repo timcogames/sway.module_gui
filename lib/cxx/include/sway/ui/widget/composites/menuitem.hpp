@@ -3,6 +3,7 @@
 
 #include <sway/core.hpp>
 #include <sway/math.hpp>
+#include <sway/ui/_typedefs.hpp>
 #include <sway/ui/painter.hpp>
 #include <sway/ui/widget/button.hpp>
 #include <sway/ui/widget/composites/item.hpp>
@@ -13,9 +14,6 @@
 
 NS_BEGIN_SWAY()
 NS_BEGIN(ui)
-
-class Builder;
-
 NS_BEGIN(widget)
 
 class MenuItem : public Item {

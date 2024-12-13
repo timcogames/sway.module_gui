@@ -14,7 +14,7 @@ class Area {
 public:
 #pragma region "Ctors/Dtor"
 
-  virtual ~Area() = default;
+  DTOR_VIRTUAL_DEFAULT(Area);
 
 #pragma endregion
 

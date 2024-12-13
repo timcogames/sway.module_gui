@@ -2,13 +2,11 @@
 #define SWAY_UI_WIDGET_ITEM_HPP
 
 #include <sway/core.hpp>
+#include <sway/ui/_typedefs.hpp>
 #include <sway/ui/widget/widget.hpp>
 
 NS_BEGIN_SWAY()
 NS_BEGIN(ui)
-
-class Builder;
-
 NS_BEGIN(widget)
 
 class Item : public Widget {

@@ -24,53 +24,51 @@ void Element::setOffset(f32_t x, f32_t y) { setOffset(math::point2f_t(x, y)); }
 auto Element::getOffset() -> ElementOffset & { return offset_; }
 
 void Element::updateOffset(Element::SharedPtr_t prev) {
-  auto prevElemOffset = math::point2f_zero;
-  if (prev != nullptr) {
-    prevElemOffset = prev->getOffset().computed;
+  if (!offset_.dirty) {
+    return;
   }
 
-  if (offset_.dirty) {
-    if (position_ == ElementPosition::RELATIVE) {
-      auto parentOpt = this->getParentNode();
-      if (!parentOpt.has_value()) {
-        // TODO
-      } else {
-        auto parent = std::static_pointer_cast<Element>(parentOpt.value());
-        auto parentOffset = parent->getOffset().computed;
-        auto parentAreaPosition = parent->getAreaHolder().getPosition<ui::AreaType::IDX_CNT>();
-        auto parentAreaSize = parent->getAreaHolder().getContentSize();
+  auto prevElemOffset = prev ? prev->getOffset().computed : math::point2f_zero;
 
-        offset_.computed =
-            math::point2f_t(prevElemOffset.getX() + parentOffset.getX(), prevElemOffset.getY() + parentOffset.getY());
-
-        auto x = 0.0F;
-        auto y = 0.0F;
-        auto sz = getAreaHolder().getContentSize();
-
-        if (core::detail::toBase<math::Alignment>(alignment_) & math::ConvFromXAlign<math::HorzAlign::CENTER>()) {
-          x = (parentAreaSize.getW() - sz.getW()) / 2;
-        } else if (core::detail::toBase<math::Alignment>(alignment_) & math::ConvFromXAlign<math::HorzAlign::RIGHT>()) {
-          x = (parentAreaSize.getW() - sz.getW());
-        }
-
-        if (core::detail::toBase<math::Alignment>(alignment_) & math::ConvFromXAlign<math::VertAlign::CENTER>()) {
-          y = (parentAreaSize.getH() - sz.getH()) / 2;
-        } else if (core::detail::toBase<math::Alignment>(alignment_) &
-                   math::ConvFromXAlign<math::VertAlign::BOTTOM>()) {
-          y = (parentAreaSize.getH() - sz.getH());
-        }
-
-        offset_.computed = math::point2f_t(offset_.computed.getX() + x, offset_.computed.getY() + y);
-      }
-    } else if (position_ == ElementPosition::ABSOLUTE || position_ == ElementPosition::FIXED) {
-      // auto parentInnerSize = parent->getInnerSize();
-      offset_.computed = offset_.original;
+  if (position_ == ElementPosition::RELATIVE) {
+    auto parentOpt = this->getParentNode();
+    if (!parentOpt.has_value()) {
+      // TODO
     } else {
-      offset_.computed = offset_.original;
-    }
+      auto parent = std::static_pointer_cast<Element>(parentOpt.value());
+      auto parentOffset = parent->getOffset().computed;
+      auto parentAreaPosition = parent->getAreaHolder().getPosition<ui::AreaType::IDX_CNT>();
+      auto parentContentSize = parent->getAreaHolder().getContentSize();
 
-    offset_.dirty = false;
+      offset_.computed =
+          math::point2f_t(prevElemOffset.getX() + parentOffset.getX(), prevElemOffset.getY() + parentOffset.getY());
+
+      auto x = 0.0F, y = 0.0F;
+      auto alignmentBase = core::detail::toBase<math::Alignment>(alignment_);
+      auto childContentSize = getAreaHolder().getContentSize();
+
+      if (alignmentBase & math::ConvFromXAlign<math::HorzAlign::CENTER>()) {
+        x = (parentContentSize.getW() - childContentSize.getW()) / 2;
+      } else if (alignmentBase & math::ConvFromXAlign<math::HorzAlign::RIGHT>()) {
+        x = (parentContentSize.getW() - childContentSize.getW());
+      }
+
+      if (alignmentBase & math::ConvFromXAlign<math::VertAlign::CENTER>()) {
+        y = (parentContentSize.getH() - childContentSize.getH()) / 2;
+      } else if (alignmentBase & math::ConvFromXAlign<math::VertAlign::BOTTOM>()) {
+        y = (parentContentSize.getH() - childContentSize.getH());
+      }
+
+      offset_.computed = math::point2f_t(offset_.computed.getX() + x, offset_.computed.getY() + y);
+    }
+  } else if (position_ == ElementPosition::ABSOLUTE || position_ == ElementPosition::FIXED) {
+    // auto parentInnerSize = parent->getInnerSize();
+    offset_.computed = offset_.original;
+  } else {
+    offset_.computed = offset_.original;
   }
+
+  offset_.dirty = false;
 }
 
 void Element::recursiveUpdate(Element::SharedPtr_t lhs, Element::SharedPtr_t rhs) {
@@ -112,11 +110,16 @@ void Element::handleAddNode(core::foundation::Event::Ptr_t evt) {
   auto currIdx = currNodeIdx.getIdxAt(currNodeIdx.getDepth() - 1);
   auto currElem = std::static_pointer_cast<Element>(this->getChildNode(currNodeIdx));
 
-  core::container::NodeIdx::ChainVec_t prevNodeChain = currNodeIdx.getChain();
-  prevNodeChain.pop_back();
-  auto prevElemNodeIdx = core::container::NodeIdx();
-  prevElemNodeIdx.setChain(prevNodeChain, currIdx - 1);
-  auto prevElem = std::static_pointer_cast<Element>(this->getChildNode(prevElemNodeIdx));
+  std::shared_ptr<Element> prevElem = nullptr;
+  if (currIdx > 0) {
+    auto prevNodeChain = currNodeIdx.getChain();
+    auto prevNodeChainIter = prevNodeChain.end();
+    prevNodeChain.pop_back();
+
+    auto prevElemNodeIdx = core::container::NodeIdx();
+    prevElemNodeIdx.setChain(prevNodeChain, currIdx - 1);
+    prevElem = std::static_pointer_cast<Element>(this->getChildNode(prevElemNodeIdx));
+  }
 
   recursiveUpdate(prevElem, currElem);
 }

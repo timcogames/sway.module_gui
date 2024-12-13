@@ -9,9 +9,9 @@ NS_BEGIN_SWAY()
 NS_BEGIN(ui)
 
 struct ElementOffset {
-  math::point2f_t original;  ///< Оригинальное положение.
-  math::point2f_t computed;  ///< Расчитанное положение.
-  bool dirty;  ///< Необходимость пересчета.
+  math::point2f_t original; /*< Оригинальное положение. */
+  math::point2f_t computed; /*< Расчитанное положение. */
+  bool dirty; /*< Необходимость пересчета. */
 
   ElementOffset()
       : original(math::point2f_zero)

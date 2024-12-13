@@ -35,6 +35,8 @@
 #include <sway/ui/widget/progress/progressmodes.hpp>
 #include <sway/ui/widget/radiobutton.hpp>
 #include <sway/ui/widget/radiobuttongroup.hpp>
+#include <sway/ui/widget/sizepolicy.hpp>
+#include <sway/ui/widget/sizepolicytypes.hpp>
 #include <sway/ui/widget/togglebutton.hpp>
 #include <sway/ui/widget/typedefs.hpp>
 #include <sway/ui/widget/widget.hpp>
