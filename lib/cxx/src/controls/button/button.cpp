@@ -37,7 +37,7 @@ void Button::updateState() {
 void Button::update() {
   textView_->setAlignment(math::Alignment::CENTER);
   textView_->setOffset(this->getOffset().computed);
-  textView_->updateOffset(nullptr);
+  // textView_->updateOffset(nullptr);
   textView_->setSize(this->getSize());
 
   std::cout << "label " << textView_->getOffset().computed << std::endl;

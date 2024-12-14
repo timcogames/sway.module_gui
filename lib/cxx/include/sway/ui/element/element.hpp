@@ -53,11 +53,11 @@ public:
 
 #pragma endregion
 
-  void updateOffset(ElementTypedefs::SharedPtr_t prev);
+  // void updateOffset(ElementTypedefs::SharedPtr_t prev);
 
-  void recursiveUpdate(ElementTypedefs::SharedPtr_t lhs, ElementTypedefs::SharedPtr_t rhs);
+  // void recursiveUpdate(ElementTypedefs::SharedPtr_t lhs, ElementTypedefs::SharedPtr_t rhs);
 
-  // PURE_VIRTUAL(void recursiveUpdateOffset(ElementTypedefs::SharedPtr_t lhs));
+  PURE_VIRTUAL(void recursiveUpdateItemOffset(const math::point2f_t offset));
 
   [[nodiscard]] auto getAreaHolder() const -> AreaHolder;
 

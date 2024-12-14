@@ -40,6 +40,8 @@ public:
 #pragma endregion
 
   void build();
+
+  MTHD_OVERRIDE(void recursiveUpdateItemOffset(const math::point2f_t offset));
 };
 
 NS_END()  // namespace ui

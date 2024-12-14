@@ -26,6 +26,8 @@ public:
 
 #pragma endregion
 
+  MTHD_OVERRIDE(void recursiveUpdateItemOffset(const math::point2f_t offset));
+
   void setMouseFilter(ois::MouseFilter::Enum filter) { mouseFilter_ = filter; }
 
   [[nodiscard]] auto getMouseFilter() const -> ois::MouseFilter::Enum { return mouseFilter_; }

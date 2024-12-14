@@ -48,12 +48,12 @@ void Draggable::update() {
           math::point2f_t(cursor.pnt.getX() - mouseDownOffset_.getX(), cursor.pnt.getY() - mouseDownOffset_.getY()));
       parent->getOffset().markAsDirty();
 
-      parent->updateOffset(nullptr);
+      // parent->updateOffset(nullptr);
 
       for (const auto &item : parent->getChildNodes()) {
         auto elem = std::static_pointer_cast<Element>(item);
         elem->getOffset().markAsDirty();
-        recursiveUpdate(nullptr, elem);
+        // recursiveUpdate(nullptr, elem);
       }
     }
   }
