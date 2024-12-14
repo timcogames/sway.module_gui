@@ -5,9 +5,11 @@
 #include <sway/math.hpp>
 #include <sway/ois.hpp>
 #include <sway/ui/_typedefs.hpp>
+#include <sway/ui/element/_typedefs.hpp>
+#include <sway/ui/element/element.hpp>
+#include <sway/ui/layout/layoutitem.hpp>
 #include <sway/ui/painter.hpp>
 #include <sway/ui/widget/appearance.hpp>
-#include <sway/ui/widget/element.hpp>
 #include <sway/ui/widget/typedefs.hpp>
 #include <sway/ui/widget/widgetevent.hpp>
 #include <sway/ui/widget/widgeteventtypes.hpp>
@@ -27,7 +29,7 @@ NS_BEGIN(ui)
 
 #define COL4F_PURPLE 0x9900FFFF
 
-class Widget : public Element {
+class Widget : public LayoutItem {
   DECLARE_PTR_ALIASES(Widget)
   DECLARE_EVENT(EVT_POINTER_ENTER, PointerEnter)
   DECLARE_EVENT(EVT_POINTER_LEAVE, PointerLeave)
@@ -50,8 +52,6 @@ public:
 
 #pragma region "Base virtual methods"
 
-  MTHD_VIRTUAL(void update());
-
   MTHD_VIRTUAL(void repaint(PainterTypedefs::SharedPtr_t painter));
 
   MTHD_VIRTUAL(void onCursorPointerEnter());
@@ -62,15 +62,9 @@ public:
 
 #pragma endregion
 
-  [[nodiscard]] auto hasRelated() -> bool;
+#pragma region "Overridden LayoutItem methods"
 
-#pragma region "Getters/Setters Size"
-
-  void setSize(const math::size2f_t &size);
-
-  void setSize(f32_t wdt, f32_t hgt);
-
-  [[nodiscard]] auto getSize() const -> math::size2f_t;
+  MTHD_VIRTUAL(void update());
 
 #pragma endregion
 
@@ -86,15 +80,10 @@ public:
 
   void setEventFilter(core::evts::EventHandler::Ptr_t hdl);
 
-  void setMouseFilter(ois::MouseFilter::Enum filter);
-
-  [[nodiscard]] auto getMouseFilter() const -> ois::MouseFilter::Enum;
-
   void setAlignment(math::Alignment alignment);
 
 protected:
   BuilderTypedefs::Ptr_t builder_;
-  ois::MouseFilter::Enum mouseFilter_;
   core::evts::EventHandler::Ptr_t eventFilter_;
   // math::rect4f_t innerRect_;  // wdt/hgt, padding
   // math::rect4f_t outerRect_;  // wdt/hgt, margin, border, padding

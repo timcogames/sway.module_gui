@@ -2,11 +2,11 @@
 #define SWAY_UI_WIDGET_MENU_HPP
 
 #include <sway/core.hpp>
+#include <sway/ui/layout/specs/linearlayout.hpp>
 #include <sway/ui/orientations.hpp>
 #include <sway/ui/painter.hpp>
 #include <sway/ui/widget/composites/menueventhandler.hpp>
 #include <sway/ui/widget/composites/menuitem.hpp>
-#include <sway/ui/widget/layout/linearlayout.hpp>
 #include <sway/ui/widget/typedefs.hpp>
 
 #include <memory>
@@ -16,7 +16,7 @@
 NS_BEGIN_SWAY()
 NS_BEGIN(ui)
 
-class Menu : public LinearLayout {
+class Menu : public Widget {
   DECLARE_PTR_ALIASES(Menu)
 
 public:
@@ -30,9 +30,9 @@ public:
 
 #pragma region "Overridden Widget methods"
 
-  MTHD_OVERRIDE(void update());
+  // MTHD_OVERRIDE(void update());
 
-  MTHD_OVERRIDE(void repaint(PainterTypedefs::SharedPtr_t painter));
+  // MTHD_OVERRIDE(void repaint(PainterTypedefs::SharedPtr_t painter));
 
 #pragma endregion
 

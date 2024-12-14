@@ -12,7 +12,7 @@ NS_BEGIN(ui)
 MenuEventHandler::MenuEventHandler(Menu *menu)
     : core::evts::EventHandler()
     , menu_(menu) {
-  scheme_ = MenuControlScheme::reset(menu_->getOrientation());
+  scheme_ = MenuControlScheme::reset(/*menu_->getOrientation()*/ Orientation::HORZ);
 }
 
 auto MenuEventHandler::invoke(const core::foundation::Event::UniquePtr_t &evt) -> bool {

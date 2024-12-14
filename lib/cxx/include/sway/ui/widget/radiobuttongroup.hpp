@@ -2,9 +2,9 @@
 #define SWAY_UI_WIDGET_RADIOBUTTONGROUP_HPP
 
 #include <sway/core.hpp>
+#include <sway/ui/layout/specs/linearlayout.hpp>
 #include <sway/ui/orientations.hpp>
 #include <sway/ui/painter.hpp>
-#include <sway/ui/widget/layout/linearlayout.hpp>
 
 #include <memory>
 #include <string>

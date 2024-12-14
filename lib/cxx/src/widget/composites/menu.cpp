@@ -1,11 +1,11 @@
 #include <sway/core.hpp>
 #include <sway/ui/builder.hpp>
+#include <sway/ui/layout/specs/linearlayout.hpp>
 #include <sway/ui/orientations.hpp>
 #include <sway/ui/painter.hpp>
 #include <sway/ui/widget/composites/menu.hpp>
 #include <sway/ui/widget/composites/menueventhandler.hpp>
 #include <sway/ui/widget/composites/menuitem.hpp>
-#include <sway/ui/widget/layout/linearlayout.hpp>
 
 #include <memory>
 #include <string>
@@ -15,7 +15,7 @@ NS_BEGIN_SWAY()
 NS_BEGIN(ui)
 
 Menu::Menu(BuilderTypedefs::Ptr_t builder, Orientation orien)
-    : LinearLayout(builder, orien) {
+    : Widget(builder) {
   subscriber_ = this->builder_->getEventBus()->subscribe(new MenuEventHandler(this));
 }
 
@@ -29,9 +29,9 @@ void Menu::addItem(const std::string &text) {
   this->addChildNode(item);
 }
 
-void Menu::update() {}
+// void Menu::update() {}
 
-void Menu::repaint(PainterTypedefs::SharedPtr_t painter) {}
+// void Menu::repaint(PainterTypedefs::SharedPtr_t painter) {}
 
 NS_END()  // namespace ui
 NS_END()  // namespace sway

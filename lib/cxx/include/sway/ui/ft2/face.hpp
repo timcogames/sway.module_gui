@@ -19,15 +19,9 @@ public:
 
   ~Face();
 
-  [[nodiscard]]
-  auto data() const -> FT_Face {
-    return face_;
-  }
+  [[nodiscard]] auto data() const -> FT_Face { return face_; }
 
-  [[nodiscard]]
-  auto getBitmap() const -> FT_Bitmap {
-    return face_->glyph->bitmap;
-  }
+  [[nodiscard]] auto getBitmap() const -> FT_Bitmap { return face_->glyph->bitmap; }
 
 public:
   FT_Face face_;

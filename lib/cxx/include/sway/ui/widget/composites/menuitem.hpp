@@ -4,6 +4,7 @@
 #include <sway/core.hpp>
 #include <sway/math.hpp>
 #include <sway/ui/_typedefs.hpp>
+#include <sway/ui/controls/button/_typedefs.hpp>
 #include <sway/ui/controls/button/button.hpp>
 #include <sway/ui/painter.hpp>
 #include <sway/ui/widget/composites/item.hpp>
@@ -42,7 +43,7 @@ public:
   void focusLost();
 
 private:
-  Button::SharedPtr_t button_;
+  ButtonTypedefs::SharedPtr_t button_;
 };
 
 NS_END()  // namespace ui

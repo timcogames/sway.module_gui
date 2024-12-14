@@ -1,8 +1,8 @@
+#include <sway/ui/area/area.hpp>
+#include <sway/ui/area/areatypes.hpp>
+#include <sway/ui/area/specs/boxarea.hpp>
+#include <sway/ui/area/specs/contentarea.hpp>
 #include <sway/ui/builder.hpp>
-#include <sway/ui/widget/area.hpp>
-#include <sway/ui/widget/areas/boxarea.hpp>
-#include <sway/ui/widget/areas/contentarea.hpp>
-#include <sway/ui/widget/areatypes.hpp>
 #include <sway/ui/widget/widget.hpp>
 
 NS_BEGIN_SWAY()
@@ -11,7 +11,6 @@ NS_BEGIN(ui)
 Widget::Widget(BuilderTypedefs::Ptr_t builder)
     : builder_(builder)
     , eventFilter_(nullptr)
-    , mouseFilter_(ois::MouseFilter::Enum::STOP)
     , containsPointer_(false)
     , needsRepainting_(false) {
   setBackgroundColor(COL4F_GRAY1);
@@ -69,26 +68,6 @@ void Widget::onMouseClick(u32_t state) {
   emit(EVT_MOUSE_CLICKED, evt, [&](core::foundation::EventHandler::Ptr_t) { return true; });
 }
 
-auto Widget::hasRelated() -> bool {
-  auto parentOpt = this->getParentNode();
-  if (!parentOpt.has_value()) {
-    return false;
-  }
-
-  auto parent = parentOpt.value();
-  return (parent->getNodeIdx().chainEqual(std::vector<i32_t>({-1}))) ? false : true;
-}
-
-void Widget::setSize(const math::size2f_t &size) {
-  this->getAreaHolder().getArea<AreaType::IDX_CNT>().value()->setSize(size);
-}
-
-void Widget::setSize(f32_t wdt, f32_t hgt) { setSize(math::size2f_t(wdt, hgt)); }
-
-auto Widget::getSize() const -> math::size2f_t {
-  return this->getAreaHolder().getArea<AreaType::IDX_CNT>().value()->getSize();
-}
-
 // void Widget::setMargin(f32_t mrg) {
 //   this->getAreaHolder().setEdge<AreaType::IDX_MRG, math::RectEdge::IDX_L>(mrg);
 //   this->getAreaHolder().setEdge<AreaType::IDX_MRG, math::RectEdge::IDX_R>(mrg);
@@ -96,7 +75,7 @@ auto Widget::getSize() const -> math::size2f_t {
 //   this->getAreaHolder().setEdge<AreaType::IDX_MRG, math::RectEdge::IDX_B>(mrg);
 // }
 
-// auto Widget::getMargin() const -> BoxArea::SharedPtr_t {
+// auto Widget::getMargin() const -> BoxAreaTypedefs::SharedPtr_t {
 //   return this->areaHolder_.getArea<AreaType::IDX_MRG>().value();
 // }
 
@@ -143,10 +122,6 @@ auto Widget::getChildAtPoint(const math::point2f_t &pnt) -> Widget::Ptr_t {
 }
 
 void Widget::setEventFilter(core::evts::EventHandler::Ptr_t hdl) { eventFilter_ = hdl; }
-
-void Widget::setMouseFilter(ois::MouseFilter::Enum filter) { mouseFilter_ = filter; }
-
-auto Widget::getMouseFilter() const -> ois::MouseFilter::Enum { return mouseFilter_; }
 
 void Widget::setAlignment(math::Alignment alignment) { alignment_ = alignment; }
 

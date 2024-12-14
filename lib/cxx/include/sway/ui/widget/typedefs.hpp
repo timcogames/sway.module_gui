@@ -2,27 +2,12 @@
 #define SWAY_UI_WIDGET_TYPEDEFS_HPP
 
 #include <sway/core.hpp>
-#include <sway/ui/widget/areatypes.hpp>
-
-#include <array>
-#include <type_traits>  // std::conditional
 
 NS_BEGIN_SWAY()
 NS_BEGIN(ui)
 
-DECLARE_PTR_TYPES(Area)
-DECLARE_PTR_TYPES(BoxArea)
-DECLARE_PTR_TYPES(ContentArea)
 DECLARE_PTR_TYPES(Element)
-DECLARE_PTR_TYPES(ElementAreaHolder)
-
-using AreaHolder_t = std::array<AreaSharedPtr_t, NUM_OF_AREAS>;
-
-template <AreaType TYPE>
-using OutputAreaType_t = typename std::conditional<TYPE == AreaType::IDX_CNT, ContentArea, BoxArea>::type;
-
 DECLARE_PTR_TYPES(Widget)
-DECLARE_PTR_TYPES(Label)
 DECLARE_PTR_TYPES(Button)
 DECLARE_PTR_TYPES(Popup)
 DECLARE_PTR_TYPES(Dialog)
