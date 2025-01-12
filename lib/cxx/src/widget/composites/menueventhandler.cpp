@@ -6,16 +6,15 @@
 
 #include <memory>
 
-NS_BEGIN_SWAY()
-NS_BEGIN(ui)
+namespace sway::ui {
 
 MenuEventHandler::MenuEventHandler(Menu *menu)
-    : core::evts::EventHandler()
+    : core::EventHandler(nullptr)
     , menu_(menu) {
   scheme_ = MenuControlScheme::reset(/*menu_->getOrientation()*/ Orientation::HORZ);
 }
 
-auto MenuEventHandler::invoke(const core::foundation::Event::UniquePtr_t &evt) -> bool {
+auto MenuEventHandler::invoke(core::EventTypedefs::UniquePtr_t &&evt) -> bool {
   if (ois::InputEventUtil::isKeyEvent(evt)) {
     onKeyEvent(ois::InputEventUtil::asKeyEvent(evt));
   }
@@ -23,10 +22,10 @@ auto MenuEventHandler::invoke(const core::foundation::Event::UniquePtr_t &evt) -
   return true;
 }
 
-void MenuEventHandler::onKeyEvent(ois::KeyEvent::Ptr_t evt) {
+void MenuEventHandler::onKeyEvent(ois::typedefs::KeyEventPtr_t evt) {
   auto evtData = evt->getConcreteData<ois::KeyEventData>();
 
-  if (evtData.state == core::detail::toBase(ois::InputActionState::PRESSED)) {
+  if (evtData.state == core::toBase(ois::InputActionState::PRESSED)) {
     if (scheme_.prevItem.button->equal(evtData.keyCode)) {
       std::cout << scheme_.prevItem.description.c_str() << std::endl;
     }
@@ -41,5 +40,4 @@ void MenuEventHandler::onKeyEvent(ois::KeyEvent::Ptr_t evt) {
   }
 }
 
-NS_END()  // namespace ui
-NS_END()  // namespace sway
+}  // namespace sway::ui

@@ -1,8 +1,7 @@
 #include <sway/ui/ft2/errormacros.hpp>
 #include <sway/ui/ft2/face.hpp>
 
-NS_BEGIN_SWAY()
-NS_BEGIN(ui)
+namespace sway::ui {
 NS_BEGIN(ft2)
 
 Face::Face(FT_Library lib, lpcstr_t filepath, u32_t idx)
@@ -29,5 +28,4 @@ Face::~Face() {
 }
 
 NS_END()  // namespace ft2
-NS_END()  // namespace ui
-NS_END()  // namespace sway
+}  // namespace sway::ui

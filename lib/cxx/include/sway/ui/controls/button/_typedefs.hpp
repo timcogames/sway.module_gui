@@ -5,15 +5,19 @@
 
 #include <array>
 
-NS_BEGIN_SWAY()
-NS_BEGIN(ui)
+namespace sway::ui {
 
 class Button;
 namespace ButtonTypedefs {
 using SharedPtr_t = std::shared_ptr<Button>;
 }  // namespace ButtonTypedefs
 
-NS_END()  // namespace ui
-NS_END()  // namespace sway
+class RadioButton;
+namespace RadioButtonTypedefs {
+using SharedPtr_t = std::shared_ptr<RadioButton>;
+using OptionalSharedPtr_t = std::optional<SharedPtr_t>;
+}  // namespace RadioButtonTypedefs
+
+}  // namespace sway::ui
 
 #endif  // SWAY_UI_BUTTON_TYPEDEFS_HPP

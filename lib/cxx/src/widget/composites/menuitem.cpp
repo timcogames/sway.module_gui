@@ -1,7 +1,6 @@
 #include <sway/ui/widget/composites/menuitem.hpp>
 
-NS_BEGIN_SWAY()
-NS_BEGIN(ui)
+namespace sway::ui {
 
 MenuItem::MenuItem(BuilderTypedefs::Ptr_t builder, const std::string &text)
     : Item(builder) {
@@ -43,5 +42,4 @@ void MenuItem::focusLost() {
   this->needsRepainting_ = true;
 }
 
-NS_END()  // namespace ui
-NS_END()  // namespace sway
+}  // namespace sway::ui

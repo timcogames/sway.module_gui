@@ -3,16 +3,15 @@
 
 #include <sway/core.hpp>
 
-NS_BEGIN_SWAY()
-NS_BEGIN(ui)
+namespace sway::ui {
 
 class Element;
 namespace ElementTypedefs {
 using Ptr_t = Element *;
 using SharedPtr_t = std::shared_ptr<Element>;
+using UnderPointer_t = Ptr_t;
 }  // namespace ElementTypedefs
 
-NS_END()  // namespace ui
-NS_END()  // namespace sway
+}  // namespace sway::ui
 
 #endif  // SWAY_UI_ELEMENT_TYPEDEFS_HPP

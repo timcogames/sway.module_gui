@@ -7,8 +7,7 @@
 #include <array>
 #include <type_traits>  // std::conditional
 
-NS_BEGIN_SWAY()
-NS_BEGIN(ui)
+namespace sway::ui {
 
 class Area;
 namespace AreaTypedefs {
@@ -30,7 +29,6 @@ using SharedPtr_t = std::shared_ptr<BoxArea>;
 template <AreaType TYPE>
 using OutputAreaType_t = typename std::conditional<TYPE == AreaType::IDX_CNT, ContentArea, BoxArea>::type;
 
-NS_END()  // namespace ui
-NS_END()  // namespace sway
+}  // namespace sway::ui
 
 #endif  // SWAY_UI_AREA_TYPEDEFS_HPP

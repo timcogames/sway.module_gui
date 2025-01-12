@@ -12,8 +12,7 @@
 #include <optional>
 #include <unordered_map>
 
-NS_BEGIN_SWAY()
-NS_BEGIN(ui)
+namespace sway::ui {
 NS_BEGIN(ft2)
 
 #define NUM_GREYMAP_CMPTS 2
@@ -176,7 +175,6 @@ public:
 };
 
 NS_END()  // namespace ft2
-NS_END()  // namespace ui
-NS_END()  // namespace sway
+}  // namespace sway::ui
 
 #endif  // SWAY_UI_FT2_FONT_HPP

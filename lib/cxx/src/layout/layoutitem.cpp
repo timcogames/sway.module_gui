@@ -1,10 +1,10 @@
+#include <sway/core/container/nodeutil.hpp>
 #include <sway/ui/layout/layoutitem.hpp>
 
-NS_BEGIN_SWAY()
-NS_BEGIN(ui)
+namespace sway::ui {
 
 LayoutItem::LayoutItem()
-    : mouseFilter_(ois::MouseFilter::Enum::STOP) {}
+    : mouseFilter_(ois::MouseFilter::STOP) {}
 
 void LayoutItem::recursiveUpdateItemOffset(const math::point2f_t parentOffset) {
   auto elementOffset = math::point2f_t(
@@ -16,12 +16,11 @@ void LayoutItem::recursiveUpdateItemOffset(const math::point2f_t parentOffset) {
       continue;
     }
 
-    auto element = NodeUtil::cast<Element>(node.value());
+    auto element = core::NodeUtil::cast<Element>(node.value());
     element->getOffset().computed = math::point2f_t(
         elementOffset.getX() /* + item->getMargin().getX() */, elementOffset.getY() /* + item->getMargin().getY() */);
     element->recursiveUpdateItemOffset(parentOffset);
   }
 }
 
-NS_END()  // namespace ui
-NS_END()  // namespace sway
+}  // namespace sway::ui

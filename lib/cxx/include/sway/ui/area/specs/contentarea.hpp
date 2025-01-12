@@ -11,17 +11,19 @@
 #include <iostream>  // std::ostream
 #include <memory>
 
-NS_BEGIN_SWAY()
-NS_BEGIN(ui)
+namespace sway::ui {
 
 class ContentArea : public Area {
 public:
-#pragma region "Ctors/Dtor"
+#pragma region "Constructor(s) & Destructor"
+  /** \~english @name Constructor(s) & Destructor */ /** \~russian @name Конструктор(ы) и Деструктор */
+  /** @{ */
 
   ContentArea(const math::size2f_t &size = math::size2f_zero);
 
-  DTOR_VIRTUAL_DEFAULT(ContentArea);
+  virtual ~ContentArea() = default;
 
+  /** @} */
 #pragma endregion
 
 #pragma region "Overridden Area methods"
@@ -45,7 +47,6 @@ private:
   math::size2f_t size_;
 };
 
-NS_END()  // namespace ui
-NS_END()  // namespace sway
+}  // namespace sway::ui
 
 #endif  // SWAY_UI_AREA_CONTENTAREA_HPP

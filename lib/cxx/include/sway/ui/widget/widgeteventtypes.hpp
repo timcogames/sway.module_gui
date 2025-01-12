@@ -3,12 +3,10 @@
 
 #include <sway/core.hpp>
 
-NS_BEGIN_SWAY()
-NS_BEGIN(ui)
+namespace sway::ui {
 
 enum class WidgetEventType : u32_t { MOUSE_OVER = 50, MOUSE_OUT, POINTER_ENTER, POINTER_LEAVE };
 
-NS_END()  // namespace ui
-NS_END()  // namespace sway
+}  // namespace sway::ui
 
 #endif  // SWAY_UI_WIDGET_WIDGETEVENTTYPES_HPP

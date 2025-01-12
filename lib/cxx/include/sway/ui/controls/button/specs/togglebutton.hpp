@@ -1,21 +1,23 @@
-#ifndef SWAY_UI_WIDGET_TOGGLEBUTTON_HPP
-#define SWAY_UI_WIDGET_TOGGLEBUTTON_HPP
+#ifndef SWAY_UI_TOGGLEBUTTON_HPP
+#define SWAY_UI_TOGGLEBUTTON_HPP
 
 #include <sway/core.hpp>
 #include <sway/ui/controls/button/button.hpp>
 #include <sway/ui/painter.hpp>
 
-NS_BEGIN_SWAY()
-NS_BEGIN(ui)
+namespace sway::ui {
 
 class ToggleButton : public Button {
 public:
-#pragma region "Ctors/Dtor"
+#pragma region "Constructor(s) & Destructor"
+  /** \~english @name Constructor(s) & Destructor */ /** \~russian @name Конструктор(ы) и Деструктор */
+  /** @{ */
 
   ToggleButton(BuilderTypedefs::Ptr_t builder, const std::string &text);
 
-  DTOR_VIRTUAL_DEFAULT(ToggleButton);
+  virtual ~ToggleButton() = default;
 
+  /** @} */
 #pragma endregion
 
 #pragma region "Overridden Button methods"
@@ -26,10 +28,7 @@ public:
 
 #pragma endregion
 
-  [[nodiscard]]
-  auto isChecked() const -> bool {
-    return checked_;
-  }
+  [[nodiscard]] auto isChecked() const -> bool { return checked_; }
 
   void setChecked(bool val) { checked_ = val; }
 
@@ -37,7 +36,6 @@ protected:
   bool checked_;
 };
 
-NS_END()  // namespace ui
-NS_END()  // namespace sway
+}  // namespace sway::ui
 
-#endif  // SWAY_UI_WIDGET_TOGGLEBUTTON_HPP
+#endif  // SWAY_UI_TOGGLEBUTTON_HPP

@@ -6,8 +6,7 @@
 #include <sway/ui/widget/sizepolicytypes.hpp>
 #include <sway/ui/widget/typedefs.hpp>
 
-NS_BEGIN_SWAY()
-NS_BEGIN(ui)
+namespace sway::ui {
 
 struct SizePolicy {
   math::size2f_t min; /*< Минимальный размер. */
@@ -22,7 +21,6 @@ struct SizePolicy {
       , vertType(SizePolicyType::PREFERRED) {}
 };
 
-NS_END()  // namespace ui
-NS_END()  // namespace sway
+}  // namespace sway::ui
 
 #endif  // SWAY_UI_WIDGETS_SIZEPOLICY_HPP

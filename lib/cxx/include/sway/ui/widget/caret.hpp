@@ -5,8 +5,7 @@
 #include <sway/math.hpp>
 #include <sway/ui/widget/caretselectionrange.hpp>
 
-NS_BEGIN_SWAY()
-NS_BEGIN(ui)
+namespace sway::ui {
 
 DECLARE_ENUM(TextModeType, VIEW, EDIT, EXPR)
 
@@ -16,7 +15,6 @@ struct Caret {
   bool visibled; /*< Видимость курсора. */
 };
 
-NS_END()  // namespace ui
-NS_END()  // namespace sway
+}  // namespace sway::ui
 
 #endif  // SWAY_UI_WIDGETS_CARET_HPP

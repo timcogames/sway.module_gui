@@ -8,26 +8,24 @@
 
 #include <memory>
 
-NS_BEGIN_SWAY()
-NS_BEGIN(ui)
+namespace sway::ui {
 
 class Menu;
 
-struct MenuEventHandler : public core::evts::EventHandler {
+struct MenuEventHandler : public core::EventHandler {
   MenuEventHandler(Menu *menu);
 
   virtual ~MenuEventHandler() override = default;
 
-  MTHD_OVERRIDE(auto invoke(const core::foundation::Event::UniquePtr_t &evt) -> bool) final;
+  virtual auto invoke(core::EventTypedefs::UniquePtr_t &&evt) -> bool;
 
-  void onKeyEvent(ois::KeyEvent::Ptr_t evt);
+  void onKeyEvent(ois::typedefs::KeyEventPtr_t evt);
 
 private:
   Menu *menu_;
   MenuControlScheme scheme_;
 };
 
-NS_END()  // namespace ui
-NS_END()  // namespace sway
+}  // namespace sway::ui
 
 #endif  // SWAY_UI_WIDGET_MENUEVENTHANDLER_HPP

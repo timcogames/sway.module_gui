@@ -3,12 +3,10 @@
 
 #include <sway/core.hpp>
 
-NS_BEGIN_SWAY()
-NS_BEGIN(ui)
+namespace sway::ui {
 
 DECLARE_ENUM(ProgressMode, FRACTION, PERCENTAGE);
 
-NS_END()  // namespace ui
-NS_END()  // namespace sway
+}  // namespace sway::ui
 
 #endif  // SWAY_UI_WIDGET_PROGRESSMODES_HPP

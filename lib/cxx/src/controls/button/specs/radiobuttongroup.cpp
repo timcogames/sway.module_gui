@@ -1,9 +1,9 @@
 #include <sway/ui/builder.hpp>
-#include <sway/ui/widget/radiobutton.hpp>
-#include <sway/ui/widget/radiobuttongroup.hpp>
+#include <sway/ui/controls/button/specs/radiobutton.hpp>
+#include <sway/ui/controls/button/specs/radiobuttongroup.hpp>
+#include <sway/ui/controls/button/specs/radiobuttongroupchangeeventdata.hpp>
 
-NS_BEGIN_SWAY()
-NS_BEGIN(ui)
+namespace sway::ui {
 
 RadioButtonGroup::RadioButtonGroup(BuilderTypedefs::Ptr_t builder, Orientation orien)
     : LinearLayout(builder, orien)
@@ -17,16 +17,16 @@ void RadioButtonGroup::deselect() {
   }
 }
 
-void RadioButtonGroup::handleAddNode(core::foundation::EventPtr_t evt) {
+auto RadioButtonGroup::handleAddNode(const core::EventTypedefs::UniquePtr_t &evt) -> bool {
   auto self = getSharedFrom<RadioButtonGroup>(this);
 
-  auto parentNodeIdx = self->getNodeIdx();
-  auto childNodeIdx = static_cast<core::container::NodeEventData *>(evt->data())->nodeidx;
+  auto parentNodeIdx = self->getNodeIndex();
+  auto childNodeIdx = static_cast<core::NodeEventData *>(evt->getData())->nodeidx;
 
-  auto childOpt = self->getChildAt(childNodeIdx.getIdxAt(
-      core::container::NodeIdx::getMatchDepth(parentNodeIdx.getChain(), childNodeIdx.getChain())));
+  auto childOpt = self->getChildAt(
+      childNodeIdx.getIndexAt(core::NodeIndex::getMatchDepth(parentNodeIdx.getChain(), childNodeIdx.getChain())));
   if (!childOpt.has_value()) {
-    return;
+    return false;
   }
 
   auto child = std::static_pointer_cast<RadioButton>(childOpt.value());
@@ -35,13 +35,14 @@ void RadioButtonGroup::handleAddNode(core::foundation::EventPtr_t evt) {
   }
 
   child->subscribe(child.get(), "MouseClicked", EVENT_HANDLER(RadioButtonGroup, handleClickedEvent));
+  return true;
 }
 
-void RadioButtonGroup::handleClickedEvent(core::foundation::EventPtr_t evt) {
+auto RadioButtonGroup::handleClickedEvent(const core::EventTypedefs::UniquePtr_t &evt) -> bool {
   for (auto const &child : this->getChildNodes()) {
     auto radioBtn = std::static_pointer_cast<RadioButton>(child);
-    auto radioBtnIdx = radioBtn->getNodeIdx();
-    auto radioBtnEvtData = static_cast<MouseClickEventData *>(evt->data());
+    auto radioBtnIdx = radioBtn->getNodeIndex();
+    auto radioBtnEvtData = static_cast<MouseClickEventData *>(evt->getData());
 
     radioBtn->setChecked(false);
 
@@ -50,12 +51,13 @@ void RadioButtonGroup::handleClickedEvent(core::foundation::EventPtr_t evt) {
       selected_ = radioBtn;
 
       auto *evtdata = new RadioButtonGroupChangeEventData();
-      evtdata->nodeidx = selected_.value()->getNodeIdx();
-      emit(EVT_CHANGED, new RadioButtonGroupChangedEvent(0, std::move(evtdata)),
-          [&](core::foundation::EventHandler *) { return true; });
+      evtdata->nodeidx = selected_.value()->getNodeIndex();
+      emit(EVT_CHANGED, std::make_unique<RadioButtonGroupChangedEvent>(0, std::move(evtdata)),
+          [&](core::EventHandler *) { return true; });
     }
   }
+
+  return true;
 }
 
-NS_END()  // namespace ui
-NS_END()  // namespace sway
+}  // namespace sway::ui

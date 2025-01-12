@@ -4,15 +4,13 @@
 #include <sway/core.hpp>
 #include <sway/math.hpp>
 
-NS_BEGIN_SWAY()
-NS_BEGIN(ui)
+namespace sway::ui {
 
 struct Cursor {
   math::point2f_t pnt;
   bool visible;
 };
 
-NS_END()  // namespace ui
-NS_END()  // namespace sway
+}  // namespace sway::ui
 
 #endif  // SWAY_UI_CURSOR_HPP

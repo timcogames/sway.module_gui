@@ -3,8 +3,7 @@
 
 #include <algorithm>  // std::max
 
-NS_BEGIN_SWAY()
-NS_BEGIN(ui)
+namespace sway::ui {
 NS_BEGIN(ft2)
 
 Font::Font(std::shared_ptr<Face> face, math::size2i_t atlasSize, math::size2i_t atlasMarginSize)
@@ -63,8 +62,8 @@ void Font::create(lpcstr_t charcodes, bool hinted, bool antialiased) {
 auto Font::computeMaxSize_(FT_Bitmap *bitmap, math::size2i_t size) -> math::size2i_t {
   // clang-format off
   return {
-    std::max<i32_t>(size.getW(), math::util::powerOf2(bitmap->width)),
-    std::max<i32_t>(size.getH(), math::util::powerOf2(bitmap->rows))
+    std::max<i32_t>(size.getW(), math::powerOf2(bitmap->width)),
+    std::max<i32_t>(size.getH(), math::powerOf2(bitmap->rows))
   };  // clang-format on
 }
 
@@ -125,5 +124,4 @@ auto Font::getCharMetrics(FT_GlyphSlot slot) -> CharInfo {
 }
 
 NS_END()  // namespace ft2
-NS_END()  // namespace ui
-NS_END()  // namespace sway
+}  // namespace sway::ui

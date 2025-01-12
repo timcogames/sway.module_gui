@@ -17,8 +17,7 @@
 constexpr std::size_t MAX_UI_RECT = {20};
 constexpr std::size_t MAX_UI_TEXT = {100};
 
-NS_BEGIN_SWAY()
-NS_BEGIN(ui)
+namespace sway::ui {
 
 enum class GeometryBatchChunkType : u32_t { RECT, TEXT, IMG };
 
@@ -52,21 +51,24 @@ class Painter : public render::RenderComponent, public render::FinalUpdatable {
   DECLARE_CLASS_METADATA(Painter, RenderComponent)
 
 public:
-#pragma region "Ctors/Dtor"
+#pragma region "Constructor(s) & Destructor"
+  /** \~english @name Constructor(s) & Destructor */ /** \~russian @name Конструктор(ы) и Деструктор */
+  /** @{ */
 
   Painter();
 
-  DTOR(Painter);
+  ~Painter();
 
+  /** @} */
 #pragma endregion
 
-  void initialize(ft2::Font::SharedPtr_t font, render::RenderSubsystem::SharedPtr_t subsys,
+  void initialize(ft2::Font::SharedPtr_t font, render::typedefs::RenderSubsystemSharedPtr_t subsys,
       render::MaterialManagerTypedefs::SharedPtr_t materialMngr, std::shared_ptr<rms::ImageResourceManager> imgResMngr,
       std::shared_ptr<rms::GLSLResourceManager> glslResMngr);
 
-  void createRectGeom(render::RenderSubsystem::SharedPtr_t subsys, u32_t geomIdx);
+  void createRectGeom(render::typedefs::RenderSubsystemSharedPtr_t subsys, u32_t geomIdx);
 
-  void createTextGeom(render::RenderSubsystem::SharedPtr_t subsys, u32_t geomIdx);
+  void createTextGeom(render::typedefs::RenderSubsystemSharedPtr_t subsys, u32_t geomIdx);
 
   void drawRect(f32_t x, f32_t y, f32_t w, f32_t h, math::col4f_t col, f32_t zindex = 0.0F);
 
@@ -94,7 +96,7 @@ public:
 
   auto getDefaultFont() -> ft2::Font::SharedPtr_t { return font_; }
 
-  void setEnvironment(const core::misc::Dictionary &env) { environment_ = env; }
+  void setEnvironment(const core::Dictionary &env) { environment_ = env; }
 
   [[nodiscard]] auto getScreenWdt() -> f32_t { return (f32_t)environment_.getIntegerOrDefault("screen_wdt", 800); }
 
@@ -107,9 +109,9 @@ public:
   [[nodiscard]] auto getScreenHalfHgt() -> f32_t { return getScreenHgt() / 2.0F; }
 
 private:
-  core::misc::Dictionary environment_;
-  render::RenderQueue::SharedPtr_t queue_;
-  render::RenderSubqueue::SharedPtr_t subqueue_;
+  core::Dictionary environment_;
+  render::typedefs::RenderQueueSharedPtr_t queue_;
+  render::typedefs::RenderSubqueueSharedPtr_t subqueue_;
   render::GeomBuilderTypedefs::SharedPtr_t geomBuilder_;
 
   render::MaterialTypedefs::SharedPtr_t rectMtrl_;
@@ -133,7 +135,6 @@ private:
   int nextTextIdx_;
 };
 
-NS_END()  // namespace ui
-NS_END()  // namespace sway
+}  // namespace sway::ui
 
 #endif  // SWAY_UI_PAINTER_HPP

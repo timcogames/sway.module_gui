@@ -5,17 +5,19 @@
 #include <sway/ui/widget/progress/progressmodes.hpp>
 #include <sway/ui/widget/widget.hpp>
 
-NS_BEGIN_SWAY()
-NS_BEGIN(ui)
+namespace sway::ui {
 
 class ProgressBar : public Widget {
 public:
-#pragma region "Ctors/Dtor"
+#pragma region "Constructor(s) & Destructor"
+  /** \~english @name Constructor(s) & Destructor */ /** \~russian @name Конструктор(ы) и Деструктор */
+  /** @{ */
 
   ProgressBar(BuilderTypedefs::Ptr_t builder);
 
-  DTOR_VIRTUAL_DEFAULT(ProgressBar);
+  virtual ~ProgressBar() = default;
 
+  /** @} */
 #pragma endregion
 
 #pragma region "Overridden Widget methods"
@@ -44,7 +46,6 @@ private:
   f32_t total_;
 };
 
-NS_END()  // namespace ui
-NS_END()  // namespace sway
+}  // namespace sway::ui
 
 #endif  // SWAY_UI_WIDGET_PROGRESSBAR_HPP

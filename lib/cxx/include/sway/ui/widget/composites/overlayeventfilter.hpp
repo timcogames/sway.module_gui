@@ -6,27 +6,29 @@
 #include <memory>
 #include <string>
 
-NS_BEGIN_SWAY()
-NS_BEGIN(ui)
+namespace sway::ui {
 
-class OverlayEventFilter : public core::evts::EventHandler {
+class OverlayEventFilter : public core::EventHandler {
 public:
-#pragma region "Ctors/Dtor"
+#pragma region "Constructor(s) & Destructor"
+  /** \~english @name Constructor(s) & Destructor */ /** \~russian @name Конструктор(ы) и Деструктор */
+  /** @{ */
 
-  OverlayEventFilter() {}
+  OverlayEventFilter()
+      : core::EventHandler(nullptr) {}
 
-  DTOR_VIRTUAL_DEFAULT(OverlayEventFilter);
+  virtual ~OverlayEventFilter() = default;
 
+  /** @} */
 #pragma endregion
 
 #pragma region "Overridden EventHandler methods"
 
-  MTHD_OVERRIDE(auto invoke(const core::foundation::Event::UniquePtr_t &evt) -> bool) final { return true; }
+  MTHD_OVERRIDE(auto invoke( core::EventTypedefs::UniquePtr_t &&evt) -> bool) final { return true; }
 
 #pragma endregion
 };
 
-NS_END()  // namespace ui
-NS_END()  // namespace sway
+}  // namespace sway::ui
 
 #endif  // SWAY_UI_WIDGET_OVERLAYEVENTFILTER_HPP

@@ -2,8 +2,7 @@
 #include <sway/ui/ft2/fontshader.hpp>
 #include <sway/ui/painter.hpp>
 
-NS_BEGIN_SWAY()
-NS_BEGIN(ui)
+namespace sway::ui {
 
 static int maxCharTall = 0;
 static math::point2i_t pos;
@@ -13,13 +12,13 @@ Painter::Painter()
 
 Painter::~Painter() {}
 
-void Painter::initialize(ft2::Font::SharedPtr_t font, render::RenderSubsystem::SharedPtr_t subsys,
+void Painter::initialize(ft2::Font::SharedPtr_t font, render::typedefs::RenderSubsystemSharedPtr_t subsys,
     render::MaterialManagerTypedefs::SharedPtr_t materialMngr, std::shared_ptr<rms::ImageResourceManager> imgResMngr,
     std::shared_ptr<rms::GLSLResourceManager> glslResMngr) {
 
   font_ = font;
 
-  subqueue_ = subsys->getQueueByPriority(core::detail::toBase(core::intrusive::Priority::Enum::LOW))
+  subqueue_ = subsys->getQueueByPriority(core::toBase(core::Priority::Enum::LOW))
                   ->getSubqueues(render::RenderSubqueueGroup::OPAQUE)[0];
 
   render::ShaderTypedefs::SourcePair_t shaderSources;
@@ -291,7 +290,7 @@ void Painter::onUpdate(math::mat4f_t tfrm, math::mat4f_t proj, math::mat4f_t vie
 
   render::pipeline::ForwardRenderCommand rectCmd;
   if (rectGeom_ != nullptr) {
-    rectCmd.stage = 0;  // core::detail::toBase(render::RenderStage::IDX_COLOR);
+    rectCmd.stage = 0;  // core::toBase(render::RenderStage::IDX_COLOR);
     rectCmd.blendDesc.enabled = true;
     rectCmd.blendDesc.mask = false;
     rectCmd.blendDesc.src = gapi::BlendFn::Enum::SRC_ALPHA;
@@ -332,7 +331,7 @@ void Painter::onUpdate(math::mat4f_t tfrm, math::mat4f_t proj, math::mat4f_t vie
 
   render::pipeline::ForwardRenderCommand textCmd;
   if (textGeom_ != nullptr) {
-    textCmd.stage = 0;  // core::detail::toBase(render::RenderStage::IDX_COLOR);
+    textCmd.stage = 0;  // core::toBase(render::RenderStage::IDX_COLOR);
     textCmd.blendDesc.enabled = true;
     textCmd.blendDesc.mask = false;
     textCmd.blendDesc.src = gapi::BlendFn::Enum::SRC_ALPHA;
@@ -402,5 +401,4 @@ void Painter::finalUpdate() {
   }
 }
 
-NS_END()  // namespace ui
-NS_END()  // namespace sway
+}  // namespace sway::ui

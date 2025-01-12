@@ -5,15 +5,13 @@
 
 #include <array>
 
-NS_BEGIN_SWAY()
-NS_BEGIN(ui)
+namespace sway::ui {
 
 class TextView;
 namespace TextViewTypedefs {
 using SharedPtr_t = std::shared_ptr<TextView>;
 }  // namespace TextViewTypedefs
 
-NS_END()  // namespace ui
-NS_END()  // namespace sway
+}  // namespace sway::ui
 
 #endif  // SWAY_UI_TEXTVIEW_TYPEDEFS_HPP

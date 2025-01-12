@@ -4,18 +4,20 @@
 #include <sway/core.hpp>
 #include <sway/ui/orientations.hpp>
 
-NS_BEGIN_SWAY()
-NS_BEGIN(ui)
+namespace sway::ui {
 
 class Orientable {
 public:
-#pragma region "Ctors/Dtor"
+#pragma region "Constructor(s) & Destructor"
+  /** \~english @name Constructor(s) & Destructor */ /** \~russian @name Конструктор(ы) и Деструктор */
+  /** @{ */
 
   Orientable(Orientation orien)
       : orientation_(orien) {}
 
-  DTOR_DEFAULT(Orientable);
+  ~Orientable() = default;
 
+  /** @} */
 #pragma endregion
 
   [[nodiscard]] auto getOrientation() const -> Orientation { return orientation_; }
@@ -24,7 +26,6 @@ private:
   Orientation orientation_;
 };
 
-NS_END()  // namespace ui
-NS_END()  // namespace sway
+}  // namespace sway::ui
 
 #endif  // SWAY_UI_ORIENTABLE_HPP

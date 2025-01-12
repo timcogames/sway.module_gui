@@ -7,8 +7,7 @@
 #include <string>
 #include <unordered_map>
 
-NS_BEGIN_SWAY()
-NS_BEGIN(ui)
+namespace sway::ui {
 
 Dialog::Dialog(BuilderTypedefs::Ptr_t builder)
     : Popup(builder)
@@ -51,5 +50,4 @@ void Dialog::repaint(PainterTypedefs::SharedPtr_t painter) {
   Popup::repaint(painter);
 }
 
-NS_END()  // namespace ui
-NS_END()  // namespace sway
+}  // namespace sway::ui

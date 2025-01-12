@@ -9,8 +9,7 @@
 #include <memory>
 #include <optional>
 
-NS_BEGIN_SWAY()
-NS_BEGIN(ui)
+namespace sway::ui {
 
 template <AreaType TYPE>
 auto AreaHolder::getAreaIndex() const -> i32_t {
@@ -60,12 +59,12 @@ auto AreaHolder::getEdge() const -> f32_t {
 template <AreaType TYPE>
 auto AreaHolder::getPosition() const -> math::vec2f_t {
   auto result = math::vec2f_zero;
-  for (auto i = 0; i < core::detail::toBase(TYPE); i++) {
-    if (i == core::detail::toBase(AreaType::IDX_CNT)) {
+  for (auto i = 0; i < core::toBase(TYPE); i++) {
+    if (i == core::toBase(AreaType::IDX_CNT)) {
       continue;
     }
 
-    const auto type = core::detail::toEnum<AreaType>(i);
+    const auto type = core::toEnum<AreaType>(i);
     auto area = getArea(type);
     if (!area.has_value()) {
       // TODO:
@@ -81,8 +80,8 @@ auto AreaHolder::getPosition() const -> math::vec2f_t {
 template <AreaType TYPE>
 auto AreaHolder::getSize() const -> math::size2f_t {
   auto result = getContentSize();
-  for (auto i = core::detail::toBase(AreaType::IDX_PAD); i >= core::detail::toBase(TYPE); i--) {
-    const auto type = core::detail::toEnum<AreaType>(i);
+  for (auto i = core::toBase(AreaType::IDX_PAD); i >= core::toBase(TYPE); i--) {
+    const auto type = core::toEnum<AreaType>(i);
     auto area = getArea(type);
     if (!area.has_value()) {
       // TODO:
@@ -96,5 +95,4 @@ auto AreaHolder::getSize() const -> math::size2f_t {
   return result;
 }
 
-NS_END()  // namespace ui
-NS_END()  // namespace sway
+}  // namespace sway::ui

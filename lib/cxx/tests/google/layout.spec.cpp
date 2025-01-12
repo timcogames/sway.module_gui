@@ -11,7 +11,7 @@ NS_SHORT_SWAY()
 
 TEST(LayoutTest, ctor_def) {
   auto builder = std::make_shared<ui::Builder>(nullptr);
-  builder->setEventBus(std::make_shared<core::evts::EventBus>());
+  builder->setEventBus(std::make_shared<core::EventBus>());
   builder->initialize();
 
   auto mainLayout = ui::LinearLayout::create(builder.get());
@@ -23,7 +23,7 @@ TEST(LayoutTest, ctor_def) {
 
 TEST(LayoutTest, build) {
   auto builder = std::make_shared<ui::Builder>(nullptr);
-  builder->setEventBus(std::make_shared<core::evts::EventBus>());
+  builder->setEventBus(std::make_shared<core::EventBus>());
   builder->initialize();
 
   auto mainLayout = ui::LinearLayout::create(builder.get());
@@ -45,15 +45,19 @@ TEST(LayoutTest, build) {
 
   // btn2->update();
 
-  mainLayout->build();
+  // mainLayout->build();
 
-  auto txt1 = ui::NodeUtil::cast<ui::TextView>(btn1->getChildNodes()[0]);
-  std::cout << "btn1: " << btn1->getNodeIdx().toStr() << " offset: " << btn1->getOffset().computed << std::endl;
-  std::cout << "txt1: " << txt1->getNodeIdx().toStr() << " offset: " << txt1->getOffset().computed << std::endl;
+  auto txt1 = core::NodeUtil::cast<ui::TextView>(btn1->getChildNodes()[0]);
+  std::cout << "btn1: " << core::Representation<core::NodeIndex>::get(btn1->getNodeIndex())
+            << " offset: " << btn1->getOffset().computed << std::endl;
+  std::cout << "txt1: " << core::Representation<core::NodeIndex>::get(txt1->getNodeIndex())
+            << " offset: " << txt1->getOffset().computed << std::endl;
 
-  auto txt2 = ui::NodeUtil::cast<ui::TextView>(btn2->getChildNodes()[0]);
-  std::cout << "btn2: " << btn2->getNodeIdx().toStr() << " offset: " << btn2->getOffset().computed << std::endl;
-  std::cout << "txt2: " << txt2->getNodeIdx().toStr() << " offset: " << txt2->getOffset().computed << std::endl;
+  auto txt2 = core::NodeUtil::cast<ui::TextView>(btn2->getChildNodes()[0]);
+  std::cout << "btn2: " << core::Representation<core::NodeIndex>::get(btn2->getNodeIndex())
+            << " offset: " << btn2->getOffset().computed << std::endl;
+  std::cout << "txt2: " << core::Representation<core::NodeIndex>::get(txt2->getNodeIndex())
+            << " offset: " << txt2->getOffset().computed << std::endl;
 
   mainLayout->removeChildNode(btn2);
   mainLayout->removeChildNode(btn1);

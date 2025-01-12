@@ -3,14 +3,12 @@
 
 #include <sway/core.hpp>
 
-NS_BEGIN_SWAY()
-NS_BEGIN(ui)
+namespace sway::ui {
 NS_BEGIN(typography)
 
 using col_t = math::col4f_t;
 
 NS_END()  // namespace typography
-NS_END()  // namespace ui
-NS_END()  // namespace sway
+}  // namespace sway::ui
 
 #endif  // SWAY_UI_TYPOGRAPHY_HPP

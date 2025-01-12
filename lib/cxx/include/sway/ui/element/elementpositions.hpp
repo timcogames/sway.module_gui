@@ -3,12 +3,10 @@
 
 #include <sway/core.hpp>
 
-NS_BEGIN_SWAY()
-NS_BEGIN(ui)
+namespace sway::ui {
 
 enum class ElementPosition : i32_t { RELATIVE, ABSOLUTE, FIXED, Latest };
 
-NS_END()  // namespace ui
-NS_END()  // namespace sway
+}  // namespace sway::ui
 
 #endif  // SWAY_UI_ELEMENTPOSITIONS_HPP

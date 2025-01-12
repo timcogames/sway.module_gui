@@ -13,19 +13,19 @@
 #include <string>
 #include <unordered_map>
 
-NS_BEGIN_SWAY()
-NS_BEGIN(ui)
+namespace sway::ui {
 
 class Menu : public Widget {
-  DECLARE_PTR_ALIASES(Menu)
-
 public:
-#pragma region "Ctors/Dtor"
+#pragma region "Constructor(s) & Destructor"
+  /** \~english @name Constructor(s) & Destructor */ /** \~russian @name Конструктор(ы) и Деструктор */
+  /** @{ */
 
   Menu(BuilderTypedefs::Ptr_t builder, Orientation orien);
 
-  DTOR_VIRTUAL(Menu);
+  virtual ~Menu();
 
+  /** @} */
 #pragma endregion
 
 #pragma region "Overridden Widget methods"
@@ -39,11 +39,10 @@ public:
   void addItem(const std::string &text);
 
 private:
-  core::evts::EventBus::Subscriber_t subscriber_;
+  core::Subscribable::Subscriber_t subscriber_;
   int selectedItem_;
 };
 
-NS_END()  // namespace ui
-NS_END()  // namespace sway
+}  // namespace sway::ui
 
 #endif  // SWAY_UI_WIDGET_MENU_HPP

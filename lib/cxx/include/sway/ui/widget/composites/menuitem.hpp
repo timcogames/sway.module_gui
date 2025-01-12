@@ -13,19 +13,19 @@
 #include <memory>
 #include <string>
 
-NS_BEGIN_SWAY()
-NS_BEGIN(ui)
+namespace sway::ui {
 
 class MenuItem : public Item {
-  DECLARE_PTR_ALIASES(MenuItem)
-
 public:
-#pragma region "Ctors/Dtor"
+#pragma region "Constructor(s) & Destructor"
+  /** \~english @name Constructor(s) & Destructor */ /** \~russian @name Конструктор(ы) и Деструктор */
+  /** @{ */
 
   MenuItem(BuilderTypedefs::Ptr_t builder, const std::string &text);
 
-  DTOR_VIRTUAL_DEFAULT(MenuItem);
+  virtual ~MenuItem() = default;
 
+  /** @} */
 #pragma endregion
 
 #pragma region "Overridden Item methods"
@@ -46,7 +46,6 @@ private:
   ButtonTypedefs::SharedPtr_t button_;
 };
 
-NS_END()  // namespace ui
-NS_END()  // namespace sway
+}  // namespace sway::ui
 
 #endif  // SWAY_UI_WIDGET_MENUITEM_HPP

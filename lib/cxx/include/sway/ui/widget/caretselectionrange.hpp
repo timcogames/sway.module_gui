@@ -5,8 +5,7 @@
 
 #include <utility>
 
-NS_BEGIN_SWAY()
-NS_BEGIN(ui)
+namespace sway::ui {
 
 /**
  * \~russian @brief Структура для представления диапазона выделения текста.
@@ -31,7 +30,6 @@ struct CaretSelectionRange {
   }
 };
 
-NS_END()  // namespace ui
-NS_END()  // namespace sway
+}  // namespace sway::ui
 
 #endif  // SWAY_UI_WIDGETS_CARETSELECTIONRANGE_HPP

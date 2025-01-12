@@ -11,17 +11,19 @@
 #include <memory>
 #include <optional>
 
-NS_BEGIN_SWAY()
-NS_BEGIN(ui)
+namespace sway::ui {
 
 class AreaHolder : public AreaTypedefs::Container_t {
 public:
-#pragma region "Ctors/Dtor"
+#pragma region "Constructor(s) & Destructor"
+  /** \~english @name Constructor(s) & Destructor */ /** \~russian @name Конструктор(ы) и Деструктор */
+  /** @{ */
 
   AreaHolder();
 
-  DTOR_DEFAULT(AreaHolder);
+  ~AreaHolder() = default;
 
+  /** @} */
 #pragma endregion
 
   auto getAreaIndex(AreaType type) const -> i32_t;
@@ -55,8 +57,7 @@ public:
   [[nodiscard]] auto getContentSize() const -> math::size2f_t;
 };
 
-NS_END()  // namespace ui
-NS_END()  // namespace sway
+}  // namespace sway::ui
 
 #include <sway/ui/area/areaholder.inl>
 

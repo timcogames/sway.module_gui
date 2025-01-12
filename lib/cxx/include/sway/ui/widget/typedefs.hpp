@@ -3,21 +3,20 @@
 
 #include <sway/core.hpp>
 
-NS_BEGIN_SWAY()
-NS_BEGIN(ui)
+namespace sway::ui {
 
-DECLARE_PTR_TYPES(Element)
-DECLARE_PTR_TYPES(Widget)
-DECLARE_PTR_TYPES(Button)
-DECLARE_PTR_TYPES(Popup)
-DECLARE_PTR_TYPES(Dialog)
-DECLARE_PTR_TYPES(Draggable)
-DECLARE_PTR_TYPES(Backdrop)
-DECLARE_PTR_TYPES(DropTarget)
-DECLARE_PTR_TYPES(Menu)
-DECLARE_PTR_TYPES(MenuItem)
+class Widget;
+class Popup;
+class Dialog;
+class Draggable;
+class Backdrop;
+class DropTarget;
+class Menu;
+class MenuItem;
 
-NS_END()  // namespace ui
-NS_END()  // namespace sway
+using BackdropSharedPtr_t = std::shared_ptr<Backdrop>;
+using DraggableSharedPtr_t = std::shared_ptr<Draggable>;
+
+}  // namespace sway::ui
 
 #endif  // SWAY_UI_WIDGET_TYPEDEFS_HPP

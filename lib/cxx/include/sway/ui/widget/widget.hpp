@@ -17,8 +17,7 @@
 #include <memory>
 #include <optional>
 
-NS_BEGIN_SWAY()
-NS_BEGIN(ui)
+namespace sway::ui {
 
 #define COL4F_RED math::col4f_t(0.85F, 0.33F, 0.17F, 1.0F)
 #define COL4F_GREEN math::col4f_t(0.5F, 0.6F, 0.43F, 1.0F)
@@ -29,8 +28,20 @@ NS_BEGIN(ui)
 
 #define COL4F_PURPLE 0x9900FFFF
 
+// struct Groupable {
+//   Guid ID;
+//   Guid ParentID;
+//   bool IsGroup;
+// };
+
+// struct Selectable {
+//   bool IsSelected;
+// };
+
+// Category = Behavior
+// struct Focusable {};
+
 class Widget : public LayoutItem {
-  DECLARE_PTR_ALIASES(Widget)
   DECLARE_EVENT(EVT_POINTER_ENTER, PointerEnter)
   DECLARE_EVENT(EVT_POINTER_LEAVE, PointerLeave)
   DECLARE_EVENT(EVT_MOUSE_CLICKED, MouseClicked)
@@ -42,12 +53,15 @@ class Widget : public LayoutItem {
   // DECLARE_EVENT(EVT_LEAVE, Leave)
   // DECLARE_EVENT(EVT_ACTIVATE, Activate)
 public:
-#pragma region "Ctors/Dtor"
+#pragma region "Constructor(s) & Destructor"
+  /** \~english @name Constructor(s) & Destructor */ /** \~russian @name Конструктор(ы) и Деструктор */
+  /** @{ */
 
   Widget(BuilderTypedefs::Ptr_t builder);
 
-  DTOR_VIRTUAL_DEFAULT(Widget);
+  virtual ~Widget() = default;
 
+  /** @} */
 #pragma endregion
 
 #pragma region "Base virtual methods"
@@ -78,13 +92,13 @@ public:
 
   auto getChildAtPoint(const math::point2f_t &point) -> Widget *;
 
-  void setEventFilter(core::evts::EventHandler::Ptr_t hdl);
+  // void setEventFilter(core::evts::EventHandlerTypedefs::Ptr_t hdl);
 
   void setAlignment(math::Alignment alignment);
 
 protected:
   BuilderTypedefs::Ptr_t builder_;
-  core::evts::EventHandler::Ptr_t eventFilter_;
+  // core::evts::EventHandlerTypedefs::Ptr_t eventFilter_;
   // math::rect4f_t innerRect_;  // wdt/hgt, padding
   // math::rect4f_t outerRect_;  // wdt/hgt, margin, border, padding
   Appearance appearance_;
@@ -94,7 +108,6 @@ protected:
   bool needToUpdate_;
 };
 
-NS_END()  // namespace ui
-NS_END()  // namespace sway
+}  // namespace sway::ui
 
 #endif  // SWAY_UI_WIDGET_WIDGET_HPP

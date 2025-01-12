@@ -11,19 +11,19 @@
 #include <memory>
 #include <string>
 
-NS_BEGIN_SWAY()
-NS_BEGIN(ui)
+namespace sway::ui {
 
 class Dialog : public Popup {
-  DECLARE_PTR_ALIASES(Dialog)
-
 public:
-#pragma region "Ctors/Dtor"
+#pragma region "Constructor(s) & Destructor"
+  /** \~english @name Constructor(s) & Destructor */ /** \~russian @name Конструктор(ы) и Деструктор */
+  /** @{ */
 
   Dialog(BuilderTypedefs::Ptr_t builder);
 
-  DTOR_VIRTUAL(Dialog);
+  virtual ~Dialog();
 
+  /** @} */
 #pragma endregion
 
 #pragma region "Overridden Widget methods"
@@ -43,16 +43,15 @@ public:
   void hide();
 
 private:
-  core::evts::EventBus::Subscriber_t subscriber_;
+  core::Subscribable::Subscriber_t subscriber_;
 
-  Backdrop::SharedPtr_t backdrop_;
-  Draggable::SharedPtr_t draghead_;
+  BackdropSharedPtr_t backdrop_;
+  DraggableSharedPtr_t draghead_;
 
   bool draggable_;
   bool resizable_;
 };
 
-NS_END()  // namespace ui
-NS_END()  // namespace sway
+}  // namespace sway::ui
 
 #endif  // SWAY_UI_WIDGET_DIALOG_HPP

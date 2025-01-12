@@ -5,8 +5,7 @@
 #include <sway/ui/_typedefs.hpp>
 #include <sway/ui/widget/widget.hpp>
 
-NS_BEGIN_SWAY()
-NS_BEGIN(ui)
+namespace sway::ui {
 
 class Item : public Widget {
 public:
@@ -22,7 +21,6 @@ public:
   void toggle() {}
 };
 
-NS_END()  // namespace ui
-NS_END()  // namespace sway
+}  // namespace sway::ui
 
 #endif  // SWAY_UI_WIDGET_ITEM_HPP

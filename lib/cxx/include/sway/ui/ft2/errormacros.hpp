@@ -7,8 +7,7 @@
 #include <freetype/fttypes.h>
 #include <stdio.h>
 
-NS_BEGIN_SWAY()
-NS_BEGIN(ui)
+namespace sway::ui {
 NS_BEGIN(ft2)
 
 #define CHECK_RESULT(error)                                                                 \
@@ -22,7 +21,6 @@ NS_BEGIN(ft2)
   })
 
 NS_END()  // namespace ft2
-NS_END()  // namespace ui
-NS_END()  // namespace sway
+}  // namespace sway::ui
 
 #endif  // SWAY_UI_FT2_ERRORMACROS_HPP

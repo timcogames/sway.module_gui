@@ -49,7 +49,7 @@ TEST(AreaHolderTest, setter_getter) {
   ui::AreaHolder holder;
 
   util::foreacher<ui::NUM_AREA_TYPES_WITHOUT_CNT>([&](auto idx) {
-    constexpr auto type = core::detail::toEnum<ui::AreaType>(idx + 0);
+    constexpr auto type = core::toEnum<ui::AreaType>(idx + 0);
 
     holder.setEdge<type, math::RectEdge::Enum::IDX_L>(1.0F);
     holder.setEdge<type, math::RectEdge::Enum::IDX_T>(2.0F);

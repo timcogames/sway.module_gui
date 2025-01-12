@@ -1,5 +1,6 @@
 #include <sway/math.hpp>
 #include <sway/ui.hpp>
+#include <sway/ui/element/event/specs/mouseevent.hpp>
 
 #undef Bool
 #undef None
@@ -12,40 +13,24 @@
 
 NS_SHORT_SWAY()
 
-TEST(ElementTest, ctor_def) {
-  // ui::Element elem;
+class ElementImpl : public ui::Element {
+public:
+  virtual void recursiveUpdateItemOffset(const math::point2f_t parentOffset) {
+    // TODO
+  }
+};
 
-  // ASSERT_EQ(elem.getPosition(), ui::ElementPosition::RELATIVE);
-  // ASSERT_EQ(elem.getOffset().computed, math::point2f_zero);
-  // ASSERT_FALSE(elem.getOffset().dirty);
+TEST(ElementTest, ctor_def) {
+  ElementImpl elem;
+
+  ASSERT_EQ(elem.getPosition(), ui::ElementPosition::RELATIVE);
+  ASSERT_EQ(elem.getOffset().computed, math::point2f_zero);
+  ASSERT_FALSE(elem.getOffset().dirty);
 }
 
 TEST(ElementTest, position) {
-  // ui::Element elem;
+  ElementImpl elem;
 
-  // elem.setPosition(ui::ElementPosition::ABSOLUTE);
-  // ASSERT_EQ(elem.getPosition(), ui::ElementPosition::ABSOLUTE);
-}
-
-TEST(ElementTest, offset) {
-  // auto absElem = std::make_shared<ui::Element>();
-
-  // absElem->setPosition(ui::ElementPosition::ABSOLUTE);
-  // absElem->setOffset(1.0F, 2.0F);
-  // ASSERT_TRUE(absElem->getOffset().dirty);
-  // absElem->updateOffset(nullptr);
-  // ASSERT_FALSE(absElem->getOffset().dirty);
-  // ASSERT_EQ(absElem->getOffset().computed, math::point2f_t(1.0F, 2.0F));
-
-  // auto relElem = std::make_shared<ui::Element>();
-  // relElem->setPosition(ui::ElementPosition::RELATIVE);
-  // relElem->setOffset(3.0F, 4.0F);
-  // ASSERT_TRUE(relElem->getOffset().dirty);
-  // relElem->updateOffset(nullptr);
-  // ASSERT_FALSE(relElem->getOffset().dirty);
-
-  // relElem->getOffset().markAsDirty();
-  // absElem->addChildNode(relElem);
-
-  // ASSERT_EQ(relElem->getOffset().computed, math::point2f_t(1.0F, 2.0F));
+  elem.setPosition(ui::ElementPosition::ABSOLUTE);
+  ASSERT_EQ(elem.getPosition(), ui::ElementPosition::ABSOLUTE);
 }

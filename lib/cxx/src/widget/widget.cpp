@@ -5,12 +5,11 @@
 #include <sway/ui/builder.hpp>
 #include <sway/ui/widget/widget.hpp>
 
-NS_BEGIN_SWAY()
-NS_BEGIN(ui)
+namespace sway::ui {
 
 Widget::Widget(BuilderTypedefs::Ptr_t builder)
     : builder_(builder)
-    , eventFilter_(nullptr)
+    // , eventFilter_(nullptr)
     , containsPointer_(false)
     , needsRepainting_(false) {
   setBackgroundColor(COL4F_GRAY1);
@@ -38,9 +37,8 @@ void Widget::onCursorPointerEnter() {
   this->update();
 
   auto *evtdata = new PointerEnterEventData();
-  auto *evt = new PointerEnterEvent(0, evtdata);
-
-  emit(EVT_POINTER_ENTER, evt, [&](core::foundation::EventHandler::Ptr_t) { return true; });
+  emit(EVT_POINTER_ENTER, std::make_unique<PointerEnterEvent>(0, evtdata),
+      [&](core::EventHandlerTypedefs::Ptr_t) { return true; });
 }
 
 void Widget::onCursorPointerLeave() {
@@ -48,24 +46,24 @@ void Widget::onCursorPointerLeave() {
   this->update();
 
   auto *evtdata = new PointerLeaveEventData();
-  auto *evt = new PointerLeaveEvent(0, evtdata);
 
-  emit(EVT_POINTER_LEAVE, evt, [&](core::foundation::EventHandler::Ptr_t) { return true; });
+  emit(EVT_POINTER_LEAVE, std::make_unique<PointerLeaveEvent>(0, evtdata),
+      [&](core::EventHandlerTypedefs::Ptr_t) { return true; });
 }
 
 void Widget::onMouseClick(u32_t state) {
   this->update();
 
-  if (eventFilter_ != nullptr) {
-    //   eventFilter_->handle(this, event);
-  }
+  // if (eventFilter_ != nullptr) {
+  //   //   eventFilter_->handle(this, event);
+  // }
 
   auto *evtdata = new MouseClickEventData();
-  evtdata->nodeidx = this->getNodeIdx();
+  evtdata->nodeidx = this->getNodeIndex();
   evtdata->state = state;
-  auto *evt = new MouseClickedEvent(0, std::move(evtdata));
 
-  emit(EVT_MOUSE_CLICKED, evt, [&](core::foundation::EventHandler::Ptr_t) { return true; });
+  emit(EVT_MOUSE_CLICKED, std::make_unique<MouseClickedEvent>(0, std::move(evtdata)),
+      [&](core::EventHandlerTypedefs::Ptr_t) { return true; });
 }
 
 // void Widget::setMargin(f32_t mrg) {
@@ -80,26 +78,22 @@ void Widget::onMouseClick(u32_t state) {
 // }
 
 void Widget::setBackgroundColor(const math::col4f_t &col) {
-  appearance_
-      .background[core::detail::toBase(WidgetColorGroup::INACTIVE)][core::detail::toBase(WidgetColorState::NORM)] = col;
+  appearance_.background[core::toBase(WidgetColorGroup::INACTIVE)][core::toBase(WidgetColorState::NORM)] = col;
 }
 
 auto Widget::getBackgroundColor() const -> math::col4f_t {
-  return appearance_
-      .background[core::detail::toBase(WidgetColorGroup::INACTIVE)][core::detail::toBase(WidgetColorState::NORM)];
+  return appearance_.background[core::toBase(WidgetColorGroup::INACTIVE)][core::toBase(WidgetColorState::NORM)];
 }
 
 void Widget::setForegroundColor(const math::col4f_t &col) {
-  appearance_.text[core::detail::toBase(WidgetColorGroup::INACTIVE)][core::detail::toBase(WidgetColorState::NORM)] =
-      col;
+  appearance_.text[core::toBase(WidgetColorGroup::INACTIVE)][core::toBase(WidgetColorState::NORM)] = col;
 }
 
 auto Widget::getForegroundColor() const -> math::col4f_t {
-  return appearance_
-      .text[core::detail::toBase(WidgetColorGroup::INACTIVE)][core::detail::toBase(WidgetColorState::NORM)];
+  return appearance_.text[core::toBase(WidgetColorGroup::INACTIVE)][core::toBase(WidgetColorState::NORM)];
 }
 
-auto Widget::getChildAtPoint(const math::point2f_t &pnt) -> Widget::Ptr_t {
+auto Widget::getChildAtPoint(const math::point2f_t &pnt) -> WidgetTypedefs::Ptr_t {
   for (auto node : this->getChildNodes()) {
     auto child = std::static_pointer_cast<Widget>(node);
     if (!child->isVisible()) {
@@ -113,7 +107,7 @@ auto Widget::getChildAtPoint(const math::point2f_t &pnt) -> Widget::Ptr_t {
 
     if (auto *const widget = child->getChildAtPoint(pnt)) {
       return widget;
-    } else if (childRect.contains(pnt) && child->getMouseFilter() != ois::MouseFilter::Enum::IGNORE) {
+    } else if (childRect.contains(pnt) && child->getMouseFilter() != ois::MouseFilter::IGNORE) {
       return child.get();
     }
   }
@@ -121,7 +115,7 @@ auto Widget::getChildAtPoint(const math::point2f_t &pnt) -> Widget::Ptr_t {
   return nullptr;
 }
 
-void Widget::setEventFilter(core::evts::EventHandler::Ptr_t hdl) { eventFilter_ = hdl; }
+// void Widget::setEventFilter(core::evts::EventHandlerTypedefs::Ptr_t hdl) { eventFilter_ = hdl; }
 
 void Widget::setAlignment(math::Alignment alignment) { alignment_ = alignment; }
 
@@ -133,14 +127,13 @@ void Widget::setAlignment(math::Alignment alignment) { alignment_ = alignment; }
 //   // hovered_ = val;
 
 //   // auto *eventdata = new WidgetEventData();
-//   // eventdata->uid = this->getNodeIdx().toStr();
+//   // eventdata->uid = this->getNodeIndex().toStr();
 //   // // clang-format off
-//   // auto event = std::make_unique<WidgetEvent>(core::detail::toBase(hovered_
+//   // auto event = std::make_unique<WidgetEvent>(core::toBase(hovered_
 //   //     ? WidgetEventType::POINTER_ENTER
 //   //     : WidgetEventType::POINTER_LEAVE), eventdata);
 //   // // clang-format on
 //   // this->builder_->getEventBus()->addToQueue(std::move(event));
 // }
 
-NS_END()  // namespace ui
-NS_END()  // namespace sway
+}  // namespace sway::ui

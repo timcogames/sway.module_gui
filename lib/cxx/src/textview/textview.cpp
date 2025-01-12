@@ -2,15 +2,14 @@
 #include <sway/ui/controls/textview/textview.hpp>
 #include <sway/ui/zindex.hpp>
 
-NS_BEGIN_SWAY()
-NS_BEGIN(ui)
+namespace sway::ui {
 
 TextView::TextView(BuilderTypedefs::Ptr_t builder, const std::string &text)
     : Widget(builder)
     , text_(text)
     , font_("")
     , fontSize_(12) {
-  setMouseFilter(ois::MouseFilter::Enum::IGNORE);
+  setMouseFilter(ois::MouseFilter::IGNORE);
 
 #ifdef UI_USE_GMOCK
   // TODO
@@ -52,5 +51,4 @@ void TextView::repaint(PainterTypedefs::SharedPtr_t painter) {
 
 void TextView::setText(const std::string &text) { text_ = text; }
 
-NS_END()  // namespace ui
-NS_END()  // namespace sway
+}  // namespace sway::ui

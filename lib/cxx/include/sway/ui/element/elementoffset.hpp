@@ -4,13 +4,12 @@
 #include <sway/core.hpp>
 #include <sway/math.hpp>
 
-NS_BEGIN_SWAY()
-NS_BEGIN(ui)
+namespace sway::ui {
 
 struct ElementOffset {
-  math::point2f_t original; /*< Оригинальное положение. */
-  math::point2f_t computed; /*< Расчитанное положение. */
-  bool dirty; /*< Необходимость пересчета. */
+  math::point2f_t original; /*< \~english Original position. \~russian Оригинальное положение. */
+  math::point2f_t computed; /*< \~english Calculated position. \~russian Расчитанное положение. */
+  bool dirty; /*< \~english Dirty flag. \~russian Необходимость пересчета. */
 
   ElementOffset()
       : original(math::point2f_zero)
@@ -20,7 +19,6 @@ struct ElementOffset {
   void markAsDirty() { dirty = true; }
 };
 
-NS_END()  // namespace ui
-NS_END()  // namespace sway
+}  // namespace sway::ui
 
 #endif  // SWAY_UI_ELEMENTOFFSET_HPP

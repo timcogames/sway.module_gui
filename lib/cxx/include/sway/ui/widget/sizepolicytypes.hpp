@@ -5,8 +5,7 @@
 #include <sway/math.hpp>
 #include <sway/ui/widget/typedefs.hpp>
 
-NS_BEGIN_SWAY()
-NS_BEGIN(ui)
+namespace sway::ui {
 
 /**
  * @enum SizePolicyType
@@ -20,7 +19,6 @@ enum class SizePolicyType : u32_t {
   EXPANDING /*< Растягивающийся размер. */
 };
 
-NS_END()  // namespace ui
-NS_END()  // namespace sway
+}  // namespace sway::ui
 
 #endif  // SWAY_UI_WIDGETS_SIZEPOLICYTYPES_HPP

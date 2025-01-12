@@ -11,8 +11,7 @@
 #include <string>
 #include <unordered_map>
 
-NS_BEGIN_SWAY()
-NS_BEGIN(ui)
+namespace sway::ui {
 NS_BEGIN(ft2)
 
 class FontManager {
@@ -20,12 +19,15 @@ public:
   using Ptr_t = FontManager *;
   using SharedPtr_t = std::shared_ptr<FontManager>;
 
-#pragma region "Ctors/Dtor"
+#pragma region "Constructor(s) & Destructor"
+  /** \~english @name Constructor(s) & Destructor */ /** \~russian @name Конструктор(ы) и Деструктор */
+  /** @{ */
 
   FontManager();
 
   ~FontManager();
 
+  /** @} */
 #pragma endregion
 
   void initLibrary();
@@ -50,7 +52,6 @@ private:
 };
 
 NS_END()  // namespace ft2
-NS_END()  // namespace ui
-NS_END()  // namespace sway
+}  // namespace sway::ui
 
 #endif  // SWAY_UI_FT2_FONTMANAGER_HPP

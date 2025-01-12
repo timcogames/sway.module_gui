@@ -4,20 +4,19 @@
 #include <sway/ois/web/emsmouse.hpp>
 #include <sway/ui/builder.hpp>
 
-NS_BEGIN_SWAY()
-NS_BEGIN(ui)
+namespace sway::ui {
 
-struct WidgetEventHandler : public core::evts::EventHandler {
+struct WidgetEventHandler : public core::EventHandler {
   WidgetEventHandler(BuilderTypedefs::Ptr_t builder)
-      : core::evts::EventHandler()
+      : core::EventHandler(nullptr)
       , builder_(builder) {}
 
   ~WidgetEventHandler() override = default;
 
-  MTHD_OVERRIDE(auto invoke(const core::foundation::Event::UniquePtr_t &evt) -> bool) final {
+  MTHD_OVERRIDE(auto invoke(core::EventTypedefs::UniquePtr_t &&evt) -> bool) final {
     if (ois::InputEventUtil::isMouseEvent(evt)) {
       auto mouseEvtData = evt->getConcreteData<ois::MouseEventData>();
-      if (evt->type() == core::detail::toBase(ois::InputActionType::MOUSE_MOVED)) {
+      if (evt->getType() == core::toBase(ois::InputActionType::MOUSE_MOVED)) {
         builder_->setCursorPoint(mouseEvtData.point);
       }
 
@@ -26,8 +25,8 @@ struct WidgetEventHandler : public core::evts::EventHandler {
 
       builder_->updateWidgetUnderPointer(target);
 
-      if (evt->type() == core::detail::toBase(ois::InputActionType::MOUSE_BUTTON)) {
-        if (mouseEvtData.btnCode == core::detail::toBase(ois::MouseButtonCode::LMB)) {
+      if (evt->getType() == core::toBase(ois::InputActionType::MOUSE_BUTTON)) {
+        if (mouseEvtData.btnCode == core::toBase(ois::MouseButtonCode::LMB)) {
           builder_->handleMouseClick(mouseEvtData.state);
         }
       }
@@ -40,8 +39,8 @@ private:
   BuilderTypedefs::Ptr_t builder_;
 };
 
-Builder::Builder(core::foundation::Context::Ptr_t context)
-    : core::foundation::Object(context)
+Builder::Builder(core::typedefs::ContextPtr_t context)
+    : core::Object(context)
     , currWidgetUnderPointer_(nullptr)
     , painter_(nullptr) {}
 
@@ -60,7 +59,7 @@ void Builder::deinit() {
 
 void Builder::update() { root_->repaint(painter_); }
 
-void Builder::updateWidgetUnderPointer(ElementUnderPointer_t target) {
+void Builder::updateWidgetUnderPointer(WidgetTypedefs::UnderPointer_t target) {
   if (currWidgetUnderPointer_ == target) {
     return;
   }
@@ -83,5 +82,4 @@ void Builder::handleMouseClick(u32_t state) {
   }
 }
 
-NS_END()  // namespace ui
-NS_END()  // namespace sway
+}  // namespace sway::ui

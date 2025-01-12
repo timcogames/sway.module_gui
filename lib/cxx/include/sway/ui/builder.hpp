@@ -7,25 +7,26 @@
 #include <sway/ui/cursor.hpp>
 #include <sway/ui/ft2/fontmanager.hpp>
 #include <sway/ui/painter.hpp>
+#include <sway/ui/widget/_typedefs.hpp>
 #include <sway/ui/widget/widget.hpp>
 
 #include <memory>
 
-NS_BEGIN_SWAY()
-NS_BEGIN(ui)
+namespace sway::ui {
 
-class Builder : public core::foundation::Object {
-  DECLARE_CLASS_METADATA(Builder, core::foundation::Object)
+class Builder : public core::Object {
+  DECLARE_CLASS_METADATA(Builder, core::Object)
 
 public:
-  using ElementUnderPointer_t = Widget::Ptr_t;
+#pragma region "Constructor(s) & Destructor"
+  /** \~english @name Constructor(s) & Destructor */ /** \~russian @name Конструктор(ы) и Деструктор */
+  /** @{ */
 
-#pragma region "Ctors/Dtor"
+  Builder(core::typedefs::ContextPtr_t context);
 
-  Builder(core::foundation::Context::Ptr_t context);
+  virtual ~Builder() = default;
 
-  DTOR_VIRTUAL_DEFAULT(Builder);
-
+  /** @} */
 #pragma endregion
 
   void initialize();
@@ -34,19 +35,19 @@ public:
 
   void update();
 
-  auto getRootWidget() -> Widget::SharedPtr_t { return root_; }
+  auto getRootWidget() -> WidgetTypedefs::SharedPtr_t { return root_; }
 
-  void setEventBus(core::evts::EventBus::SharedPtr_t evtbus) { evtbus_ = evtbus; }
+  void setEventBus(core::EventBusTypedefs::SharedPtr_t evtbus) { evtbus_ = evtbus; }
 
-  auto getEventBus() -> core::evts::EventBus::SharedPtr_t { return evtbus_; }
+  auto getEventBus() -> core::EventBusTypedefs::SharedPtr_t { return evtbus_; }
 
   void setCursorPoint(const math::point2f_t &pnt) { cursor_.pnt = pnt; }
 
   auto getCursor() const -> Cursor { return cursor_; }
 
-  void updateWidgetUnderPointer(ElementUnderPointer_t target);
+  void updateWidgetUnderPointer(WidgetTypedefs::UnderPointer_t target);
 
-  auto getWidgetUnderPointer() -> ElementUnderPointer_t { return currWidgetUnderPointer_; }
+  auto getWidgetUnderPointer() -> WidgetTypedefs::UnderPointer_t { return currWidgetUnderPointer_; }
 
   void handleMouseClick(u32_t state);
 
@@ -55,22 +56,21 @@ public:
   auto getPainter() -> PainterTypedefs::SharedPtr_t { return painter_; }
 
 private:
-  core::evts::EventBus::SharedPtr_t evtbus_;
-  core::evts::EventBus::Subscriber_t subscriber_;
+  core::EventBusTypedefs::SharedPtr_t evtbus_;
+  core::Subscribable::Subscriber_t subscriber_;
   ft2::FontManager::SharedPtr_t fontMngr_;
   PainterTypedefs::SharedPtr_t painter_;
-  Widget::SharedPtr_t root_;
+  WidgetTypedefs::SharedPtr_t root_;
 
   struct ElementUnderPointerInfo {
-    ElementUnderPointer_t element;
+    WidgetTypedefs::UnderPointer_t element;
   };
 
-  ElementUnderPointer_t currWidgetUnderPointer_;
+  WidgetTypedefs::UnderPointer_t currWidgetUnderPointer_;
 
   Cursor cursor_;
 };
 
-NS_END()  // namespace ui
-NS_END()  // namespace sway
+}  // namespace sway::ui
 
 #endif  // SWAY_UI_BUILDER_HPP

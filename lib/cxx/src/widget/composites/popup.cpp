@@ -8,8 +8,7 @@
 #include <string>
 #include <unordered_map>
 
-NS_BEGIN_SWAY()
-NS_BEGIN(ui)
+namespace sway::ui {
 
 Popup::Popup(BuilderTypedefs::Ptr_t builder)
     : Widget(builder) {}
@@ -21,10 +20,9 @@ void Popup::update() {}
 void Popup::repaint(PainterTypedefs::SharedPtr_t painter) {
   auto offset = this->getOffset().computed;
   painter->drawRect(math::rect4f_t(offset.getX(), offset.getY(), this->getSize()), this->getBackgroundColor(),
-      getZIndex((i32_t)core::detail::toBase(ZIndex::DIALOG)));
+      getZIndex((i32_t)core::toBase(ZIndex::DIALOG)));
 
   Widget::repaint(painter);
 }
 
-NS_END()  // namespace ui
-NS_END()  // namespace sway
+}  // namespace sway::ui

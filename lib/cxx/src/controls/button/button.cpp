@@ -2,8 +2,7 @@
 #include <sway/ui/controls/button/button.hpp>
 #include <sway/ui/zindex.hpp>
 
-NS_BEGIN_SWAY()
-NS_BEGIN(ui)
+namespace sway::ui {
 
 auto Button::create(BuilderTypedefs::Ptr_t builder, const std::string &text) -> ButtonTypedefs::SharedPtr_t {
   return std::make_shared<Button>(builder, text);
@@ -20,7 +19,7 @@ Button::~Button() { this->removeChildNode(textView_); }
 
 void Button::updateState() {
   const auto oldState = hovering_;
-  hovering_ = this->builder_->getWidgetUnderPointer()->getNodeIdx().equal(this->getNodeIdx());
+  hovering_ = this->builder_->getWidgetUnderPointer()->getNodeIndex().equal(this->getNodeIndex());
   if (oldState == hovering_) {
     return;
   }
@@ -54,5 +53,4 @@ void Button::repaint(PainterTypedefs::SharedPtr_t painter) {
   Widget::repaint(painter);
 }
 
-NS_END()  // namespace ui
-NS_END()  // namespace sway
+}  // namespace sway::ui

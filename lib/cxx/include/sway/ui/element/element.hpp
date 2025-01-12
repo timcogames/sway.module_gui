@@ -2,25 +2,32 @@
 #define SWAY_UI_ELEMENT_HPP
 
 #include <sway/core.hpp>
+#include <sway/core/container/nodeindexchain.hpp>
+#include <sway/core/container/nodeutil.hpp>
 #include <sway/math.hpp>
 #include <sway/ui/area/areaholder.hpp>
 #include <sway/ui/element/_typedefs.hpp>
 #include <sway/ui/element/elementoffset.hpp>
 #include <sway/ui/element/elementpositions.hpp>
-#include <sway/ui/element/nodechainextension.hpp>
-#include <sway/ui/element/nodeindexextension.hpp>
-#include <sway/ui/element/nodeutil.hpp>
 
-NS_BEGIN_SWAY()
-NS_BEGIN(ui)
+namespace sway::ui {
 
-class Element : public core::container::Node {
+class Element : public core::Node, public core::Visibleable {
 public:
-#pragma region "Ctors/Dtor"
+#pragma region "Constructor(s) & Destructor"
+  /** \~english @name Constructor(s) & Destructor */ /** \~russian @name Конструктор(ы) и Деструктор */
+  /** @{ */
 
   Element();
 
-  DTOR_DEFAULT(Element);
+  virtual ~Element() = default;
+
+  /** @} */
+#pragma endregion
+
+#pragma region "Pure virtual methods"
+
+  virtual void recursiveUpdateItemOffset(const math::point2f_t offset) = 0;
 
 #pragma endregion
 
@@ -37,6 +44,7 @@ public:
   /**
    * \~russian @brief Устанавливает оригинальное положение.
    * @param[in] pnt Новое оригинальное положение.
+   *
    * @sa setOffset(f32_t, f32_t)
    */
   void setOffset(const math::point2f_t &pnt);
@@ -45,6 +53,7 @@ public:
    * \~russian @brief Устанавливает оригинальное положение.
    * @param[in] x Значение координаты по оси X.
    * @param[in] y Значение координаты по оси Y.
+   *
    * @sa setOffset(const math::point2f_t &)
    */
   void setOffset(f32_t x, f32_t y);
@@ -53,11 +62,7 @@ public:
 
 #pragma endregion
 
-  // void updateOffset(ElementTypedefs::SharedPtr_t prev);
-
-  // void recursiveUpdate(ElementTypedefs::SharedPtr_t lhs, ElementTypedefs::SharedPtr_t rhs);
-
-  PURE_VIRTUAL(void recursiveUpdateItemOffset(const math::point2f_t offset));
+  void updateOffset();
 
   [[nodiscard]] auto getAreaHolder() const -> AreaHolder;
 
@@ -67,7 +72,7 @@ public:
 
   [[nodiscard]] auto getOuterSizeWithMargin() const -> math::size2f_t;
 
-  void handleAddNode(core::foundation::Event::Ptr_t evt);
+  auto handleAddNode(const core::EventTypedefs::UniquePtr_t &evt) -> bool;
 
 #pragma region "Getters/Setters Size"
 
@@ -88,7 +93,6 @@ private:
   ElementOffset offset_;
 };
 
-NS_END()  // namespace ui
-NS_END()  // namespace sway
+}  // namespace sway::ui
 
 #endif  // SWAY_UI_ELEMENT_HPP

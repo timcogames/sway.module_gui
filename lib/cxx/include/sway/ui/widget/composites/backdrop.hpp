@@ -9,20 +9,20 @@
 #include <memory>
 #include <string>
 
-NS_BEGIN_SWAY()
-NS_BEGIN(ui)
+namespace sway::ui {
 
 // pseudo-element
 class Backdrop : public Widget {
-  DECLARE_PTR_ALIASES(Backdrop)
-
 public:
-#pragma region "Ctors/Dtor"
+#pragma region "Constructor(s) & Destructor"
+  /** \~english @name Constructor(s) & Destructor */ /** \~russian @name Конструктор(ы) и Деструктор */
+  /** @{ */
 
   Backdrop(BuilderTypedefs::Ptr_t builder);
 
-  DTOR_VIRTUAL_DEFAULT(Backdrop);
+  virtual ~Backdrop() = default;
 
+  /** @} */
 #pragma endregion
 
 #pragma region "Overridden Widget methods"
@@ -34,7 +34,6 @@ public:
 #pragma endregion
 };
 
-NS_END()  // namespace ui
-NS_END()  // namespace sway
+}  // namespace sway::ui
 
 #endif  // SWAY_UI_WIDGET_BACKDROP_HPP

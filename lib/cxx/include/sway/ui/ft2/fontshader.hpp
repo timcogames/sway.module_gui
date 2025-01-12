@@ -5,8 +5,7 @@
 #include <sway/render.hpp>
 #include <sway/ui/typography.hpp>
 
-NS_BEGIN_SWAY()
-NS_BEGIN(ui)
+namespace sway::ui {
 NS_BEGIN(ft2)
 
 class FontShader {
@@ -18,11 +17,11 @@ public:
 
   ~FontShader() = default;
 
-  static void setColor(render::EffectPtr_t eff, const typography::col_t &col) {
+  static void setColor(render::EffectTypedefs::Ptr_t eff, const typography::col_t &col) {
     eff->getShaderProgram()->setUniformCol4f("text_color", col);
   }
 
-  static void setLayer(render::EffectPtr_t eff, i32_t zindex) {
+  static void setLayer(render::EffectTypedefs::Ptr_t eff, i32_t zindex) {
     eff->getShaderProgram()->setUniform1f("zindex", zindex == 0 ? -0.999F : (f32_t)(zindex - 100) / 100);
   }
 
@@ -30,7 +29,6 @@ private:
 };
 
 NS_END()  // namespace ft2
-NS_END()  // namespace ui
-NS_END()  // namespace sway
+}  // namespace sway::ui
 
 #endif  // SWAY_UI_FT2_FONTSHADER_HPP

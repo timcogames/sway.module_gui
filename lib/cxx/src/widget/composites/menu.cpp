@@ -11,8 +11,7 @@
 #include <string>
 #include <unordered_map>
 
-NS_BEGIN_SWAY()
-NS_BEGIN(ui)
+namespace sway::ui {
 
 Menu::Menu(BuilderTypedefs::Ptr_t builder, Orientation orien)
     : Widget(builder) {
@@ -33,5 +32,4 @@ void Menu::addItem(const std::string &text) {
 
 // void Menu::repaint(PainterTypedefs::SharedPtr_t painter) {}
 
-NS_END()  // namespace ui
-NS_END()  // namespace sway
+}  // namespace sway::ui

@@ -3,15 +3,15 @@
 
 #include <sway/core.hpp>
 
-NS_BEGIN_SWAY()
-NS_BEGIN(ui)
+namespace sway::ui {
 
 class Widget;
 namespace WidgetTypedefs {
+using Ptr_t = Widget *;
 using SharedPtr_t = std::shared_ptr<Widget>;
+using UnderPointer_t = Ptr_t;
 }  // namespace WidgetTypedefs
 
-NS_END()  // namespace ui
-NS_END()  // namespace sway
+}  // namespace sway::ui
 
 #endif  // SWAY_UI_WIDGETS_TYPEDEFS_HPP

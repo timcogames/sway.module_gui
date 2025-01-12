@@ -3,8 +3,7 @@
 
 #include <sway/core.hpp>
 
-NS_BEGIN_SWAY()
-NS_BEGIN(ui)
+namespace sway::ui {
 
 class Builder;
 namespace BuilderTypedefs {
@@ -17,7 +16,6 @@ namespace PainterTypedefs {
 using SharedPtr_t = std::shared_ptr<Painter>;
 }  // namespace PainterTypedefs
 
-NS_END()  // namespace ui
-NS_END()  // namespace sway
+}  // namespace sway::ui
 
 #endif  // SWAY_UI_TYPEDEFS_HPP

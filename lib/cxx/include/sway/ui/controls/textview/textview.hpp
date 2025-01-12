@@ -10,17 +10,19 @@
 #include <memory>
 #include <string>
 
-NS_BEGIN_SWAY()
-NS_BEGIN(ui)
+namespace sway::ui {
 
 class TextView : public Widget {
 public:
-#pragma region "Ctors/Dtor"
+#pragma region "Constructor(s) & Destructor"
+  /** \~english @name Constructor(s) & Destructor */ /** \~russian @name Конструктор(ы) и Деструктор */
+  /** @{ */
 
   TextView(BuilderTypedefs::Ptr_t builder, const std::string &text);
 
-  DTOR_VIRTUAL_DEFAULT(TextView);
+  virtual ~TextView() = default;
 
+  /** @} */
 #pragma endregion
 
 #pragma region "Overridden Widget methods"
@@ -51,7 +53,6 @@ private:
   // bool uppercase_;
 };
 
-NS_END()  // namespace ui
-NS_END()  // namespace sway
+}  // namespace sway::ui
 
 #endif  // SWAY_UI_TEXTVIEW_HPP

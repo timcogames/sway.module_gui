@@ -9,19 +9,19 @@
 #include <memory>
 #include <string>
 
-NS_BEGIN_SWAY()
-NS_BEGIN(ui)
+namespace sway::ui {
 
 class Draggable : public Widget {
-  DECLARE_PTR_ALIASES(Draggable)
-
 public:
-#pragma region "Ctors/Dtor"
+#pragma region "Constructor(s) & Destructor"
+  /** \~english @name Constructor(s) & Destructor */ /** \~russian @name Конструктор(ы) и Деструктор */
+  /** @{ */
 
   Draggable(BuilderTypedefs::Ptr_t builder);
 
-  DTOR_VIRTUAL(Draggable);
+  virtual ~Draggable();
 
+  /** @} */
 #pragma endregion
 
 #pragma region "Overridden Widget methods"
@@ -32,10 +32,10 @@ public:
 
 #pragma endregion
 
-  void handleMouseClickedEvent(core::foundation::Event *evt);
+  bool handleMouseClickedEvent(const core::EventTypedefs::UniquePtr_t &evt);
 
 private:
-  core::evts::EventBus::Subscriber_t subscriber_;
+  core::Subscribable::Subscriber_t subscriber_;
   bool hovering_;
   bool dragging_;
 
@@ -45,7 +45,6 @@ private:
   bool mouseIsDown_ = false;
 };
 
-NS_END()  // namespace ui
-NS_END()  // namespace sway
+}  // namespace sway::ui
 
 #endif  // SWAY_UI_WIDGET_DRAGSOURCE_HPP

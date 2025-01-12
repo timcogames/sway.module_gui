@@ -1,42 +1,48 @@
-#ifndef SWAY_UI_LAYOUT_LAYOUTITEM_HPP
-#define SWAY_UI_LAYOUT_LAYOUTITEM_HPP
+#ifndef SWAY_UI_LAYOUTITEM_HPP
+#define SWAY_UI_LAYOUTITEM_HPP
 
 #include <sway/core.hpp>
 #include <sway/ois.hpp>
+#include <sway/render/updatable.hpp>
 #include <sway/ui/element/_typedefs.hpp>
 #include <sway/ui/element/element.hpp>
 #include <sway/ui/layout/_typedefs.hpp>
 
-NS_BEGIN_SWAY()
-NS_BEGIN(ui)
+namespace sway::ui {
 
-class LayoutItem : public Element {
+class LayoutItem : public Element, public render::Updatable {
 public:
-#pragma region "Ctors/Dtor"
+#pragma region "Constructor(s) & Destructor"
+  /** \~english @name Constructor(s) & Destructor */ /** \~russian @name Конструктор(ы) и Деструктор */
+  /** @{ */
 
   LayoutItem();
 
-  DTOR_VIRTUAL_DEFAULT(LayoutItem);
+  virtual ~LayoutItem() = default;
+
+  /** @} */
+#pragma endregion
+
+#pragma region "Overridden Updatable methods"
+
+  virtual void update() {}
 
 #pragma endregion
 
-#pragma region "Base virtual methods"
+#pragma region "Overridden Element methods"
 
-  MTHD_VIRTUAL(void update()) {}
+  void recursiveUpdateItemOffset(const math::point2f_t offset) override;
 
 #pragma endregion
 
-  MTHD_OVERRIDE(void recursiveUpdateItemOffset(const math::point2f_t offset));
+  void setMouseFilter(ois::MouseFilter filter) { mouseFilter_ = filter; }
 
-  void setMouseFilter(ois::MouseFilter::Enum filter) { mouseFilter_ = filter; }
-
-  [[nodiscard]] auto getMouseFilter() const -> ois::MouseFilter::Enum { return mouseFilter_; }
+  [[nodiscard]] auto getMouseFilter() const -> ois::MouseFilter { return mouseFilter_; }
 
 private:
-  ois::MouseFilter::Enum mouseFilter_;
+  ois::MouseFilter mouseFilter_;
 };
 
-NS_END()  // namespace ui
-NS_END()  // namespace sway
+}  // namespace sway::ui
 
-#endif  // SWAY_UI_LAYOUT_LAYOUTITEM_HPP
+#endif  // SWAY_UI_LAYOUTITEM_HPP

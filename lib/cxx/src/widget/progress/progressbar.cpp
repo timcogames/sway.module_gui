@@ -4,8 +4,7 @@
 
 #include <algorithm>
 
-NS_BEGIN_SWAY()
-NS_BEGIN(ui)
+namespace sway::ui {
 
 ProgressBar::ProgressBar(BuilderTypedefs::Ptr_t builder)
     : Widget(builder)
@@ -59,5 +58,4 @@ void ProgressBar::setProgress(f32_t val) {
 
 void ProgressBar::addProgress(f32_t val) { this->setProgress(current_ + val); }
 
-NS_END()  // namespace ui
-NS_END()  // namespace sway
+}  // namespace sway::ui

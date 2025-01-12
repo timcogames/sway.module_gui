@@ -8,8 +8,7 @@
 #include <freetype/ftstroke.h>
 #include <ft2build.h>
 
-NS_BEGIN_SWAY()
-NS_BEGIN(ui)
+namespace sway::ui {
 NS_BEGIN(ft2)
 
 struct ObjectFetchResponse : public rms::FetchResponse {
@@ -34,7 +33,6 @@ private:
 };
 
 NS_END()  // namespace ft2
-NS_END()  // namespace ui
-NS_END()  // namespace sway
+}  // namespace sway::ui
 
 #endif  // SWAY_UI_FT2_FACELOADER_HPP

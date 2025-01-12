@@ -1,5 +1,5 @@
-#ifndef SWAY_UI_LAYOUT_LINEARLAYOUT_HPP
-#define SWAY_UI_LAYOUT_LINEARLAYOUT_HPP
+#ifndef SWAY_UI_LINEARLAYOUT_HPP
+#define SWAY_UI_LINEARLAYOUT_HPP
 
 #include <sway/core.hpp>
 #include <sway/ui/layout/_typedefs.hpp>
@@ -9,8 +9,7 @@
 
 #include <memory>
 
-NS_BEGIN_SWAY()
-NS_BEGIN(ui)
+namespace sway::ui {
 
 class LinearLayout : public Layout {
 public:
@@ -31,20 +30,41 @@ public:
 
 #pragma endregion
 
-#pragma region "Ctors/Dtor"
+#pragma region "Constructor(s) & Destructor"
+  /** \~english @name Constructor(s) & Destructor */ /** \~russian @name Конструктор(ы) и Деструктор */
+  /** @{ */
 
   LinearLayout(BuilderTypedefs::Ptr_t builder, Orientation orien);
 
-  DTOR_VIRTUAL_DEFAULT(LinearLayout);
+  virtual ~LinearLayout() = default;
 
+  /** @} */
 #pragma endregion
 
-  void build();
+  /**
+   * \~english @brief Set the Adjacent object.
+   * @details
+   *   This method sets the adjacent offset for each child element
+   *   in the linear layout. The adjacent offset is used to calculate
+   *   the position of each element in the layout.
+   *
+   * \~russian @brief Устанавливает смещение соседа.
+   * @details
+   *   Этот метод устанавливает смещение соседа для каждого элемента
+   *   в линейном макете. Смещение соседа используется для вычисления
+   *   положения каждого элемента в макете.
+   *
+   * @see Layout::getCellSize()
+   */
+  void setAdjacent();
 
-  MTHD_OVERRIDE(void recursiveUpdateItemOffset(const math::point2f_t offset));
+#pragma region "Overridden Layout > LayoutItem > Element methods"
+
+  void recursiveUpdateItemOffset(const math::point2f_t offset) override;
+
+#pragma endregion
 };
 
-NS_END()  // namespace ui
-NS_END()  // namespace sway
+}  // namespace sway::ui
 
-#endif  // SWAY_UI_LAYOUT_LINEARLAYOUT_HPP
+#endif  // SWAY_UI_LINEARLAYOUT_HPP

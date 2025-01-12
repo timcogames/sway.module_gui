@@ -11,17 +11,19 @@
 #include <iostream>  // std::ostream
 #include <memory>
 
-NS_BEGIN_SWAY()
-NS_BEGIN(ui)
+namespace sway::ui {
 
 class BoxArea : public Area {
 public:
-#pragma region "Ctors/Dtor"
+#pragma region "Constructor(s) & Destructor"
+  /** \~english @name Constructor(s) & Destructor */ /** \~russian @name Конструктор(ы) и Деструктор */
+  /** @{ */
 
   BoxArea(AreaType type);
 
-  DTOR_VIRTUAL_DEFAULT(BoxArea);
+  virtual ~BoxArea() = default;
 
+  /** @} */
 #pragma endregion
 
 #pragma region "Overridden Area methods"
@@ -69,7 +71,6 @@ private:
   std::array<f32_t, NUM_OF_EDGES> edges_;
 };
 
-NS_END()  // namespace ui
-NS_END()  // namespace sway
+}  // namespace sway::ui
 
 #endif  // SWAY_UI_AREA_BOXAREA_HPP
