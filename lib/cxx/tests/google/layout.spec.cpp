@@ -48,15 +48,15 @@ TEST(LayoutTest, build) {
   // mainLayout->build();
 
   auto txt1 = core::NodeUtil::cast<ui::TextView>(btn1->getChildNodes()[0]);
-  std::cout << "btn1: " << core::Representation<core::NodeIndex>::get(btn1->getNodeIndex())
+  std::cout << "btn1: " << Representation<core::NodeIndex>::get(btn1->getNodeIndex())
             << " offset: " << btn1->getOffset().computed << std::endl;
-  std::cout << "txt1: " << core::Representation<core::NodeIndex>::get(txt1->getNodeIndex())
+  std::cout << "txt1: " << Representation<core::NodeIndex>::get(txt1->getNodeIndex())
             << " offset: " << txt1->getOffset().computed << std::endl;
 
   auto txt2 = core::NodeUtil::cast<ui::TextView>(btn2->getChildNodes()[0]);
-  std::cout << "btn2: " << core::Representation<core::NodeIndex>::get(btn2->getNodeIndex())
+  std::cout << "btn2: " << Representation<core::NodeIndex>::get(btn2->getNodeIndex())
             << " offset: " << btn2->getOffset().computed << std::endl;
-  std::cout << "txt2: " << core::Representation<core::NodeIndex>::get(txt2->getNodeIndex())
+  std::cout << "txt2: " << Representation<core::NodeIndex>::get(txt2->getNodeIndex())
             << " offset: " << txt2->getOffset().computed << std::endl;
 
   mainLayout->removeChildNode(btn2);

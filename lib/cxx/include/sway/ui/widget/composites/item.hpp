@@ -9,10 +9,17 @@ namespace sway::ui {
 
 class Item : public Widget {
 public:
+#pragma region "Constructor(s) & Destructor"
+  /** \~english @name Constructor(s) & Destructor */ /** \~russian @name Конструктор(ы) и Деструктор */
+  /** @{ */
+
   Item(BuilderTypedefs::Ptr_t builder)
       : Widget(builder) {}
 
-  DTOR_VIRTUAL_DEFAULT(Item);
+  virtual ~Item() = default;
+
+  /** @} */
+#pragma endregion
 
   void select() {}
 

@@ -12,7 +12,7 @@ Painter::Painter()
 
 Painter::~Painter() {}
 
-void Painter::initialize(ft2::Font::SharedPtr_t font, render::typedefs::RenderSubsystemSharedPtr_t subsys,
+void Painter::initialize(ft2::Font::SharedPtr_t font, render::RenderSubsystemSharedPtr_t subsys,
     render::MaterialManagerTypedefs::SharedPtr_t materialMngr, std::shared_ptr<rms::ImageResourceManager> imgResMngr,
     std::shared_ptr<rms::GLSLResourceManager> glslResMngr) {
 

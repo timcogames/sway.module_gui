@@ -28,14 +28,14 @@ void Widget::repaint(PainterTypedefs::SharedPtr_t painter) {
   for (auto const &child : this->getChildNodes()) {
     auto widget = core::NodeUtil::cast<Widget>(child);
     std::cout << "repaint " << core::toBase(widget->getBarrierType()) << " "
-              << core::Representation<core::NodeIndex>::get(widget->getNodeIndex()) << std::endl;
+              << Representation<core::NodeIndex>::get(widget->getNodeIndex()) << std::endl;
     if (widget->getBarrierType() != BarrierType::LAYOUT) {
       widget->repaint(painter);
     } else {
       for (auto const &child2 : widget->getChildNodes()) {
         auto widget2 = core::NodeUtil::cast<Widget>(child2);
         std::cout << "repaint " << core::toBase(widget2->getBarrierType()) << " "
-                  << core::Representation<core::NodeIndex>::get(widget2->getNodeIndex()) << std::endl;
+                  << Representation<core::NodeIndex>::get(widget2->getNodeIndex()) << std::endl;
         if (widget2->getBarrierType() != BarrierType::LAYOUT) {
           widget2->repaint(painter);
         }
