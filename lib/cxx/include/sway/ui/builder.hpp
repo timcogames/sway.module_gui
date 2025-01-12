@@ -45,9 +45,9 @@ public:
 
   auto getCursor() const -> Cursor { return cursor_; }
 
-  void updateWidgetUnderPointer(WidgetTypedefs::UnderPointer_t target);
+  void updateWidgetUnderPointer(ElementTypedefs::UnderPointer_t target);
 
-  auto getWidgetUnderPointer() -> WidgetTypedefs::UnderPointer_t { return currWidgetUnderPointer_; }
+  auto getWidgetUnderPointer() -> ElementTypedefs::UnderPointer_t { return currWidgetUnderPointer_; }
 
   void handleMouseClick(u32_t state);
 
@@ -63,10 +63,10 @@ private:
   WidgetTypedefs::SharedPtr_t root_;
 
   struct ElementUnderPointerInfo {
-    WidgetTypedefs::UnderPointer_t element;
+    ElementTypedefs::UnderPointer_t element;
   };
 
-  WidgetTypedefs::UnderPointer_t currWidgetUnderPointer_;
+  ElementTypedefs::UnderPointer_t currWidgetUnderPointer_;
 
   Cursor cursor_;
 };

@@ -35,12 +35,7 @@ public:
 
 #pragma endregion
 
-  void setMouseFilter(ois::MouseFilter filter) { mouseFilter_ = filter; }
-
-  [[nodiscard]] auto getMouseFilter() const -> ois::MouseFilter { return mouseFilter_; }
-
-private:
-  ois::MouseFilter mouseFilter_;
+  MTHD_OVERRIDE(auto getBarrierType() const -> BarrierType) { return BarrierType::NONE; }
 };
 
 }  // namespace sway::ui

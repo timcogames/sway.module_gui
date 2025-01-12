@@ -9,8 +9,6 @@ namespace sway::ui {
 
 Widget::Widget(BuilderTypedefs::Ptr_t builder)
     : builder_(builder)
-    // , eventFilter_(nullptr)
-    , containsPointer_(false)
     , needsRepainting_(false) {
   setBackgroundColor(COL4F_GRAY1);
   setForegroundColor(COL4F_BEIGE);
@@ -28,42 +26,22 @@ void Widget::repaint(PainterTypedefs::SharedPtr_t painter) {
   }
 
   for (auto const &child : this->getChildNodes()) {
-    std::static_pointer_cast<Widget>(child)->repaint(painter);
+    auto widget = core::NodeUtil::cast<Widget>(child);
+    std::cout << "repaint " << core::toBase(widget->getBarrierType()) << " "
+              << core::Representation<core::NodeIndex>::get(widget->getNodeIndex()) << std::endl;
+    if (widget->getBarrierType() != BarrierType::LAYOUT) {
+      widget->repaint(painter);
+    } else {
+      for (auto const &child2 : widget->getChildNodes()) {
+        auto widget2 = core::NodeUtil::cast<Widget>(child2);
+        std::cout << "repaint " << core::toBase(widget2->getBarrierType()) << " "
+                  << core::Representation<core::NodeIndex>::get(widget2->getNodeIndex()) << std::endl;
+        if (widget2->getBarrierType() != BarrierType::LAYOUT) {
+          widget2->repaint(painter);
+        }
+      }
+    }
   }
-}
-
-void Widget::onCursorPointerEnter() {
-  containsPointer_ = true;
-  this->update();
-
-  auto *evtdata = new PointerEnterEventData();
-  emit(EVT_POINTER_ENTER, std::make_unique<PointerEnterEvent>(0, evtdata),
-      [&](core::EventHandlerTypedefs::Ptr_t) { return true; });
-}
-
-void Widget::onCursorPointerLeave() {
-  containsPointer_ = false;
-  this->update();
-
-  auto *evtdata = new PointerLeaveEventData();
-
-  emit(EVT_POINTER_LEAVE, std::make_unique<PointerLeaveEvent>(0, evtdata),
-      [&](core::EventHandlerTypedefs::Ptr_t) { return true; });
-}
-
-void Widget::onMouseClick(u32_t state) {
-  this->update();
-
-  // if (eventFilter_ != nullptr) {
-  //   //   eventFilter_->handle(this, event);
-  // }
-
-  auto *evtdata = new MouseClickEventData();
-  evtdata->nodeidx = this->getNodeIndex();
-  evtdata->state = state;
-
-  emit(EVT_MOUSE_CLICKED, std::make_unique<MouseClickedEvent>(0, std::move(evtdata)),
-      [&](core::EventHandlerTypedefs::Ptr_t) { return true; });
 }
 
 // void Widget::setMargin(f32_t mrg) {
@@ -91,28 +69,6 @@ void Widget::setForegroundColor(const math::col4f_t &col) {
 
 auto Widget::getForegroundColor() const -> math::col4f_t {
   return appearance_.text[core::toBase(WidgetColorGroup::INACTIVE)][core::toBase(WidgetColorState::NORM)];
-}
-
-auto Widget::getChildAtPoint(const math::point2f_t &pnt) -> WidgetTypedefs::Ptr_t {
-  for (auto node : this->getChildNodes()) {
-    auto child = std::static_pointer_cast<Widget>(node);
-    if (!child->isVisible()) {
-      break;
-    }
-
-    const auto childPos = child->getOffset().computed;
-    auto childRect = math::rect4f_t(childPos.getX(), childPos.getY(), child->getOuterSize());
-
-    // std::cout << childRect << " / " << pnt << std::endl;
-
-    if (auto *const widget = child->getChildAtPoint(pnt)) {
-      return widget;
-    } else if (childRect.contains(pnt) && child->getMouseFilter() != ois::MouseFilter::IGNORE) {
-      return child.get();
-    }
-  }
-
-  return nullptr;
 }
 
 // void Widget::setEventFilter(core::evts::EventHandlerTypedefs::Ptr_t hdl) { eventFilter_ = hdl; }

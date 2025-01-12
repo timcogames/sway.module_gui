@@ -5,6 +5,7 @@
 #include <sway/math.hpp>
 #include <sway/ois.hpp>
 #include <sway/ui/_typedefs.hpp>
+#include <sway/ui/barriertypes.hpp>
 #include <sway/ui/element/_typedefs.hpp>
 #include <sway/ui/element/element.hpp>
 #include <sway/ui/layout/layoutitem.hpp>
@@ -42,10 +43,6 @@ namespace sway::ui {
 // struct Focusable {};
 
 class Widget : public LayoutItem {
-  DECLARE_EVENT(EVT_POINTER_ENTER, PointerEnter)
-  DECLARE_EVENT(EVT_POINTER_LEAVE, PointerLeave)
-  DECLARE_EVENT(EVT_MOUSE_CLICKED, MouseClicked)
-
   // DECLARE_EVENT(EVT_PRESSED, Pressed)
   // DECLARE_EVENT(EVT_RELEASED, Released)
   // DECLARE_EVENT(EVT_CLICKED, Clicked)
@@ -68,12 +65,6 @@ public:
 
   MTHD_VIRTUAL(void repaint(PainterTypedefs::SharedPtr_t painter));
 
-  MTHD_VIRTUAL(void onCursorPointerEnter());
-
-  MTHD_VIRTUAL(void onCursorPointerLeave());
-
-  MTHD_VIRTUAL(void onMouseClick(u32_t state));
-
 #pragma endregion
 
 #pragma region "Overridden LayoutItem methods"
@@ -90,20 +81,16 @@ public:
 
   [[nodiscard]] auto getForegroundColor() const -> math::col4f_t;
 
-  auto getChildAtPoint(const math::point2f_t &point) -> Widget *;
-
-  // void setEventFilter(core::evts::EventHandlerTypedefs::Ptr_t hdl);
-
   void setAlignment(math::Alignment alignment);
+
+  MTHD_OVERRIDE(auto getBarrierType() const -> BarrierType) { return BarrierType::NONE; }
 
 protected:
   BuilderTypedefs::Ptr_t builder_;
-  // core::evts::EventHandlerTypedefs::Ptr_t eventFilter_;
   // math::rect4f_t innerRect_;  // wdt/hgt, padding
   // math::rect4f_t outerRect_;  // wdt/hgt, margin, border, padding
   Appearance appearance_;
 
-  bool containsPointer_;
   bool needsRepainting_;
   bool needToUpdate_;
 };

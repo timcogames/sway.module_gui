@@ -59,7 +59,7 @@ void Builder::deinit() {
 
 void Builder::update() { root_->repaint(painter_); }
 
-void Builder::updateWidgetUnderPointer(WidgetTypedefs::UnderPointer_t target) {
+void Builder::updateWidgetUnderPointer(ElementTypedefs::UnderPointer_t target) {
   if (currWidgetUnderPointer_ == target) {
     return;
   }

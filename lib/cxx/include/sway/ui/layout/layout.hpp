@@ -36,6 +36,8 @@ public:
 
   /** @} */
 #pragma endregion
+
+  MTHD_OVERRIDE(auto getBarrierType() const -> BarrierType) { return BarrierType::LAYOUT; }
 };
 
 }  // namespace sway::ui

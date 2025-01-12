@@ -9,7 +9,6 @@ class Widget;
 namespace WidgetTypedefs {
 using Ptr_t = Widget *;
 using SharedPtr_t = std::shared_ptr<Widget>;
-using UnderPointer_t = Ptr_t;
 }  // namespace WidgetTypedefs
 
 }  // namespace sway::ui

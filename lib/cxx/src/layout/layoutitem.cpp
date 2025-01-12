@@ -3,8 +3,7 @@
 
 namespace sway::ui {
 
-LayoutItem::LayoutItem()
-    : mouseFilter_(ois::MouseFilter::STOP) {}
+LayoutItem::LayoutItem() {}
 
 void LayoutItem::recursiveUpdateItemOffset(const math::point2f_t parentOffset) {
   auto elementOffset = math::point2f_t(

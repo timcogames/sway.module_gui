@@ -18,6 +18,8 @@ public:
   virtual void recursiveUpdateItemOffset(const math::point2f_t parentOffset) {
     // TODO
   }
+
+  virtual auto getBarrierType() const -> ui::BarrierType { return ui::BarrierType::NONE; }
 };
 
 TEST(ElementTest, ctor_def) {

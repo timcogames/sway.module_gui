@@ -1,9 +1,13 @@
 #include <sway/ui/element/element.hpp>
+#include <sway/ui/widget/widgetevent.hpp>
 
 namespace sway::ui {
 
 Element::Element()
-    : position_(ElementPosition::RELATIVE)
+    : mouseFilter_(ois::MouseFilter::STOP)
+    , position_(ElementPosition::RELATIVE)
+    , containsPointer_(false)
+    , eventFilter_(nullptr)
     , alignment_(math::Alignment::LEFT_TOP) {
   this->subscribe(this, "NodeAdded", EVENT_HANDLER(Element, handleAddNode));
 }
@@ -104,6 +108,62 @@ auto Element::handleAddNode(const core::EventTypedefs::UniquePtr_t &evt) -> bool
 
   // recursiveUpdate(prevElement, currElement);
   return true;
+}
+
+auto Element::getChildAtPoint(const math::point2f_t &pnt) -> ElementTypedefs::Ptr_t {
+  for (auto node : this->getChildNodes()) {
+    auto child = std::static_pointer_cast<Element>(node);
+    if (!child->isVisible()) {
+      break;
+    }
+
+    const auto childPos = child->getOffset().computed;
+    auto childRect = math::rect4f_t(childPos.getX(), childPos.getY(), child->getOuterSize());
+
+    // std::cout << childRect << " / " << pnt << std::endl;
+
+    if (auto *const element = child->getChildAtPoint(pnt)) {
+      return element;
+    } else if (childRect.contains(pnt) && child->getMouseFilter() != ois::MouseFilter::IGNORE) {
+      return child.get();
+    }
+  }
+
+  return nullptr;
+}
+
+void Element::onCursorPointerEnter() {
+  containsPointer_ = true;
+  // this->update();
+
+  auto *evtdata = new PointerEnterEventData();
+
+  emit(EVT_POINTER_ENTER, std::make_unique<PointerEnterEvent>(0, evtdata),
+      [&](core::EventHandlerTypedefs::Ptr_t) { return true; });
+}
+
+void Element::onCursorPointerLeave() {
+  containsPointer_ = false;
+  // this->update();
+
+  auto *evtdata = new PointerLeaveEventData();
+  emit(EVT_POINTER_LEAVE, std::make_unique<PointerLeaveEvent>(0, evtdata),
+      [&](core::EventHandlerTypedefs::Ptr_t) { return true; });
+}
+
+void Element::onMouseClick(u32_t state) {
+  // this->update();
+
+  if (eventFilter_ != nullptr) {
+    // eventFilter_->handle(this, event);
+  }
+
+  auto *evtdata = new MouseClickEventData();
+  evtdata->nodeidx = this->getNodeIndex();
+  evtdata->state = state;
+
+  emit(EVT_MOUSE_CLICKED, std::make_unique<MouseClickedEvent>(0, std::move(evtdata)),
+      [&](core::EventHandlerTypedefs::Ptr_t) { return true; });
 }
 
 }  // namespace sway::ui
