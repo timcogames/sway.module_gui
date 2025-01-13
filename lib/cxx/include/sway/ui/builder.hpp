@@ -16,6 +16,15 @@ class Builder : public core::Object {
   DECLARE_CLASS_METADATA(Builder, core::Object)
 
 public:
+#pragma region "Pointer aliases"
+  /** \~english @name Pointer aliases */ /** \~russian @name Типы указателей */
+
+  using Ptr_t = BuilderPtr_t;
+  using SharedPtr_t = BuilderSharedPtr_t;
+
+  /** @{ */
+#pragma endregion
+
 #pragma region "Constructor(s) & Destructor"
   /** \~english @name Constructor(s) & Destructor */ /** \~russian @name Конструктор(ы) и Деструктор */
   /** @{ */

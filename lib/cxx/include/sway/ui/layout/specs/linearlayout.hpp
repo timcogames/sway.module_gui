@@ -12,19 +12,22 @@ namespace sway::ui {
 class LinearLayout : public Layout {
 public:
 #pragma region "Static methods"
-
   /**
    * @name creators
    * @{
    */
 
-  static auto create(BuilderPtr_t builder, Orientation orien = Orientation::VERT) -> LinearLayoutTypedefs::SharedPtr_t;
+  static auto create(BuilderPtr_t builder, Orientation orien = Orientation::VERT) -> LinearLayoutSharedPtr_t;
 
-  /**
-   * end of creators group
-   * @}
-   */
+  /** @} */
+#pragma endregion
 
+#pragma region "Pointer aliases"
+  /** \~english @name Pointer aliases */ /** \~russian @name Типы указателей */
+
+  using SharedPtr_t = LinearLayoutSharedPtr_t;
+
+  /** @{ */
 #pragma endregion
 
 #pragma region "Constructor(s) & Destructor"

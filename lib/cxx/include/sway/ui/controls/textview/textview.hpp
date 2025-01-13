@@ -2,6 +2,7 @@
 #define SWAY_UI_TEXTVIEW_HPP
 
 #include <sway/ui/_stdafx.hpp>
+#include <sway/ui/controls/textview/_typedefs.hpp>
 #include <sway/ui/painter.hpp>
 #include <sway/ui/typography.hpp>
 #include <sway/ui/widget/typedefs.hpp>
@@ -11,6 +12,14 @@ namespace sway::ui {
 
 class TextView : public Widget {
 public:
+#pragma region "Pointer aliases"
+  /** \~english @name Pointer aliases */ /** \~russian @name Типы указателей */
+
+  using SharedPtr_t = TextViewSharedPtr_t;
+
+  /** @{ */
+#pragma endregion
+
 #pragma region "Constructor(s) & Destructor"
   /** \~english @name Constructor(s) & Destructor */ /** \~russian @name Конструктор(ы) и Деструктор */
   /** @{ */

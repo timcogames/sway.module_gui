@@ -6,10 +6,9 @@
 namespace sway::ui {
 
 class LinearLayout;
-namespace LinearLayoutTypedefs {
-using Ptr_t = LinearLayout *;
-using SharedPtr_t = std::shared_ptr<LinearLayout>;
-}  // namespace LinearLayoutTypedefs
+
+using LinearLayoutPtr_t = LinearLayout *;
+using LinearLayoutSharedPtr_t = std::shared_ptr<LinearLayout>;
 
 }  // namespace sway::ui
 

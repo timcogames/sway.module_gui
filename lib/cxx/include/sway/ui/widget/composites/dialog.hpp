@@ -3,6 +3,7 @@
 
 #include <sway/ui/_stdafx.hpp>
 #include <sway/ui/painter.hpp>
+#include <sway/ui/widget/composites/_typedefs.hpp>
 #include <sway/ui/widget/composites/backdrop.hpp>
 #include <sway/ui/widget/composites/draggable.hpp>
 #include <sway/ui/widget/composites/popup.hpp>
@@ -12,6 +13,14 @@ namespace sway::ui {
 
 class Dialog : public Popup {
 public:
+#pragma region "Pointer aliases"
+  /** \~english @name Pointer aliases */ /** \~russian @name Типы указателей */
+
+  using SharedPtr_t = DialogSharedPtr_t;
+
+  /** @{ */
+#pragma endregion
+
 #pragma region "Constructor(s) & Destructor"
   /** \~english @name Constructor(s) & Destructor */ /** \~russian @name Конструктор(ы) и Деструктор */
   /** @{ */

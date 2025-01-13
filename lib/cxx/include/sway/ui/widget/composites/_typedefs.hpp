@@ -6,9 +6,12 @@
 namespace sway::ui {
 
 class Menu;
+class Dialog;
 
 using MenuPtr_t = Menu *;
 using MenuSharedPtr_t = std::shared_ptr<Menu>;
+
+using DialogSharedPtr_t = std::shared_ptr<Dialog>;
 
 }  // namespace sway::ui
 

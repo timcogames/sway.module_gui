@@ -6,9 +6,8 @@
 namespace sway::ui {
 
 class TextView;
-namespace TextViewTypedefs {
-using SharedPtr_t = std::shared_ptr<TextView>;
-}  // namespace TextViewTypedefs
+
+using TextViewSharedPtr_t = std::shared_ptr<TextView>;
 
 }  // namespace sway::ui
 

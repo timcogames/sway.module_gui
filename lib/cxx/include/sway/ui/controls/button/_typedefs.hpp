@@ -6,15 +6,16 @@
 namespace sway::ui {
 
 class Button;
-namespace ButtonTypedefs {
-using SharedPtr_t = std::shared_ptr<Button>;
-}  // namespace ButtonTypedefs
-
+class ToggleButton;
 class RadioButton;
-namespace RadioButtonTypedefs {
-using SharedPtr_t = std::shared_ptr<RadioButton>;
-using OptionalSharedPtr_t = std::optional<SharedPtr_t>;
-}  // namespace RadioButtonTypedefs
+class RadioButtonGroup;
+
+using ButtonSharedPtr_t = std::shared_ptr<Button>;
+using ToggleButtonSharedPtr_t = std::shared_ptr<ToggleButton>;
+using RadioButtonSharedPtr_t = std::shared_ptr<RadioButton>;
+using RadioButtonOptionalSharedPtr_t = std::optional<RadioButtonSharedPtr_t>;
+using RadioButtonGroupPtr_t = RadioButtonGroup *;
+using RadioButtonGroupSharedPtr_t = std::shared_ptr<RadioButtonGroup>;
 
 }  // namespace sway::ui
 

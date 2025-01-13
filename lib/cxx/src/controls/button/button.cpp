@@ -4,7 +4,7 @@
 
 namespace sway::ui {
 
-auto Button::create(BuilderPtr_t builder, const std::string &text) -> ButtonTypedefs::SharedPtr_t {
+auto Button::create(BuilderPtr_t builder, const std::string &text) -> ButtonSharedPtr_t {
   return std::make_shared<Button>(builder, text);
 }
 

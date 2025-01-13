@@ -39,7 +39,7 @@ public:
   void focusLost();
 
 private:
-  ButtonTypedefs::SharedPtr_t button_;
+  ButtonSharedPtr_t button_;
 };
 
 }  // namespace sway::ui

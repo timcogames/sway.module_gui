@@ -9,6 +9,14 @@ namespace sway::ui {
 
 class RadioButton : public ToggleButton {
 public:
+#pragma region "Pointer aliases"
+  /** \~english @name Pointer aliases */ /** \~russian @name Типы указателей */
+
+  using SharedPtr_t = RadioButtonSharedPtr_t;
+
+  /** @{ */
+#pragma endregion
+
 #pragma region "Constructor(s) & Destructor"
   /** \~english @name Constructor(s) & Destructor */ /** \~russian @name Конструктор(ы) и Деструктор */
   /** @{ */

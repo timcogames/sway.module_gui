@@ -12,16 +12,22 @@ namespace sway::ui {
 class Button : public Widget {
 public:
 #pragma region "Static methods"
-
   /**
    * @name creators
    * @{
    */
 
-  static auto create(BuilderPtr_t builder, const std::string &text) -> ButtonTypedefs::SharedPtr_t;
+  static auto create(BuilderPtr_t builder, const std::string &text) -> ButtonSharedPtr_t;
 
   /** @} */
+#pragma endregion
 
+#pragma region "Pointer aliases"
+  /** \~english @name Pointer aliases */ /** \~russian @name Типы указателей */
+
+  using SharedPtr_t = ButtonSharedPtr_t;
+
+  /** @{ */
 #pragma endregion
 
 #pragma region "Constructor(s) & Destructor"
@@ -45,10 +51,10 @@ public:
 
 #pragma endregion
 
-  auto getLabel() const -> TextViewTypedefs::SharedPtr_t { return textView_; }
+  auto getLabel() const -> TextViewSharedPtr_t { return textView_; }
 
 private:
-  TextViewTypedefs::SharedPtr_t textView_;
+  TextViewSharedPtr_t textView_;
   bool hovering_;
 };
 

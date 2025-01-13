@@ -47,18 +47,31 @@ public:
 #pragma region "Getters/Setters Offset"
 
   /**
-   * \~russian @brief Устанавливает оригинальное положение.
+   * \~english
+   * @brief Sets the original position.
+   * @param[in] pnt New original position.
+   *
+   * \~russian
+   * @brief Устанавливает оригинальное положение.
    * @param[in] pnt Новое оригинальное положение.
    *
+   * \~
    * @sa setOffset(f32_t, f32_t)
    */
   void setOffset(const math::point2f_t &pnt);
 
   /**
-   * \~russian @brief Устанавливает оригинальное положение.
+   * \~english
+   * @brief Sets the original position.
+   * @param[in] x Value of X coordinate.
+   * @param[in] y Value of Y coordinate.
+   *
+   * \~russian
+   * @brief Устанавливает оригинальное положение.
    * @param[in] x Значение координаты по оси X.
    * @param[in] y Значение координаты по оси Y.
    *
+   * \~
    * @sa setOffset(const math::point2f_t &)
    */
   void setOffset(f32_t x, f32_t y);
