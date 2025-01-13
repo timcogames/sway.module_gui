@@ -1,14 +1,11 @@
 #ifndef SWAY_UI_TEXTVIEW_HPP
 #define SWAY_UI_TEXTVIEW_HPP
 
-#include <sway/core.hpp>
+#include <sway/ui/_stdafx.hpp>
 #include <sway/ui/painter.hpp>
 #include <sway/ui/typography.hpp>
 #include <sway/ui/widget/typedefs.hpp>
 #include <sway/ui/widget/widget.hpp>
-
-#include <memory>
-#include <string>
 
 namespace sway::ui {
 
@@ -18,7 +15,7 @@ public:
   /** \~english @name Constructor(s) & Destructor */ /** \~russian @name Конструктор(ы) и Деструктор */
   /** @{ */
 
-  TextView(BuilderTypedefs::Ptr_t builder, const std::string &text);
+  TextView(BuilderPtr_t builder, const std::string &text);
 
   virtual ~TextView() = default;
 
@@ -29,7 +26,7 @@ public:
 
   MTHD_VIRTUAL(void update());
 
-  MTHD_VIRTUAL(void repaint(PainterTypedefs::SharedPtr_t painter));
+  MTHD_VIRTUAL(void repaint(PainterSharedPtr_t painter));
 
 #pragma endregion
 

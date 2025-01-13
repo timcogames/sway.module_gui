@@ -7,7 +7,7 @@
 namespace sway::ui {
 
 struct WidgetEventHandler : public core::EventHandler {
-  WidgetEventHandler(BuilderTypedefs::Ptr_t builder)
+  WidgetEventHandler(BuilderPtr_t builder)
       : core::EventHandler(nullptr)
       , builder_(builder) {}
 
@@ -36,7 +36,7 @@ struct WidgetEventHandler : public core::EventHandler {
   }
 
 private:
-  BuilderTypedefs::Ptr_t builder_;
+  BuilderPtr_t builder_;
 };
 
 Builder::Builder(core::typedefs::ContextPtr_t context)
@@ -59,7 +59,7 @@ void Builder::deinit() {
 
 void Builder::update() { root_->repaint(painter_); }
 
-void Builder::updateWidgetUnderPointer(ElementTypedefs::UnderPointer_t target) {
+void Builder::updateWidgetUnderPointer(ElementUnderPointer_t target) {
   if (currWidgetUnderPointer_ == target) {
     return;
   }

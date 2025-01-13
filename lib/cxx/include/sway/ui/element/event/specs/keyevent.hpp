@@ -1,7 +1,7 @@
 #ifndef SWAY_UI_ELEMENT_EVENTHUBS_KEYEVENT_HPP
 #define SWAY_UI_ELEMENT_EVENTHUBS_KEYEVENT_HPP
 
-#include <sway/core.hpp>
+#include <sway/ui/_stdafx.hpp>
 #include <sway/ui/element/event/_typedefs.hpp>
 #include <sway/ui/element/event/specs/inputevent.hpp>
 

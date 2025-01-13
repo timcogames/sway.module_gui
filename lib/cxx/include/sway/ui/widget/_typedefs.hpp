@@ -1,15 +1,14 @@
 #ifndef SWAY_UI_WIDGETS_TYPEDEFS_HPP
 #define SWAY_UI_WIDGETS_TYPEDEFS_HPP
 
-#include <sway/core.hpp>
+#include <sway/ui/_stdafx.hpp>
 
 namespace sway::ui {
 
 class Widget;
-namespace WidgetTypedefs {
-using Ptr_t = Widget *;
-using SharedPtr_t = std::shared_ptr<Widget>;
-}  // namespace WidgetTypedefs
+
+using WidgetPtr_t = Widget *;
+using WidgetSharedPtr_t = std::shared_ptr<Widget>;
 
 }  // namespace sway::ui
 

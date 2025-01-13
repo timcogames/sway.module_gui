@@ -10,14 +10,14 @@
 
 namespace sway::ui {
 
-Popup::Popup(BuilderTypedefs::Ptr_t builder)
+Popup::Popup(BuilderPtr_t builder)
     : Widget(builder) {}
 
 Popup::~Popup() {}
 
 void Popup::update() {}
 
-void Popup::repaint(PainterTypedefs::SharedPtr_t painter) {
+void Popup::repaint(PainterSharedPtr_t painter) {
   auto offset = this->getOffset().computed;
   painter->drawRect(math::rect4f_t(offset.getX(), offset.getY(), this->getSize()), this->getBackgroundColor(),
       getZIndex((i32_t)core::toBase(ZIndex::DIALOG)));

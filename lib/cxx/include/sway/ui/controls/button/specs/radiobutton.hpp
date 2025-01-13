@@ -1,11 +1,9 @@
 #ifndef SWAY_UI_RADIOBUTTON_HPP
 #define SWAY_UI_RADIOBUTTON_HPP
 
-#include <sway/core.hpp>
+#include <sway/ui/_stdafx.hpp>
 #include <sway/ui/controls/button/specs/togglebutton.hpp>
 #include <sway/ui/painter.hpp>
-
-#include <string>
 
 namespace sway::ui {
 
@@ -15,7 +13,7 @@ public:
   /** \~english @name Constructor(s) & Destructor */ /** \~russian @name Конструктор(ы) и Деструктор */
   /** @{ */
 
-  RadioButton(BuilderTypedefs::Ptr_t builder, const std::string &text);
+  RadioButton(BuilderPtr_t builder, const std::string &text);
 
   virtual ~RadioButton() = default;
 
@@ -26,7 +24,7 @@ public:
 
   MTHD_VIRTUAL(void update());
 
-  MTHD_VIRTUAL(void repaint(PainterTypedefs::SharedPtr_t painter));
+  MTHD_VIRTUAL(void repaint(PainterSharedPtr_t painter));
 
 #pragma endregion
 };

@@ -1,9 +1,7 @@
 #ifndef SWAY_UI_RADIOBUTTONGROUPCHANGEEVENTDATA_HPP
 #define SWAY_UI_RADIOBUTTONGROUPCHANGEEVENTDATA_HPP
 
-#include <sway/core.hpp>
-
-#include <string>
+#include <sway/ui/_stdafx.hpp>
 
 namespace sway::ui {
 

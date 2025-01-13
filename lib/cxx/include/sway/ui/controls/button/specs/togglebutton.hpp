@@ -1,7 +1,7 @@
 #ifndef SWAY_UI_TOGGLEBUTTON_HPP
 #define SWAY_UI_TOGGLEBUTTON_HPP
 
-#include <sway/core.hpp>
+#include <sway/ui/_stdafx.hpp>
 #include <sway/ui/controls/button/button.hpp>
 #include <sway/ui/painter.hpp>
 
@@ -13,7 +13,7 @@ public:
   /** \~english @name Constructor(s) & Destructor */ /** \~russian @name Конструктор(ы) и Деструктор */
   /** @{ */
 
-  ToggleButton(BuilderTypedefs::Ptr_t builder, const std::string &text);
+  ToggleButton(BuilderPtr_t builder, const std::string &text);
 
   virtual ~ToggleButton() = default;
 
@@ -24,7 +24,7 @@ public:
 
   MTHD_VIRTUAL(void update());
 
-  MTHD_VIRTUAL(void repaint(PainterTypedefs::SharedPtr_t painter));
+  MTHD_VIRTUAL(void repaint(PainterSharedPtr_t painter));
 
 #pragma endregion
 

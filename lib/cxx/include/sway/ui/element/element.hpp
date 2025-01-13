@@ -1,11 +1,8 @@
 #ifndef SWAY_UI_ELEMENT_HPP
 #define SWAY_UI_ELEMENT_HPP
 
-#include <sway/core.hpp>
 #include <sway/core/container/nodeindexchain.hpp>
-#include <sway/core/container/nodeutil.hpp>
-#include <sway/math.hpp>
-#include <sway/ois.hpp>
+#include <sway/ui/_stdafx.hpp>
 #include <sway/ui/area/areaholder.hpp>
 #include <sway/ui/barriertypes.hpp>
 #include <sway/ui/element/_typedefs.hpp>
@@ -92,7 +89,7 @@ public:
 
 #pragma endregion
 
-  auto getChildAtPoint(const math::point2f_t &point) -> ElementTypedefs::Ptr_t;
+  auto getChildAtPoint(const math::point2f_t &point) -> ElementPtr_t;
 
   void setEventFilter(core::EventHandlerTypedefs::Ptr_t handler) { eventFilter_ = handler; }
 

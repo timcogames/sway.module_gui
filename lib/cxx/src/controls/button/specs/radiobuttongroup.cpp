@@ -5,7 +5,7 @@
 
 namespace sway::ui {
 
-RadioButtonGroup::RadioButtonGroup(BuilderTypedefs::Ptr_t builder, Orientation orien)
+RadioButtonGroup::RadioButtonGroup(BuilderPtr_t builder, Orientation orien)
     : LinearLayout(builder, orien)
     , selected_(std::nullopt) {
   this->subscribe(this, "NodeAdded", EVENT_HANDLER(RadioButtonGroup, handleAddNode));

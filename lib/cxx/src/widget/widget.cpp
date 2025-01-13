@@ -7,7 +7,7 @@
 
 namespace sway::ui {
 
-Widget::Widget(BuilderTypedefs::Ptr_t builder)
+Widget::Widget(BuilderPtr_t builder)
     : builder_(builder)
     , needsRepainting_(false) {
   setBackgroundColor(COL4F_GRAY1);
@@ -20,7 +20,7 @@ void Widget::update() {
   }
 }
 
-void Widget::repaint(PainterTypedefs::SharedPtr_t painter) {
+void Widget::repaint(PainterSharedPtr_t painter) {
   if (!this->isVisible()) {
     return;
   }

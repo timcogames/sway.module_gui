@@ -1,15 +1,10 @@
 #ifndef SWAY_UI_AREA_BOXAREA_HPP
 #define SWAY_UI_AREA_BOXAREA_HPP
 
-#include <sway/core.hpp>
-#include <sway/math.hpp>
+#include <sway/ui/_stdafx.hpp>
 #include <sway/ui/area/_typedefs.hpp>
 #include <sway/ui/area/area.hpp>
 #include <sway/ui/area/areatypes.hpp>
-
-#include <array>
-#include <iostream>  // std::ostream
-#include <memory>
 
 namespace sway::ui {
 

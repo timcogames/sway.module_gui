@@ -1,11 +1,8 @@
 #ifndef SWAY_UI_AREA_TYPEDEFS_HPP
 #define SWAY_UI_AREA_TYPEDEFS_HPP
 
-#include <sway/core.hpp>
+#include <sway/ui/_stdafx.hpp>
 #include <sway/ui/area/areatypes.hpp>
-
-#include <array>
-#include <type_traits>  // std::conditional
 
 namespace sway::ui {
 

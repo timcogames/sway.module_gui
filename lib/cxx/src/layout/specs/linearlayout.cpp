@@ -3,11 +3,11 @@
 
 namespace sway::ui {
 
-auto LinearLayout::create(BuilderTypedefs::Ptr_t builder, Orientation orien) -> LinearLayoutTypedefs::SharedPtr_t {
+auto LinearLayout::create(BuilderPtr_t builder, Orientation orien) -> LinearLayoutTypedefs::SharedPtr_t {
   return std::make_shared<LinearLayout>(builder, orien);
 }
 
-LinearLayout::LinearLayout(BuilderTypedefs::Ptr_t builder, Orientation orien)
+LinearLayout::LinearLayout(BuilderPtr_t builder, Orientation orien)
     : Layout(builder, orien) {}
 
 void LinearLayout::setAdjacent() {

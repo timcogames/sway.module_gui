@@ -5,11 +5,11 @@
 
 namespace sway::ui {
 
-DropTarget::DropTarget(BuilderTypedefs::Ptr_t builder)
+DropTarget::DropTarget(BuilderPtr_t builder)
     : Widget(builder) {}
 
 void DropTarget::update() {}
 
-void DropTarget::repaint(PainterTypedefs::SharedPtr_t painter) {}
+void DropTarget::repaint(PainterSharedPtr_t painter) {}
 
 }  // namespace sway::ui

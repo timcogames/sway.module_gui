@@ -1,11 +1,8 @@
 #ifndef SWAY_UI_WIDGET_MENUCONTROLSCHEME_HPP
 #define SWAY_UI_WIDGET_MENUCONTROLSCHEME_HPP
 
-#include <sway/core.hpp>
-#include <sway/ois.hpp>
+#include <sway/ui/_stdafx.hpp>
 #include <sway/ui/orientations.hpp>
-
-#include <memory>
 
 namespace sway::ui {
 

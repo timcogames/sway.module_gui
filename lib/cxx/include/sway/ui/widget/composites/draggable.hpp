@@ -1,13 +1,10 @@
 #ifndef SWAY_UI_WIDGET_DRAGSOURCE_HPP
 #define SWAY_UI_WIDGET_DRAGSOURCE_HPP
 
-#include <sway/core.hpp>
+#include <sway/ui/_stdafx.hpp>
 #include <sway/ui/painter.hpp>
 #include <sway/ui/widget/typedefs.hpp>
 #include <sway/ui/widget/widget.hpp>
-
-#include <memory>
-#include <string>
 
 namespace sway::ui {
 
@@ -17,7 +14,7 @@ public:
   /** \~english @name Constructor(s) & Destructor */ /** \~russian @name Конструктор(ы) и Деструктор */
   /** @{ */
 
-  Draggable(BuilderTypedefs::Ptr_t builder);
+  Draggable(BuilderPtr_t builder);
 
   virtual ~Draggable();
 
@@ -28,7 +25,7 @@ public:
 
   MTHD_OVERRIDE(void update());
 
-  MTHD_OVERRIDE(void repaint(PainterTypedefs::SharedPtr_t painter));
+  MTHD_OVERRIDE(void repaint(PainterSharedPtr_t painter));
 
 #pragma endregion
 

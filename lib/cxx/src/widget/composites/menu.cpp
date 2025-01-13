@@ -13,7 +13,7 @@
 
 namespace sway::ui {
 
-Menu::Menu(BuilderTypedefs::Ptr_t builder, Orientation orien)
+Menu::Menu(BuilderPtr_t builder, Orientation orien)
     : Widget(builder) {
   subscriber_ = this->builder_->getEventBus()->subscribe(new MenuEventHandler(this));
 }
@@ -30,6 +30,6 @@ void Menu::addItem(const std::string &text) {
 
 // void Menu::update() {}
 
-// void Menu::repaint(PainterTypedefs::SharedPtr_t painter) {}
+// void Menu::repaint(PainterSharedPtr_t painter) {}
 
 }  // namespace sway::ui

@@ -1,7 +1,7 @@
 #ifndef SWAY_UI_LAYOUT_TYPEDEFS_HPP
 #define SWAY_UI_LAYOUT_TYPEDEFS_HPP
 
-#include <sway/core.hpp>
+#include <sway/ui/_stdafx.hpp>
 
 namespace sway::ui {
 

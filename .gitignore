@@ -1,2 +1,25 @@
-/build
-/bin
+# project output files
+build/*
+!build/.gitkeep
+
+bin/*
+!bin/.gitkeep
+
+# osx noise
+.DS_Store
+profile
+
+#doxygen, moxygen
+docs/generated/html/*
+!docs/generated/html/.gitkeep
+
+docs/generated/xml/*
+!docs/generated/xml/.gitkeep
+
+docs/generated/md/*
+!docs/generated/md/.gitkeep
+
+docs/doxygen.log
+
+# note‑taking app settings
+.obsidian

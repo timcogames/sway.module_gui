@@ -1,10 +1,7 @@
 #ifndef SWAY_UI_WIDGET_APPEARANCE_HPP
 #define SWAY_UI_WIDGET_APPEARANCE_HPP
 
-#include <sway/core.hpp>
-#include <sway/math.hpp>
-
-#include <array>
+#include <sway/ui/_stdafx.hpp>
 
 namespace sway::ui {
 

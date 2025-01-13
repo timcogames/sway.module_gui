@@ -1,13 +1,11 @@
 #ifndef SWAY_UI_LINEARLAYOUT_HPP
 #define SWAY_UI_LINEARLAYOUT_HPP
 
-#include <sway/core.hpp>
+#include <sway/ui/_stdafx.hpp>
 #include <sway/ui/layout/_typedefs.hpp>
 #include <sway/ui/layout/layout.hpp>
 #include <sway/ui/orientations.hpp>
 #include <sway/ui/painter.hpp>
-
-#include <memory>
 
 namespace sway::ui {
 
@@ -20,8 +18,7 @@ public:
    * @{
    */
 
-  static auto create(BuilderTypedefs::Ptr_t builder, Orientation orien = Orientation::VERT)
-      -> LinearLayoutTypedefs::SharedPtr_t;
+  static auto create(BuilderPtr_t builder, Orientation orien = Orientation::VERT) -> LinearLayoutTypedefs::SharedPtr_t;
 
   /**
    * end of creators group
@@ -34,7 +31,7 @@ public:
   /** \~english @name Constructor(s) & Destructor */ /** \~russian @name Конструктор(ы) и Деструктор */
   /** @{ */
 
-  LinearLayout(BuilderTypedefs::Ptr_t builder, Orientation orien);
+  LinearLayout(BuilderPtr_t builder, Orientation orien);
 
   virtual ~LinearLayout() = default;
 

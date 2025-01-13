@@ -1,8 +1,7 @@
 #ifndef SWAY_UI_ELEMENTOFFSET_HPP
 #define SWAY_UI_ELEMENTOFFSET_HPP
 
-#include <sway/core.hpp>
-#include <sway/math.hpp>
+#include <sway/ui/_stdafx.hpp>
 
 namespace sway::ui {
 

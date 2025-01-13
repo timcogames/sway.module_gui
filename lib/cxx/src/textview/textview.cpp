@@ -4,7 +4,7 @@
 
 namespace sway::ui {
 
-TextView::TextView(BuilderTypedefs::Ptr_t builder, const std::string &text)
+TextView::TextView(BuilderPtr_t builder, const std::string &text)
     : Widget(builder)
     , text_(text)
     , font_("")
@@ -41,7 +41,7 @@ void TextView::resize() {
 
 void TextView::update() {}
 
-void TextView::repaint(PainterTypedefs::SharedPtr_t painter) {
+void TextView::repaint(PainterSharedPtr_t painter) {
   auto zindex = getZIndex(2);
   auto offset = this->getOffset().computed;
 

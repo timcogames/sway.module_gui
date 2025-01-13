@@ -1,8 +1,7 @@
 #ifndef SWAY_UI_ZINDEX_HPP
 #define SWAY_UI_ZINDEX_HPP
 
-#include <sway/core.hpp>
-#include <sway/math.hpp>
+#include <sway/ui/_stdafx.hpp>
 
 namespace sway::ui {
 

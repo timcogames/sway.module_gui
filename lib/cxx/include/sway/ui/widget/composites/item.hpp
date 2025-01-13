@@ -1,7 +1,7 @@
 #ifndef SWAY_UI_WIDGET_ITEM_HPP
 #define SWAY_UI_WIDGET_ITEM_HPP
 
-#include <sway/core.hpp>
+#include <sway/ui/_stdafx.hpp>
 #include <sway/ui/_typedefs.hpp>
 #include <sway/ui/widget/widget.hpp>
 
@@ -13,7 +13,7 @@ public:
   /** \~english @name Constructor(s) & Destructor */ /** \~russian @name Конструктор(ы) и Деструктор */
   /** @{ */
 
-  Item(BuilderTypedefs::Ptr_t builder)
+  Item(BuilderPtr_t builder)
       : Widget(builder) {}
 
   virtual ~Item() = default;

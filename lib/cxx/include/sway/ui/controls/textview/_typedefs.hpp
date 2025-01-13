@@ -1,9 +1,7 @@
 #ifndef SWAY_UI_TEXTVIEW_TYPEDEFS_HPP
 #define SWAY_UI_TEXTVIEW_TYPEDEFS_HPP
 
-#include <sway/core.hpp>
-
-#include <array>
+#include <sway/ui/_stdafx.hpp>
 
 namespace sway::ui {
 

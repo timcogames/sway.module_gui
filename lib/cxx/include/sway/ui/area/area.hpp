@@ -1,7 +1,7 @@
 #ifndef SWAY_UI_AREA_HPP
 #define SWAY_UI_AREA_HPP
 
-#include <sway/core.hpp>
+#include <sway/ui/_stdafx.hpp>
 #include <sway/ui/area/_typedefs.hpp>
 #include <sway/ui/area/areatypes.hpp>
 

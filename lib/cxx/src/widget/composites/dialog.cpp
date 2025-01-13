@@ -9,7 +9,7 @@
 
 namespace sway::ui {
 
-Dialog::Dialog(BuilderTypedefs::Ptr_t builder)
+Dialog::Dialog(BuilderPtr_t builder)
     : Popup(builder)
     , backdrop_(nullptr)
     , draghead_(nullptr) {
@@ -36,7 +36,7 @@ void Dialog::hide() {}
 
 void Dialog::update() {}
 
-void Dialog::repaint(PainterTypedefs::SharedPtr_t painter) {
+void Dialog::repaint(PainterSharedPtr_t painter) {
   auto offset = this->getOffset().computed;
   auto contentSize = this->getAreaHolder().getContentSize();
 

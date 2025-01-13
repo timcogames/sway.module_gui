@@ -2,7 +2,7 @@
 
 namespace sway::ui {
 
-MenuItem::MenuItem(BuilderTypedefs::Ptr_t builder, const std::string &text)
+MenuItem::MenuItem(BuilderPtr_t builder, const std::string &text)
     : Item(builder) {
   button_ = std::make_shared<Button>(this->builder_, text);
   // button_->subscribe(button_.get(), "MouseClicked", EVENT_HANDLER(MenuScreenView, handlePlayMouseClickedEvent));
@@ -18,7 +18,7 @@ void MenuItem::update() {
   Item::update();
 }
 
-void MenuItem::repaint(PainterTypedefs::SharedPtr_t painter) {
+void MenuItem::repaint(PainterSharedPtr_t painter) {
   if (this->needsRepainting_) {
     button_->setAlignment(math::Alignment::CENTER);
     const auto offset = this->getOffset().computed;

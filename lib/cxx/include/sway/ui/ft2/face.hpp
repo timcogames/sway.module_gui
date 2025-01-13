@@ -1,11 +1,7 @@
 #ifndef SWAY_UI_FT2_FACE_HPP
 #define SWAY_UI_FT2_FACE_HPP
 
-#include <sway/core.hpp>
-#include <sway/rms.hpp>
-
-#include <freetype/ftstroke.h>
-#include <ft2build.h>
+#include <sway/ui/_stdafx.hpp>
 
 namespace sway::ui {
 NS_BEGIN(ft2)

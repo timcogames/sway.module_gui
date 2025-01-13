@@ -1,9 +1,8 @@
 #ifndef SWAY_UI_LAYOUTITEM_HPP
 #define SWAY_UI_LAYOUTITEM_HPP
 
-#include <sway/core.hpp>
-#include <sway/ois.hpp>
 #include <sway/render/updatable.hpp>
+#include <sway/ui/_stdafx.hpp>
 #include <sway/ui/element/_typedefs.hpp>
 #include <sway/ui/element/element.hpp>
 #include <sway/ui/layout/_typedefs.hpp>

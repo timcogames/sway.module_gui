@@ -1,7 +1,7 @@
 #ifndef SWAY_UI_LAYOUT_HPP
 #define SWAY_UI_LAYOUT_HPP
 
-#include <sway/core.hpp>
+#include <sway/ui/_stdafx.hpp>
 #include <sway/ui/layout/_typedefs.hpp>
 #include <sway/ui/orientable.hpp>
 #include <sway/ui/orientations.hpp>
@@ -22,7 +22,7 @@ public:
    *
    * @return math::size2f_t
    */
-  static auto getCellSize(ElementTypedefs::Ptr_t elem) -> math::size2f_t;
+  static auto getCellSize(ElementPtr_t elem) -> math::size2f_t;
 
 #pragma endregion
 
@@ -30,7 +30,7 @@ public:
   /** \~english @name Constructor(s) & Destructor */ /** \~russian @name Конструктор(ы) и Деструктор */
   /** @{ */
 
-  Layout(BuilderTypedefs::Ptr_t builder, Orientation orien);
+  Layout(BuilderPtr_t builder, Orientation orien);
 
   virtual ~Layout() = default;
 

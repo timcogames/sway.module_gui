@@ -6,7 +6,7 @@
 
 namespace sway::ui {
 
-ProgressBar::ProgressBar(BuilderTypedefs::Ptr_t builder)
+ProgressBar::ProgressBar(BuilderPtr_t builder)
     : Widget(builder)
     , mode_(ProgressMode::Enum::PERCENTAGE)
     , current_(0.0F)
@@ -35,7 +35,7 @@ void ProgressBar::update() {
   std::cout << text << std::endl;
 }
 
-void ProgressBar::repaint(PainterTypedefs::SharedPtr_t painter) {
+void ProgressBar::repaint(PainterSharedPtr_t painter) {
   const auto offset = this->getOffset().computed;
 
   auto rectWithMargin = math::rect4f_t(offset.getX(), offset.getY(), this->getSize());

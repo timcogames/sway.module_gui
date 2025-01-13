@@ -1,15 +1,9 @@
 #ifndef SWAY_UI_FT2_FONTMANAGER_HPP
 #define SWAY_UI_FT2_FONTMANAGER_HPP
 
-#include <sway/core.hpp>
+#include <sway/ui/_stdafx.hpp>
 #include <sway/ui/ft2/face.hpp>
 #include <sway/ui/ft2/font.hpp>
-
-#include <freetype/ftstroke.h>
-#include <ft2build.h>
-#include <memory>
-#include <string>
-#include <unordered_map>
 
 namespace sway::ui {
 NS_BEGIN(ft2)

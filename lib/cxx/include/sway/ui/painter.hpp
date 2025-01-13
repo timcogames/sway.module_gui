@@ -1,16 +1,10 @@
 #ifndef SWAY_UI_PAINTER_HPP
 #define SWAY_UI_PAINTER_HPP
 
-#include <sway/core.hpp>
-#include <sway/gapi.hpp>
-#include <sway/math.hpp>
-#include <sway/render.hpp>
 #include <sway/render/updatable.hpp>
+#include <sway/ui/_stdafx.hpp>
 #include <sway/ui/_typedefs.hpp>
 #include <sway/ui/ft2/font.hpp>
-
-#include <array>
-#include <memory>
 
 #define GEOMERTY_BATCH_CHUNK_SIZE 5000
 

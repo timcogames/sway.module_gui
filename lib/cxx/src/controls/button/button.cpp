@@ -4,11 +4,11 @@
 
 namespace sway::ui {
 
-auto Button::create(BuilderTypedefs::Ptr_t builder, const std::string &text) -> ButtonTypedefs::SharedPtr_t {
+auto Button::create(BuilderPtr_t builder, const std::string &text) -> ButtonTypedefs::SharedPtr_t {
   return std::make_shared<Button>(builder, text);
 }
 
-Button::Button(BuilderTypedefs::Ptr_t builder, const std::string &text)
+Button::Button(BuilderPtr_t builder, const std::string &text)
     : Widget(builder)
     , hovering_(false) {
   textView_ = std::make_shared<TextView>(builder, text);
@@ -44,7 +44,7 @@ void Button::update() {
   // updateState();
 }
 
-void Button::repaint(PainterTypedefs::SharedPtr_t painter) {
+void Button::repaint(PainterSharedPtr_t painter) {
   auto zindex = getZIndex(1);
   auto offset = this->getOffset().computed;
 

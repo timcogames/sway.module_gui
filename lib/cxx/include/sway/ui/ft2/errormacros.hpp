@@ -1,11 +1,8 @@
 #ifndef SWAY_UI_FT2_ERRORMACROS_HPP
 #define SWAY_UI_FT2_ERRORMACROS_HPP
 
-#include <sway/core.hpp>
+#include <sway/ui/_stdafx.hpp>
 #include <sway/ui/ft2/errorconvertor.hpp>
-
-#include <freetype/fttypes.h>
-#include <stdio.h>
 
 namespace sway::ui {
 NS_BEGIN(ft2)

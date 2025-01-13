@@ -1,10 +1,7 @@
 #ifndef SWAY_UI_WIDGET_OVERLAYEVENTFILTER_HPP
 #define SWAY_UI_WIDGET_OVERLAYEVENTFILTER_HPP
 
-#include <sway/core.hpp>
-
-#include <memory>
-#include <string>
+#include <sway/ui/_stdafx.hpp>
 
 namespace sway::ui {
 

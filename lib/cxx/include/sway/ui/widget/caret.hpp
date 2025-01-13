@@ -1,8 +1,7 @@
 #ifndef SWAY_UI_WIDGETS_CARET_HPP
 #define SWAY_UI_WIDGETS_CARET_HPP
 
-#include <sway/core.hpp>
-#include <sway/math.hpp>
+#include <sway/ui/_stdafx.hpp>
 #include <sway/ui/widget/caretselectionrange.hpp>
 
 namespace sway::ui {

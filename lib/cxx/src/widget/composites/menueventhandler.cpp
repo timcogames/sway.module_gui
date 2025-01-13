@@ -8,7 +8,7 @@
 
 namespace sway::ui {
 
-MenuEventHandler::MenuEventHandler(Menu *menu)
+MenuEventHandler::MenuEventHandler(MenuPtr_t menu)
     : core::EventHandler(nullptr)
     , menu_(menu) {
   scheme_ = MenuControlScheme::reset(/*menu_->getOrientation()*/ Orientation::HORZ);

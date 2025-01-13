@@ -1,15 +1,10 @@
 #ifndef SWAY_UI_AREA_AREAHOLDER_HPP
 #define SWAY_UI_AREA_AREAHOLDER_HPP
 
-#include <sway/core.hpp>
-#include <sway/math.hpp>
+#include <sway/ui/_stdafx.hpp>
 #include <sway/ui/area/_typedefs.hpp>
 #include <sway/ui/area/area.hpp>
 #include <sway/ui/area/areatypes.hpp>
-
-#include <array>
-#include <memory>
-#include <optional>
 
 namespace sway::ui {
 

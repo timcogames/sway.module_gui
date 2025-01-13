@@ -1,15 +1,9 @@
 #ifndef SWAY_UI_FT2_GLYPH_HPP
 #define SWAY_UI_FT2_GLYPH_HPP
 
-#include <sway/core.hpp>
-#include <sway/math.hpp>
+#include <sway/ui/_stdafx.hpp>
 #include <sway/ui/ft2/errormacros.hpp>
 #include <sway/ui/ft2/face.hpp>
-
-#include <freetype/ftglyph.h>
-#include <freetype/ftstroke.h>
-#include <ft2build.h>
-#include <optional>
 
 namespace sway::ui {
 NS_BEGIN(ft2)

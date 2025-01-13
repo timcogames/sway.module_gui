@@ -3,11 +3,11 @@
 
 namespace sway::ui {
 
-auto Layout::getCellSize(ElementTypedefs::Ptr_t elem) -> math::size2f_t {
+auto Layout::getCellSize(ElementPtr_t elem) -> math::size2f_t {
   return elem->getAreaHolder().getContentSize() / elem->getNumOfChildNodes();
 }
 
-Layout::Layout(BuilderTypedefs::Ptr_t builder, Orientation orien)
+Layout::Layout(BuilderPtr_t builder, Orientation orien)
     : LayoutItem()
     , Orientable(orien) {
   setMouseFilter(ois::MouseFilter::PASS);

@@ -97,7 +97,7 @@ auto Element::handleAddNode(const core::EventTypedefs::UniquePtr_t &evt) -> bool
   /** При добавлении нового узла обновляем смещение всех дочерних элементов по отношению к родителю. */
   recursiveUpdateItemOffset(math::point2f_zero);
 
-  // auto prevElement = (ElementTypedefs::SharedPtr_t) nullptr;
+  // auto prevElement = (ElementSharedPtr_t) nullptr;
 
   // auto prevNodeIndex = NodeChainExtension::getPrevItem(nodeEventData->nodeidx);
   // if (!prevNodeIndex.has_value()) {
@@ -110,7 +110,7 @@ auto Element::handleAddNode(const core::EventTypedefs::UniquePtr_t &evt) -> bool
   return true;
 }
 
-auto Element::getChildAtPoint(const math::point2f_t &pnt) -> ElementTypedefs::Ptr_t {
+auto Element::getChildAtPoint(const math::point2f_t &pnt) -> ElementPtr_t {
   for (auto node : this->getChildNodes()) {
     auto child = std::static_pointer_cast<Element>(node);
     if (!child->isVisible()) {

@@ -1,12 +1,8 @@
 #ifndef SWAY_UI_FT2_FACELOADER_HPP
 #define SWAY_UI_FT2_FACELOADER_HPP
 
-#include <sway/core.hpp>
-#include <sway/rms.hpp>
+#include <sway/ui/_stdafx.hpp>
 #include <sway/ui/ft2/face.hpp>
-
-#include <freetype/ftstroke.h>
-#include <ft2build.h>
 
 namespace sway::ui {
 NS_BEGIN(ft2)

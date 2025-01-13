@@ -1,13 +1,10 @@
 #ifndef SWAY_UI_RADIOBUTTONGROUP_HPP
 #define SWAY_UI_RADIOBUTTONGROUP_HPP
 
-#include <sway/core.hpp>
+#include <sway/ui/_stdafx.hpp>
 #include <sway/ui/layout/specs/linearlayout.hpp>
 #include <sway/ui/orientations.hpp>
 #include <sway/ui/painter.hpp>
-
-#include <memory>
-#include <string>
 
 namespace sway::ui {
 
@@ -22,7 +19,7 @@ public:
   /** \~english @name Constructor(s) & Destructor */ /** \~russian @name Конструктор(ы) и Деструктор */
   /** @{ */
 
-  RadioButtonGroup(BuilderTypedefs::Ptr_t builder, Orientation orientation);
+  RadioButtonGroup(BuilderPtr_t builder, Orientation orientation);
 
   virtual ~RadioButtonGroup() = default;
 

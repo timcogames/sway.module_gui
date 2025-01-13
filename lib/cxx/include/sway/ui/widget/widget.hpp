@@ -1,9 +1,7 @@
 #ifndef SWAY_UI_WIDGET_WIDGET_HPP
 #define SWAY_UI_WIDGET_WIDGET_HPP
 
-#include <sway/core.hpp>
-#include <sway/math.hpp>
-#include <sway/ois.hpp>
+#include <sway/ui/_stdafx.hpp>
 #include <sway/ui/_typedefs.hpp>
 #include <sway/ui/barriertypes.hpp>
 #include <sway/ui/element/_typedefs.hpp>
@@ -14,9 +12,6 @@
 #include <sway/ui/widget/typedefs.hpp>
 #include <sway/ui/widget/widgetevent.hpp>
 #include <sway/ui/widget/widgeteventtypes.hpp>
-
-#include <memory>
-#include <optional>
 
 namespace sway::ui {
 
@@ -54,7 +49,7 @@ public:
   /** \~english @name Constructor(s) & Destructor */ /** \~russian @name Конструктор(ы) и Деструктор */
   /** @{ */
 
-  Widget(BuilderTypedefs::Ptr_t builder);
+  Widget(BuilderPtr_t builder);
 
   virtual ~Widget() = default;
 
@@ -63,7 +58,7 @@ public:
 
 #pragma region "Base virtual methods"
 
-  MTHD_VIRTUAL(void repaint(PainterTypedefs::SharedPtr_t painter));
+  MTHD_VIRTUAL(void repaint(PainterSharedPtr_t painter));
 
 #pragma endregion
 
@@ -86,7 +81,7 @@ public:
   MTHD_OVERRIDE(auto getBarrierType() const -> BarrierType) { return BarrierType::NONE; }
 
 protected:
-  BuilderTypedefs::Ptr_t builder_;
+  BuilderPtr_t builder_;
   // math::rect4f_t innerRect_;  // wdt/hgt, padding
   // math::rect4f_t outerRect_;  // wdt/hgt, margin, border, padding
   Appearance appearance_;

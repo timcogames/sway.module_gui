@@ -13,7 +13,7 @@ public:
   /** \~english @name Constructor(s) & Destructor */ /** \~russian @name Конструктор(ы) и Деструктор */
   /** @{ */
 
-  ProgressBar(BuilderTypedefs::Ptr_t builder);
+  ProgressBar(BuilderPtr_t builder);
 
   virtual ~ProgressBar() = default;
 
@@ -24,7 +24,7 @@ public:
 
   MTHD_VIRTUAL(void update());
 
-  MTHD_VIRTUAL(void repaint(PainterTypedefs::SharedPtr_t painter));
+  MTHD_VIRTUAL(void repaint(PainterSharedPtr_t painter));
 
 #pragma endregion
 

@@ -6,7 +6,7 @@
 
 namespace sway::ui {
 
-Draggable::Draggable(BuilderTypedefs::Ptr_t builder)
+Draggable::Draggable(BuilderPtr_t builder)
     : Widget(builder)
     , hovering_(false)
     , dragging_(false) {
@@ -60,7 +60,7 @@ void Draggable::update() {
   }
 }
 
-void Draggable::repaint(PainterTypedefs::SharedPtr_t painter) {
+void Draggable::repaint(PainterSharedPtr_t painter) {
   update();
 
   auto offset = this->getOffset().computed;

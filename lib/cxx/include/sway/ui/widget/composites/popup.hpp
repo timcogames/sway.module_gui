@@ -1,13 +1,10 @@
 #ifndef SWAY_UI_WIDGET_POPUP_HPP
 #define SWAY_UI_WIDGET_POPUP_HPP
 
-#include <sway/core.hpp>
+#include <sway/ui/_stdafx.hpp>
 #include <sway/ui/painter.hpp>
 #include <sway/ui/widget/composites/draggable.hpp>
 #include <sway/ui/widget/typedefs.hpp>
-
-#include <memory>
-#include <string>
 
 namespace sway::ui {
 
@@ -17,7 +14,7 @@ public:
   /** \~english @name Constructor(s) & Destructor */ /** \~russian @name Конструктор(ы) и Деструктор */
   /** @{ */
 
-  Popup(BuilderTypedefs::Ptr_t builder);
+  Popup(BuilderPtr_t builder);
 
   virtual ~Popup();
 
@@ -28,7 +25,7 @@ public:
 
   MTHD_OVERRIDE(void update());
 
-  MTHD_OVERRIDE(void repaint(PainterTypedefs::SharedPtr_t painter));
+  MTHD_OVERRIDE(void repaint(PainterSharedPtr_t painter));
 
 #pragma endregion
 

@@ -1,8 +1,7 @@
 #ifndef SWAY_UI_FT2_FONTSHADER_HPP
 #define SWAY_UI_FT2_FONTSHADER_HPP
 
-#include <sway/core.hpp>
-#include <sway/render.hpp>
+#include <sway/ui/_stdafx.hpp>
 #include <sway/ui/typography.hpp>
 
 namespace sway::ui {
