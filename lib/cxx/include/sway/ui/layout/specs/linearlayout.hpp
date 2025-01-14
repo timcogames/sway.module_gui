@@ -51,7 +51,7 @@ public:
    * @details Этот метод устанавливает смещение дочернего соседа относительно предыдущего элемента в линейном макете.
    * Смещение соседа используется для вычисления позиции каждого элемента в макете.
    */
-  void setOffsetAdjacentChild();
+  void setAdjacentChildOffset();
 
 #pragma region "Overridden Layout > LayoutItem > Element methods"
 

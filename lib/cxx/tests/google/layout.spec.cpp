@@ -27,7 +27,7 @@ TEST(LayoutTest, build) {
   builder->initialize();
 
   auto mainLayout = ui::LinearLayout::create(builder.get());
-  mainLayout->setSize(800, 600);
+  mainLayout->setSize(800.0F, 600.0F);
 
   auto btn1 = ui::Button::create(builder.get(), "btn1");
   btn1->setAlignment(math::Alignment::CENTER);

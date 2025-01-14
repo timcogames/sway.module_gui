@@ -10,7 +10,7 @@ auto LinearLayout::create(BuilderPtr_t builder, Orientation orien) -> LinearLayo
 LinearLayout::LinearLayout(BuilderPtr_t builder, Orientation orien)
     : Layout(builder, orien) {}
 
-void LinearLayout::setOffsetAdjacentChild() {
+void LinearLayout::setAdjacentChildOffset() {
   auto accum = math::point2f_zero;
 
   for (auto i = 0; i < getNumOfChildNodes(); ++i) {
@@ -31,7 +31,7 @@ void LinearLayout::setOffsetAdjacentChild() {
 }
 
 void LinearLayout::recursiveUpdateItemOffset(const math::point2f_t parentOffset) {
-  setAdjacent();
+  setAdjacentChildOffset();
 
   LayoutItem::recursiveUpdateItemOffset(parentOffset);
 }

@@ -14,13 +14,13 @@ public:
 #pragma region "Static methods"
 
   /**
-   * \~english @brief Returns the size of the layout cell.
+   * \~english
+   * @brief Returns the size of the layout cell.
    * @param[in] elem Pointer to the layout element.
    *
-   * \~russian @brief Возвращает размер ячейки макета.
+   * \~russian
+   * @brief Возвращает размер ячейки макета.
    * @param[in] elem Указатель на элемент макета.
-   *
-   * @return math::size2f_t
    */
   static auto getCellSize(ElementPtr_t elem) -> math::size2f_t;
 
@@ -38,6 +38,17 @@ public:
 #pragma endregion
 
   MTHD_OVERRIDE(auto getBarrierType() const -> BarrierType) { return BarrierType::LAYOUT; }
+
+  /**
+   * \~english
+   * @brief Requests one of the child elements of this view to measure itself.
+   * @param[in] child Child element to measure.
+   *
+   * \~russian
+   * @brief Запрашивает одного из дочерних элементов этого представления измерить себя.
+   * @param[in] child Дочерний элемент для измерения.
+   */
+  void measureChild(ElementSharedPtr_t child) {}
 };
 
 }  // namespace sway::ui
