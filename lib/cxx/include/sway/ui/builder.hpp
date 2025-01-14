@@ -18,11 +18,12 @@ class Builder : public core::Object {
 public:
 #pragma region "Pointer aliases"
   /** \~english @name Pointer aliases */ /** \~russian @name Типы указателей */
+  /** @{ */
 
   using Ptr_t = BuilderPtr_t;
   using SharedPtr_t = BuilderSharedPtr_t;
 
-  /** @{ */
+  /** @} */
 #pragma endregion
 
 #pragma region "Constructor(s) & Destructor"

@@ -7,21 +7,17 @@
 namespace sway::ui {
 
 class Area;
-namespace AreaTypedefs {
-using SharedPtr_t = std::shared_ptr<Area>;
-using OptionalSharedPtr_t = std::optional<SharedPtr_t>;
-using Container_t = std::array<SharedPtr_t, NUM_AREA_TYPES>;
-}  // namespace AreaTypedefs
+
+using AreaSharedPtr_t = std::shared_ptr<Area>;
+using AreaOptionalSharedPtr_t = std::optional<AreaSharedPtr_t>;
+using AreaContainer_t = std::array<AreaSharedPtr_t, NUM_AREA_TYPES>;
 
 class ContentArea;
-namespace ContentAreaTypedefs {
-using SharedPtr_t = std::shared_ptr<ContentArea>;
-}  // namespace ContentAreaTypedefs
+
+using ContentAreaSharedPtr_t = std::shared_ptr<ContentArea>;
 
 class BoxArea;
-namespace BoxAreaTypedefs {
-using SharedPtr_t = std::shared_ptr<BoxArea>;
-}  // namespace BoxAreaTypedefs
+using BoxAreaSharedPtr_t = std::shared_ptr<BoxArea>;
 
 template <AreaType TYPE>
 using OutputAreaType_t = typename std::conditional<TYPE == AreaType::IDX_CNT, ContentArea, BoxArea>::type;

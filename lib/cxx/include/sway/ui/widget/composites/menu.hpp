@@ -15,11 +15,12 @@ class Menu : public Widget {
 public:
 #pragma region "Pointer aliases"
   /** \~english @name Pointer aliases */ /** \~russian @name Типы указателей */
+  /** @{ */
 
   using Ptr_t = MenuPtr_t;
   using SharedPtr_t = MenuSharedPtr_t;
 
-  /** @{ */
+  /** @} */
 #pragma endregion
 
 #pragma region "Constructor(s) & Destructor"

@@ -10,7 +10,7 @@ auto LinearLayout::create(BuilderPtr_t builder, Orientation orien) -> LinearLayo
 LinearLayout::LinearLayout(BuilderPtr_t builder, Orientation orien)
     : Layout(builder, orien) {}
 
-void LinearLayout::setAdjacent() {
+void LinearLayout::setOffsetAdjacentChild() {
   auto accum = math::point2f_zero;
 
   for (auto i = 0; i < getNumOfChildNodes(); ++i) {

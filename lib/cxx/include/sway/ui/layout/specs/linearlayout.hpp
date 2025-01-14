@@ -12,10 +12,8 @@ namespace sway::ui {
 class LinearLayout : public Layout {
 public:
 #pragma region "Static methods"
-  /**
-   * @name creators
-   * @{
-   */
+  /** \~english @name Creators */ /** \~russian @name Создатели */
+  /** @{ */
 
   static auto create(BuilderPtr_t builder, Orientation orien = Orientation::VERT) -> LinearLayoutSharedPtr_t;
 
@@ -24,10 +22,11 @@ public:
 
 #pragma region "Pointer aliases"
   /** \~english @name Pointer aliases */ /** \~russian @name Типы указателей */
+  /** @{ */
 
   using SharedPtr_t = LinearLayoutSharedPtr_t;
 
-  /** @{ */
+  /** @} */
 #pragma endregion
 
 #pragma region "Constructor(s) & Destructor"
@@ -42,21 +41,17 @@ public:
 #pragma endregion
 
   /**
-   * \~english @brief Set the Adjacent object.
-   * @details
-   *   This method sets the adjacent offset for each child element
-   *   in the linear layout. The adjacent offset is used to calculate
-   *   the position of each element in the layout.
+   * \~english
+   * @brief Sets the adjacent offset for each child element in the linear layout.
+   * @details This method sets the adjacent offset for each child element in the linear layout. The adjacent offset is
+   * used to calculate the position of each element in the layout.
    *
-   * \~russian @brief Устанавливает смещение соседа.
-   * @details
-   *   Этот метод устанавливает смещение соседа для каждого элемента
-   *   в линейном макете. Смещение соседа используется для вычисления
-   *   положения каждого элемента в макете.
-   *
-   * @see Layout::getCellSize()
+   * \~russian
+   * @brief Устанавливает смещение дочернего соседа в линейном макете.
+   * @details Этот метод устанавливает смещение дочернего соседа относительно предыдущего элемента в линейном макете.
+   * Смещение соседа используется для вычисления позиции каждого элемента в макете.
    */
-  void setAdjacent();
+  void setOffsetAdjacentChild();
 
 #pragma region "Overridden Layout > LayoutItem > Element methods"
 

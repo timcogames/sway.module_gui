@@ -27,15 +27,11 @@ void Widget::repaint(PainterSharedPtr_t painter) {
 
   for (auto const &child : this->getChildNodes()) {
     auto widget = core::NodeUtil::cast<Widget>(child);
-    std::cout << "repaint " << core::toBase(widget->getBarrierType()) << " "
-              << Representation<core::NodeIndex>::get(widget->getNodeIndex()) << std::endl;
     if (widget->getBarrierType() != BarrierType::LAYOUT) {
       widget->repaint(painter);
     } else {
       for (auto const &child2 : widget->getChildNodes()) {
         auto widget2 = core::NodeUtil::cast<Widget>(child2);
-        std::cout << "repaint " << core::toBase(widget2->getBarrierType()) << " "
-                  << Representation<core::NodeIndex>::get(widget2->getNodeIndex()) << std::endl;
         if (widget2->getBarrierType() != BarrierType::LAYOUT) {
           widget2->repaint(painter);
         }
@@ -51,7 +47,7 @@ void Widget::repaint(PainterSharedPtr_t painter) {
 //   this->getAreaHolder().setEdge<AreaType::IDX_MRG, math::RectEdge::IDX_B>(mrg);
 // }
 
-// auto Widget::getMargin() const -> BoxAreaTypedefs::SharedPtr_t {
+// auto Widget::getMargin() const -> BoxAreaSharedPtr_t {
 //   return this->areaHolder_.getArea<AreaType::IDX_MRG>().value();
 // }
 

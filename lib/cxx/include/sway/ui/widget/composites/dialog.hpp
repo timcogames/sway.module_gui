@@ -15,10 +15,11 @@ class Dialog : public Popup {
 public:
 #pragma region "Pointer aliases"
   /** \~english @name Pointer aliases */ /** \~russian @name Типы указателей */
+  /** @{ */
 
   using SharedPtr_t = DialogSharedPtr_t;
 
-  /** @{ */
+  /** @} */
 #pragma endregion
 
 #pragma region "Constructor(s) & Destructor"

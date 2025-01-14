@@ -6,7 +6,7 @@ namespace sway::ui {
 
 // clang-format off
 AreaHolder::AreaHolder()
-    : AreaTypedefs::Container_t({
+    : AreaContainer_t({
         std::make_shared<BoxArea>(AreaType::IDX_MRG),
         std::make_shared<BoxArea>(AreaType::IDX_BRD),
         std::make_shared<BoxArea>(AreaType::IDX_PAD),
@@ -24,11 +24,11 @@ auto AreaHolder::getAreaIndex(AreaType type) const -> i32_t {
   return GLOB_IDX_INVALID;
 }
 
-auto AreaHolder::getArea(AreaType type) const -> AreaTypedefs::OptionalSharedPtr_t {
+auto AreaHolder::getArea(AreaType type) const -> AreaOptionalSharedPtr_t {
   const auto idx = getAreaIndex(type);
   // clang-format off
   return (idx != GLOB_IDX_INVALID) 
-      ? AreaTypedefs::OptionalSharedPtr_t(this->at(idx)) 
+      ? AreaOptionalSharedPtr_t(this->at(idx)) 
       : std::nullopt;
   // clang-format on
 }

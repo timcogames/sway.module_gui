@@ -12,10 +12,8 @@ namespace sway::ui {
 class Button : public Widget {
 public:
 #pragma region "Static methods"
-  /**
-   * @name creators
-   * @{
-   */
+  /** \~english @name Creators */ /** \~russian @name Создатели */
+  /** @{ */
 
   static auto create(BuilderPtr_t builder, const std::string &text) -> ButtonSharedPtr_t;
 
@@ -24,10 +22,11 @@ public:
 
 #pragma region "Pointer aliases"
   /** \~english @name Pointer aliases */ /** \~russian @name Типы указателей */
+  /** @{ */
 
   using SharedPtr_t = ButtonSharedPtr_t;
 
-  /** @{ */
+  /** @} */
 #pragma endregion
 
 #pragma region "Constructor(s) & Destructor"

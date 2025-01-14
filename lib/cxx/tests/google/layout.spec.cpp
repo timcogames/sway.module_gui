@@ -31,15 +31,15 @@ TEST(LayoutTest, build) {
 
   auto btn1 = ui::Button::create(builder.get(), "btn1");
   btn1->setAlignment(math::Alignment::CENTER);
-  btn1->setOffset(10.0F, 20.0F);
-  btn1->setSize(100.0F, 30.0F);
+  btn1->setOffset(0.0F, 0.0F);
+  btn1->setSize(150.0F, 70.0F);
   mainLayout->addChildNode(btn1);
 
   // btn1->update();
 
   auto btn2 = ui::Button::create(builder.get(), "btn2");
   btn2->setAlignment(math::Alignment::CENTER);
-  btn2->setOffset(50.0F, 100.0F);
+  btn2->setOffset(0.0F, 0.0F);
   btn2->setSize(150.0F, 70.0F);
   mainLayout->addChildNode(btn2);
 

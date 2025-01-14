@@ -31,7 +31,7 @@ public:
 
   [[nodiscard]] auto getSize() const -> math::size2f_t;
 
-  friend auto operator<<(std::ostream &out, const ContentAreaTypedefs::SharedPtr_t &area) -> std::ostream & {
+  friend auto operator<<(std::ostream &out, const ContentAreaSharedPtr_t &area) -> std::ostream & {
     const auto size = area->getSize();
     return out << std::fixed << std::setprecision(3) << "{"
                << "w:" << size.getW() << ", "

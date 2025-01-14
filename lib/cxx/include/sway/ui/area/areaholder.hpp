@@ -8,7 +8,7 @@
 
 namespace sway::ui {
 
-class AreaHolder : public AreaTypedefs::Container_t {
+class AreaHolder : public AreaContainer_t {
 public:
 #pragma region "Constructor(s) & Destructor"
   /** \~english @name Constructor(s) & Destructor */ /** \~russian @name Конструктор(ы) и Деструктор */
@@ -26,7 +26,7 @@ public:
   template <AreaType TYPE>
   auto getAreaIndex() const -> i32_t;
 
-  auto getArea(AreaType type) const -> AreaTypedefs::OptionalSharedPtr_t;
+  auto getArea(AreaType type) const -> AreaOptionalSharedPtr_t;
 
   template <AreaType TYPE, typename OUT = OutputAreaType_t<TYPE>>
   auto getArea() const -> std::optional<std::shared_ptr<OUT>>;
@@ -35,10 +35,10 @@ public:
   void setEdge(f32_t size);
 
   // template <math::RectEdge::Enum EDGE>
-  // auto getEdge(AreaTypedefs::OptionalSharedPtr_t area) const -> f32_t;
+  // auto getEdge(AreaOptionalSharedPtr_t area) const -> f32_t;
 
   template <math::RectEdge::Enum EDGE>
-  auto getEdge(AreaTypedefs::SharedPtr_t area) const -> f32_t;
+  auto getEdge(AreaSharedPtr_t area) const -> f32_t;
 
   template <AreaType TYPE, math::RectEdge::Enum EDGE>
   auto getEdge() const -> f32_t;

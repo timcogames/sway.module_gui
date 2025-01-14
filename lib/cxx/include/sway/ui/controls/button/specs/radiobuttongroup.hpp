@@ -14,11 +14,12 @@ class RadioButtonGroup : public LinearLayout {
 public:
 #pragma region "Pointer aliases"
   /** \~english @name Pointer aliases */ /** \~russian @name Типы указателей */
+  /** @{ */
 
   using Ptr_t = RadioButtonGroupPtr_t;
   using SharedPtr_t = RadioButtonGroupSharedPtr_t;
 
-  /** @{ */
+  /** @} */
 #pragma endregion
 
 #pragma region "Constructor(s) & Destructor"

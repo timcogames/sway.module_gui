@@ -37,12 +37,12 @@ void AreaHolder::setEdge(f32_t size) {
 }
 
 // template <math::RectEdge::Enum EDGE>
-// auto AreaHolder::getEdge(AreaTypedefs::OptionalSharedPtr_t area) const -> f32_t {
+// auto AreaHolder::getEdge(AreaOptionalSharedPtr_t area) const -> f32_t {
 //   return area.value()->at(EDGE);
 // }
 
 template <math::RectEdge::Enum EDGE>
-auto AreaHolder::getEdge(AreaTypedefs::SharedPtr_t area) const -> f32_t {
+auto AreaHolder::getEdge(AreaSharedPtr_t area) const -> f32_t {
   return std::static_pointer_cast<BoxArea>(area)->at(EDGE);
 }
 

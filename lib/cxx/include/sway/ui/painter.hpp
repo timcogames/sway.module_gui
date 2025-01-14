@@ -47,10 +47,11 @@ class Painter : public render::RenderComponent, public render::FinalUpdatable {
 public:
 #pragma region "Pointer aliases"
   /** \~english @name Pointer aliases */ /** \~russian @name Типы указателей */
+  /** @{ */
 
   using SharedPtr_t = PainterSharedPtr_t;
 
-  /** @{ */
+  /** @} */
 #pragma endregion
 
 #pragma region "Constructor(s) & Destructor"
