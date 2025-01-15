@@ -8,9 +8,7 @@ Element::Element()
     , position_(ElementPosition::RELATIVE)
     , containsPointer_(false)
     , eventFilter_(nullptr)
-    , alignment_(math::Alignment::LEFT_TOP) {
-  this->subscribe(this, "NodeAdded", EVENT_HANDLER(Element, handleAddNode));
-}
+    , alignment_(math::Alignment::LEFT_TOP) {}
 
 void Element::setPosition(ElementPosition pos) { position_ = pos; }
 
@@ -90,25 +88,6 @@ auto Element::getInnerSize() const -> math::size2f_t { return holder_.getSize<Ar
 auto Element::getOuterSize() const -> math::size2f_t { return holder_.getSize<AreaType::IDX_BRD>(); }
 
 auto Element::getOuterSizeWithMargin() const -> math::size2f_t { return holder_.getSize<AreaType::IDX_MRG>(); }
-
-auto Element::handleAddNode(const core::EventTypedefs::UniquePtr_t &evt) -> bool {
-  auto *nodeEventData = static_cast<core::NodeEventData *>(evt->getData());
-
-  /** При добавлении нового узла обновляем смещение всех дочерних элементов по отношению к родителю. */
-  recursiveUpdateItemOffset(math::point2f_zero);
-
-  // auto prevElement = (ElementSharedPtr_t) nullptr;
-
-  // auto prevNodeIndex = NodeChainExtension::getPrevItem(nodeEventData->nodeidx);
-  // if (!prevNodeIndex.has_value()) {
-  //   std::clog << "[UI Element::handleAddNode]: prevNodeIndex has no value" << std::endl;
-  // } else {
-  //   prevElement = NodeExtension::getChild<Element>(this, prevNodeIndex);
-  // }
-
-  // recursiveUpdate(prevElement, currElement);
-  return true;
-}
 
 auto Element::getChildAtPoint(const math::point2f_t &pnt) -> ElementPtr_t {
   for (auto node : this->getChildNodes()) {

@@ -6,7 +6,11 @@
 #include <sway/ui/ft2/font.hpp>
 
 namespace sway::ui {
-NS_BEGIN(ft2)
+
+/**
+ * @ingroup ft2
+ * @{
+ */
 
 class FontManager {
 public:
@@ -45,7 +49,8 @@ private:
   std::unordered_map<std::string, Font::SharedPtr_t> fonts_;
 };
 
-NS_END()  // namespace ft2
+/** @} */  // ingroup ft2
+
 }  // namespace sway::ui
 
 #endif  // SWAY_UI_FT2_FONTMANAGER_HPP

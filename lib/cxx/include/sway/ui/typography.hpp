@@ -3,12 +3,8 @@
 
 #include <sway/core.hpp>
 
-namespace sway::ui {
-NS_BEGIN(typography)
+/** @defgroup ft2 FreeType 2 */
 
-using col_t = math::col4f_t;
-
-NS_END()  // namespace typography
-}  // namespace sway::ui
+namespace sway::ui {}  // namespace sway::ui
 
 #endif  // SWAY_UI_TYPOGRAPHY_HPP

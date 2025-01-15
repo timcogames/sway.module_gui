@@ -12,12 +12,31 @@
 
 namespace sway::ui {
 
-class Builder : public core::Object {
+class Graph {
+public:
+#pragma region "Constructor(s) & Destructor"
+  /** \~english @name Constructor(s) & Destructor */ /** \~russian @name Конструктор(ы) и Деструктор */
+  /** @{ */
+
+  Graph() = default;
+
+  virtual ~Graph() = default;
+
+  /** @} */
+#pragma endregion
+
+  [[nodiscard]] auto getRootWidget() -> WidgetSharedPtr_t { return root_; }
+
+protected:
+  WidgetSharedPtr_t root_;
+};
+
+class Builder : public Graph, public core::Object {
   DECLARE_CLASS_METADATA(Builder, core::Object)
 
 public:
-#pragma region "Pointer aliases"
-  /** \~english @name Pointer aliases */ /** \~russian @name Типы указателей */
+#pragma region "Define aliases"
+  /** \~english @name Define aliases */ /** \~russian @name Определение алиасов */
   /** @{ */
 
   using Ptr_t = BuilderPtr_t;
@@ -43,8 +62,6 @@ public:
 
   void update();
 
-  auto getRootWidget() -> WidgetSharedPtr_t { return root_; }
-
   void setEventBus(core::EventBusTypedefs::SharedPtr_t evtbus) { evtbus_ = evtbus; }
 
   auto getEventBus() -> core::EventBusTypedefs::SharedPtr_t { return evtbus_; }
@@ -66,12 +83,9 @@ public:
 private:
   core::EventBusTypedefs::SharedPtr_t evtbus_;
   core::Subscribable::Subscriber_t subscriber_;
-  ft2::FontManager::SharedPtr_t fontMngr_;
+  FontManager::SharedPtr_t fontMngr_;
   PainterSharedPtr_t painter_;
-  WidgetSharedPtr_t root_;
-
   ElementUnderPointer_t currWidgetUnderPointer_;
-
   Cursor cursor_;
 };
 

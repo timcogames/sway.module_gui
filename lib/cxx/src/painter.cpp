@@ -12,7 +12,7 @@ Painter::Painter()
 
 Painter::~Painter() {}
 
-void Painter::initialize(ft2::Font::SharedPtr_t font, render::RenderSubsystemSharedPtr_t subsys,
+void Painter::initialize(Font::SharedPtr_t font, render::RenderSubsystemSharedPtr_t subsys,
     render::MaterialManagerTypedefs::SharedPtr_t materialMngr, std::shared_ptr<rms::ImageResourceManager> imgResMngr,
     std::shared_ptr<rms::GLSLResourceManager> glslResMngr) {
 
@@ -355,8 +355,8 @@ void Painter::onUpdate(math::mat4f_t tfrm, math::mat4f_t proj, math::mat4f_t vie
     textCmd.geom = textGeom_;
     textCmd.topology = gapi::TopologyType::Enum::TRIANGLE_LIST;
 
-    ft2::FontShader::setLayer(textMtrl_->getEffect(), 1);
-    ft2::FontShader::setColor(textMtrl_->getEffect(), math::col4f_t(0.7F, 0.8F, 1.0F, 1.0F));
+    FontShader::setLayer(textMtrl_->getEffect(), 1);
+    FontShader::setColor(textMtrl_->getEffect(), math::col4f_t(0.7F, 0.8F, 1.0F, 1.0F));
 
     textCmd.mtrl = textMtrl_;
     textCmd.tfrm = math::mat4f_t();

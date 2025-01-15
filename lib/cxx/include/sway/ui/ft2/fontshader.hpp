@@ -5,18 +5,29 @@
 #include <sway/ui/typography.hpp>
 
 namespace sway::ui {
-NS_BEGIN(ft2)
+
+/**
+ * @ingroup ft2
+ * @{
+ */
 
 class FontShader {
 public:
   using Ptr_t = FontShader *;
   using SharedPtr_t = std::shared_ptr<FontShader>;
 
+#pragma region "Constructor(s) & Destructor"
+  /** \~english @name Constructor(s) & Destructor */ /** \~russian @name Конструктор(ы) и Деструктор */
+  /** @{ */
+
   FontShader() {}
 
   ~FontShader() = default;
 
-  static void setColor(render::EffectTypedefs::Ptr_t eff, const typography::col_t &col) {
+  /** @} */
+#pragma endregion
+
+  static void setColor(render::EffectTypedefs::Ptr_t eff, const math::col4f_t &col) {
     eff->getShaderProgram()->setUniformCol4f("text_color", col);
   }
 
@@ -27,7 +38,8 @@ public:
 private:
 };
 
-NS_END()  // namespace ft2
+/** @} */  // ingroup ft2
+
 }  // namespace sway::ui
 
 #endif  // SWAY_UI_FT2_FONTSHADER_HPP

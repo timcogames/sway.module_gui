@@ -6,8 +6,8 @@
 #include <sway/ui/controls/button/_typedefs.hpp>
 #include <sway/ui/controls/button/button.hpp>
 #include <sway/ui/painter.hpp>
+#include <sway/ui/widget/_typedefs.hpp>
 #include <sway/ui/widget/composites/item.hpp>
-#include <sway/ui/widget/typedefs.hpp>
 
 namespace sway::ui {
 

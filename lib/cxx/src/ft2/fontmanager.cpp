@@ -2,7 +2,6 @@
 #include <sway/ui/ft2/fontmanager.hpp>
 
 namespace sway::ui {
-NS_BEGIN(ft2)
 
 FontManager::FontManager()
     : lib_(nullptr)
@@ -68,5 +67,4 @@ auto FontManager::find(const std::string &name) -> Font::SharedPtr_t {
 
 void FontManager::removeFont() { fonts_.clear(); }
 
-NS_END()  // namespace ft2
 }  // namespace sway::ui

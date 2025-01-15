@@ -7,7 +7,6 @@
 #include FT_FREETYPE_H
 
 namespace sway::ui {
-NS_BEGIN(ft2)
 
 struct ErrorConvertor {
   static auto conv(FT_Error error) -> lpcstr_t {
@@ -24,7 +23,6 @@ struct ErrorConvertor {
   }
 };
 
-NS_END()  // namespace ft2
 }  // namespace sway::ui
 
 #endif  // SWAY_UI_FT2_ERRORCONVERTOR_HPP

@@ -2,7 +2,7 @@
 #define SWAY_UI_WIDGETS_SIZEPOLICYTYPES_HPP
 
 #include <sway/ui/_stdafx.hpp>
-#include <sway/ui/widget/typedefs.hpp>
+#include <sway/ui/widget/_typedefs.hpp>
 
 namespace sway::ui {
 

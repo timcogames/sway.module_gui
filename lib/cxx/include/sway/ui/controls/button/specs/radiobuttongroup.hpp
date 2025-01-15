@@ -12,8 +12,8 @@ class RadioButtonGroup : public LinearLayout {
   DECLARE_EVENT(EVT_CHANGED, RadioButtonGroupChanged)
 
 public:
-#pragma region "Pointer aliases"
-  /** \~english @name Pointer aliases */ /** \~russian @name Типы указателей */
+#pragma region "Define aliases"
+  /** \~english @name Define aliases */ /** \~russian @name Определение алиасов */
   /** @{ */
 
   using Ptr_t = RadioButtonGroupPtr_t;

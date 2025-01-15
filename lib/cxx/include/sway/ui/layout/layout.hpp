@@ -39,6 +39,8 @@ public:
 
   MTHD_OVERRIDE(auto getBarrierType() const -> BarrierType) { return BarrierType::LAYOUT; }
 
+  auto handleItemAdded(const core::EventTypedefs::UniquePtr_t &evt) -> bool;
+
   /**
    * \~english
    * @brief Requests one of the child elements of this view to measure itself.

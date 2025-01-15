@@ -4,7 +4,6 @@
 #include <algorithm>  // std::max
 
 namespace sway::ui {
-NS_BEGIN(ft2)
 
 Font::Font(std::shared_ptr<Face> face, math::size2i_t atlasSize, math::size2i_t atlasMarginSize)
     : face_(face)
@@ -123,5 +122,4 @@ auto Font::getCharMetrics(FT_GlyphSlot slot) -> CharInfo {
   return info;
 }
 
-NS_END()  // namespace ft2
 }  // namespace sway::ui

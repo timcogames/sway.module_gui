@@ -3,7 +3,7 @@
 
 #include <sway/ui/_stdafx.hpp>
 #include <sway/ui/painter.hpp>
-#include <sway/ui/widget/typedefs.hpp>
+#include <sway/ui/widget/_typedefs.hpp>
 #include <sway/ui/widget/widget.hpp>
 
 namespace sway::ui {

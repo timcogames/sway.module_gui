@@ -6,7 +6,11 @@
 #include <sway/ui/ft2/face.hpp>
 
 namespace sway::ui {
-NS_BEGIN(ft2)
+
+/**
+ * @ingroup ft2
+ * @{
+ */
 
 struct FontGlyphId {
   u32_t idx;
@@ -19,10 +23,17 @@ struct FontGlyphId {
 
 class FontGlyph {
 public:
+#pragma region "Constructor(s) & Destructor"
+  /** \~english @name Constructor(s) & Destructor */ /** \~russian @name Конструктор(ы) и Деструктор */
+  /** @{ */
+
   FontGlyph(std::shared_ptr<Face> face)
       : face_(face) {}
 
   ~FontGlyph() = default;
+
+  /** @} */
+#pragma endregion
 
   static auto load(FT_Face face, FontGlyphId sym) -> std::optional<FT_GlyphSlot> {
     bool success = CHECK_RESULT(FT_Load_Glyph(face, sym.idx, FT_LOAD_DEFAULT));
@@ -37,7 +48,8 @@ private:
   std::shared_ptr<Face> face_;
 };
 
-NS_END()  // namespace ft2
+/** @} */  // ingroup ft2
+
 }  // namespace sway::ui
 
 #endif  // SWAY_UI_FT2_GLYPH_HPP

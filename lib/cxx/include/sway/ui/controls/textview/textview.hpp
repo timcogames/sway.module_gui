@@ -5,15 +5,15 @@
 #include <sway/ui/controls/textview/_typedefs.hpp>
 #include <sway/ui/painter.hpp>
 #include <sway/ui/typography.hpp>
-#include <sway/ui/widget/typedefs.hpp>
+#include <sway/ui/widget/_typedefs.hpp>
 #include <sway/ui/widget/widget.hpp>
 
 namespace sway::ui {
 
 class TextView : public Widget {
 public:
-#pragma region "Pointer aliases"
-  /** \~english @name Pointer aliases */ /** \~russian @name Типы указателей */
+#pragma region "Define aliases"
+  /** \~english @name Define aliases */ /** \~russian @name Определение алиасов */
   /** @{ */
 
   using SharedPtr_t = TextViewSharedPtr_t;
@@ -34,9 +34,9 @@ public:
 
 #pragma region "Overridden Widget methods"
 
-  MTHD_VIRTUAL(void update());
+  virtual void update();
 
-  MTHD_VIRTUAL(void repaint(PainterSharedPtr_t painter));
+  virtual void repaint(PainterSharedPtr_t painter);
 
 #pragma endregion
 
@@ -53,7 +53,7 @@ private:
   std::string font_;
 
   int fontSize_;
-  typography::col_t fontColor_;
+  math::col4f_t fontColor_;
 
   // int lineSpacing_;
   // math::col4f_t fontShadowColor_;

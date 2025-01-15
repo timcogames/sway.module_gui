@@ -11,6 +11,15 @@
 
 namespace sway::ui {
 
+/** @defgroup views Views */
+
+/**
+ * @ingroup views
+ * @brief Fundamental UI building block
+ * @verbatim
+    * [Size & Position](#size--position)
+  @endverbatim
+ */
 class Element : public core::Node, public core::Visibleable {
   DECLARE_EVENT(EVT_POINTER_ENTER, PointerEnter)
   DECLARE_EVENT(EVT_POINTER_LEAVE, PointerLeave)
@@ -26,7 +35,7 @@ public:
   virtual ~Element() = default;
 
   /** @} */
-#pragma endregion
+#pragma endregion  // region "Constructor(s) & Destructor"
 
 #pragma region "Pure virtual methods"
 
@@ -34,7 +43,11 @@ public:
 
   virtual auto getBarrierType() const -> BarrierType = 0;
 
-#pragma endregion
+#pragma endregion  // region "Pure virtual methods"
+
+#pragma region "Size & Position"
+  /** \~english @name Size & Position */ /** \~russian @name Размер и Позиция */
+  /** @{ */
 
 #pragma region "Getters/Setters Position"
 
@@ -42,7 +55,7 @@ public:
 
   [[nodiscard]] auto getPosition() const -> ElementPosition;
 
-#pragma endregion
+#pragma endregion  // region "Getters/Setters Position"
 
 #pragma region "Getters/Setters Offset"
 
@@ -78,7 +91,20 @@ public:
 
   auto getOffset() -> ElementOffset &;
 
-#pragma endregion
+#pragma endregion  // region "Getters/Setters Offset"
+
+#pragma region "Getters/Setters Size"
+
+  void setSize(const math::size2f_t &size);
+
+  void setSize(f32_t wdt, f32_t hgt);
+
+  [[nodiscard]] auto getSize() const -> math::size2f_t;
+
+#pragma endregion  // region "Getters/Setters Size"
+
+  /** @} */
+#pragma endregion  // region "Size & Position"
 
   void updateOffset();
 
@@ -89,18 +115,6 @@ public:
   [[nodiscard]] auto getOuterSize() const -> math::size2f_t;
 
   [[nodiscard]] auto getOuterSizeWithMargin() const -> math::size2f_t;
-
-  auto handleAddNode(const core::EventTypedefs::UniquePtr_t &evt) -> bool;
-
-#pragma region "Getters/Setters Size"
-
-  void setSize(const math::size2f_t &size);
-
-  void setSize(f32_t wdt, f32_t hgt);
-
-  [[nodiscard]] auto getSize() const -> math::size2f_t;
-
-#pragma endregion
 
   auto getChildAtPoint(const math::point2f_t &point) -> ElementPtr_t;
 
@@ -120,13 +134,18 @@ protected:
   math::Alignment alignment_;
 
 private:
+  /** @cond INTERNAL */
+
   AreaHolder holder_;
+
   ElementPosition position_;
   ElementOffset offset_;
 
   core::EventHandlerTypedefs::Ptr_t eventFilter_;
   ois::MouseFilter mouseFilter_;
   bool containsPointer_;
+
+  /** @endcond */
 };
 
 }  // namespace sway::ui

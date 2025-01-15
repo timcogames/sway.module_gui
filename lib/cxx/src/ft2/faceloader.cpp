@@ -1,7 +1,6 @@
 #include <sway/ui/ft2/faceloader.hpp>
 
 namespace sway::ui {
-NS_BEGIN(ft2)
 
 FaceLoader::FaceLoader(const std::string &url)
     : rms::Fetcher(url) {}
@@ -19,5 +18,4 @@ void FaceLoader::fetch() {
 #endif
 }
 
-NS_END()  // namespace ft2
 }  // namespace sway::ui

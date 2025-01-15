@@ -10,7 +10,7 @@
 NS_SHORT_SWAY()
 
 TEST(FontTest, ctor_def) {
-  auto fontMngr = std::make_shared<ui::ft2::FontManager>();
+  auto fontMngr = std::make_shared<ui::FontManager>();
   // fontMngr->load("array", "./assets/fonts/array.ttf");
   ASSERT_TRUE(fontMngr != nullptr);
 }

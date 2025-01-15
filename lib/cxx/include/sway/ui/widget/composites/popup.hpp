@@ -3,8 +3,8 @@
 
 #include <sway/ui/_stdafx.hpp>
 #include <sway/ui/painter.hpp>
+#include <sway/ui/widget/_typedefs.hpp>
 #include <sway/ui/widget/composites/draggable.hpp>
-#include <sway/ui/widget/typedefs.hpp>
 
 namespace sway::ui {
 

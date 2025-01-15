@@ -4,9 +4,9 @@
 #include <sway/ui/_stdafx.hpp>
 #include <sway/ui/ft2/face.hpp>
 #include <sway/ui/ft2/glyph.hpp>
+#include <sway/ui/json.hpp>
 
 namespace sway::ui {
-NS_BEGIN(ft2)
 
 #define NUM_GREYMAP_CMPTS 2
 
@@ -57,6 +57,11 @@ struct BitmapInfo {
       : data(Greymap::initial(size)) {}
 };
 
+/**
+ * @ingroup ft2
+ * @{
+ */
+
 struct CharInfo {
   math::size2i_t size;
   i32_t advance;
@@ -103,9 +108,9 @@ class Font {
 public:
   using SharedPtr_t = std::shared_ptr<Font>;
 
-  static void toJson(nlohmann::json &jdata, const FontGlyphDescriptor &glyph) {
+  static void toJson(Json &jdata, const FontGlyphDescriptor &glyph) {
     // clang-format off
-    jdata = nlohmann::json{
+    jdata = Json{
       {"a", glyph.advance}, 
       {"x", glyph.x}, 
       {"y", glyph.y}, 
@@ -116,7 +121,7 @@ public:
     // clang-format on
   }
 
-  static void fromJson(nlohmann::json &jdata, FontGlyphDescriptor &glyph) {
+  static void fromJson(Json &jdata, FontGlyphDescriptor &glyph) {
     jdata.at("x").get_to(glyph.x);
     jdata.at("y").get_to(glyph.y);
     jdata.at("t").get_to(glyph.top);
@@ -126,9 +131,16 @@ public:
     jdata.at("a").get_to(glyph.advance);
   }
 
+#pragma region "Constructor(s) & Destructor"
+  /** \~english @name Constructor(s) & Destructor */ /** \~russian @name Конструктор(ы) и Деструктор */
+  /** @{ */
+
   Font(std::shared_ptr<Face> face, math::size2i_t atlasSize, math::size2i_t atlasMarginSize);
 
   ~Font() = default;
+
+  /** @} */
+#pragma endregion
 
   void setHeight(u32_t height);
 
@@ -167,7 +179,8 @@ public:
   math::size2i_t maxSize_;
 };
 
-NS_END()  // namespace ft2
+/** @} */  // ingroup ft2
+
 }  // namespace sway::ui
 
 #endif  // SWAY_UI_FT2_FONT_HPP

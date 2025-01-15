@@ -5,16 +5,16 @@
 #include <sway/ui/layout/specs/linearlayout.hpp>
 #include <sway/ui/orientations.hpp>
 #include <sway/ui/painter.hpp>
+#include <sway/ui/widget/_typedefs.hpp>
 #include <sway/ui/widget/composites/menueventhandler.hpp>
 #include <sway/ui/widget/composites/menuitem.hpp>
-#include <sway/ui/widget/typedefs.hpp>
 
 namespace sway::ui {
 
 class Menu : public Widget {
 public:
-#pragma region "Pointer aliases"
-  /** \~english @name Pointer aliases */ /** \~russian @name Типы указателей */
+#pragma region "Define aliases"
+  /** \~english @name Define aliases */ /** \~russian @name Определение алиасов */
   /** @{ */
 
   using Ptr_t = MenuPtr_t;

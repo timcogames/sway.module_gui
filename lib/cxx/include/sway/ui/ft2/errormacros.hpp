@@ -5,7 +5,6 @@
 #include <sway/ui/ft2/errorconvertor.hpp>
 
 namespace sway::ui {
-NS_BEGIN(ft2)
 
 #define CHECK_RESULT(error)                                                                 \
   ({                                                                                        \
@@ -17,7 +16,6 @@ NS_BEGIN(ft2)
     true;                                                                                   \
   })
 
-NS_END()  // namespace ft2
 }  // namespace sway::ui
 
 #endif  // SWAY_UI_FT2_ERRORMACROS_HPP

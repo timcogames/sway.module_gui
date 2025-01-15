@@ -20,8 +20,8 @@ public:
   /** @} */
 #pragma endregion
 
-#pragma region "Pointer aliases"
-  /** \~english @name Pointer aliases */ /** \~russian @name Типы указателей */
+#pragma region "Define aliases"
+  /** \~english @name Define aliases */ /** \~russian @name Определение алиасов */
   /** @{ */
 
   using SharedPtr_t = LinearLayoutSharedPtr_t;

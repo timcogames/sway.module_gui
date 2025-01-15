@@ -45,8 +45,8 @@ class Painter : public render::RenderComponent, public render::FinalUpdatable {
   DECLARE_CLASS_METADATA(Painter, RenderComponent)
 
 public:
-#pragma region "Pointer aliases"
-  /** \~english @name Pointer aliases */ /** \~russian @name Типы указателей */
+#pragma region "Define aliases"
+  /** \~english @name Define aliases */ /** \~russian @name Определение алиасов */
   /** @{ */
 
   using SharedPtr_t = PainterSharedPtr_t;
@@ -65,7 +65,7 @@ public:
   /** @} */
 #pragma endregion
 
-  void initialize(ft2::Font::SharedPtr_t font, render::RenderSubsystemSharedPtr_t subsys,
+  void initialize(Font::SharedPtr_t font, render::RenderSubsystemSharedPtr_t subsys,
       render::MaterialManagerTypedefs::SharedPtr_t materialMngr, std::shared_ptr<rms::ImageResourceManager> imgResMngr,
       std::shared_ptr<rms::GLSLResourceManager> glslResMngr);
 
@@ -97,7 +97,7 @@ public:
 
   void clear();
 
-  auto getDefaultFont() -> ft2::Font::SharedPtr_t { return font_; }
+  auto getDefaultFont() -> Font::SharedPtr_t { return font_; }
 
   void setEnvironment(const core::Dictionary &env) { environment_ = env; }
 
@@ -129,7 +129,7 @@ private:
   u32_t rectId_;
   u32_t textId_;
 
-  ft2::Font::SharedPtr_t font_;
+  Font::SharedPtr_t font_;
 
   std::array<GeometryBatchChunk, GEOMERTY_BATCH_CHUNK_SIZE> geomBatchChunks_;
   u32_t geomBatchChunkSize_;

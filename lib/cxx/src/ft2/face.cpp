@@ -2,7 +2,6 @@
 #include <sway/ui/ft2/face.hpp>
 
 namespace sway::ui {
-NS_BEGIN(ft2)
 
 Face::Face(FT_Library lib, lpcstr_t filepath, u32_t idx)
     : face_(nullptr) {
@@ -27,5 +26,4 @@ Face::~Face() {
   face_ = nullptr;
 }
 
-NS_END()  // namespace ft2
 }  // namespace sway::ui
