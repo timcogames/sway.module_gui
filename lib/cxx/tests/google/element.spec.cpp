@@ -15,7 +15,7 @@ NS_SHORT_SWAY()
 
 class ElementImpl : public ui::Element {
 public:
-  virtual void recursiveUpdateItemOffset(const math::point2f_t parentOffset) {
+  virtual void recursiveUpdateItemOffsets(const math::point2f_t parentOffset) {
     // TODO
   }
 

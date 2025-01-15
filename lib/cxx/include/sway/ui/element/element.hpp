@@ -39,7 +39,7 @@ public:
 
 #pragma region "Pure virtual methods"
 
-  virtual void recursiveUpdateItemOffset(const math::point2f_t offset) = 0;
+  virtual void recursiveUpdateItemOffsets(const math::point2f_t offset) = 0;
 
   virtual auto getBarrierType() const -> BarrierType = 0;
 

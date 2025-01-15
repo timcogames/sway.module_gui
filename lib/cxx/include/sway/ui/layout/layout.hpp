@@ -39,6 +39,8 @@ public:
 
   MTHD_OVERRIDE(auto getBarrierType() const -> BarrierType) { return BarrierType::LAYOUT; }
 
+  virtual void setAdjacentChildOffsets() = 0;
+
   auto handleItemAdded(const core::EventTypedefs::UniquePtr_t &evt) -> bool;
 
   /**

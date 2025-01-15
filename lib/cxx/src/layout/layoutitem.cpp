@@ -5,7 +5,7 @@ namespace sway::ui {
 
 LayoutItem::LayoutItem() {}
 
-void LayoutItem::recursiveUpdateItemOffset(const math::point2f_t parentOffset) {
+void LayoutItem::recursiveUpdateItemOffsets(const math::point2f_t parentOffset) {
   auto elementOffset = math::point2f_t(
       parentOffset.getX() + getOffset().original.getX(), parentOffset.getY() + getOffset().original.getY());
 
@@ -18,7 +18,8 @@ void LayoutItem::recursiveUpdateItemOffset(const math::point2f_t parentOffset) {
     auto element = core::NodeUtil::cast<Element>(node.value());
     element->getOffset().computed = math::point2f_t(
         elementOffset.getX() /* + item->getMargin().getX() */, elementOffset.getY() /* + item->getMargin().getY() */);
-    element->recursiveUpdateItemOffset(parentOffset);
+    element->updateOffset();
+    element->recursiveUpdateItemOffsets(parentOffset);
   }
 }
 

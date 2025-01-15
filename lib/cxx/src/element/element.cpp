@@ -27,11 +27,6 @@ auto Element::getSize() const -> math::size2f_t {
 void Element::setOffset(const math::point2f_t &pnt) {
   offset_.original = pnt;
   offset_.markAsDirty();
-
-  // for (auto &node : getChildNodes()) {
-  //   auto child = NodeUtil::cast<Element>(node);
-  //   child->setOffset(pnt);
-  // }
 }
 
 void Element::setOffset(f32_t x, f32_t y) { setOffset(math::point2f_t(x, y)); }
@@ -48,6 +43,8 @@ void Element::updateOffset() {
     if (!parentOpt.has_value()) {
       offset_.computed = offset_.original;
     } else {
+      offset_.computed = offset_.original;
+
       auto parent = core::NodeUtil::cast<Element>(parentOpt);
       auto parentAreaHolder = parent->getAreaHolder();
       auto parentAreaPosition = parentAreaHolder.getPosition<ui::AreaType::IDX_CNT>();
@@ -58,15 +55,15 @@ void Element::updateOffset() {
       auto childContentSize = this->getAreaHolder().getContentSize();
 
       if (alignmentBase & math::ConvFromXAlign<math::HorzAlign::CENTER>()) {
-        x = (parentContentSize.getW() - childContentSize.getW()) / 2;
+        x = ((parentContentSize.getW() / parent->getNumOfChildNodes()) - childContentSize.getW()) / 2;
       } else if (alignmentBase & math::ConvFromXAlign<math::HorzAlign::RIGHT>()) {
-        x = (parentContentSize.getW() - childContentSize.getW());
+        x = ((parentContentSize.getW() / parent->getNumOfChildNodes()) - childContentSize.getW());
       }
 
       if (alignmentBase & math::ConvFromXAlign<math::VertAlign::CENTER>()) {
-        y = (parentContentSize.getH() - childContentSize.getH()) / 2;
+        y = ((parentContentSize.getH() / parent->getNumOfChildNodes()) - childContentSize.getH()) / 2;
       } else if (alignmentBase & math::ConvFromXAlign<math::VertAlign::BOTTOM>()) {
-        y = (parentContentSize.getH() - childContentSize.getH());
+        y = ((parentContentSize.getH() / parent->getNumOfChildNodes()) - childContentSize.getH());
       }
 
       offset_.computed = math::point2f_t(offset_.computed.getX() + x, offset_.computed.getY() + y);

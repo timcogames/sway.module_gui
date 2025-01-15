@@ -17,10 +17,8 @@ Layout::Layout(BuilderPtr_t builder, Orientation orien)
 auto Layout::handleItemAdded(const core::EventTypedefs::UniquePtr_t &evt) -> bool {
   auto *nodeEventData = static_cast<core::NodeEventData *>(evt->getData());
 
-  std::cout << Representation<core::NodeIndex>::get(this->getNodeIndex()) << std::endl;
-
-  /** При добавлении нового узла обновляем смещение всех дочерних элементов по отношению к родителю. */
-  recursiveUpdateItemOffset(math::point2f_zero);
+  setAdjacentChildOffsets();
+  recursiveUpdateItemOffsets(math::point2f_zero);
 
   // auto prevElement = (ElementSharedPtr_t) nullptr;
 

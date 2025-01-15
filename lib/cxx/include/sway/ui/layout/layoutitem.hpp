@@ -30,7 +30,7 @@ public:
 
 #pragma region "Overridden Element methods"
 
-  void recursiveUpdateItemOffset(const math::point2f_t offset) override;
+  void recursiveUpdateItemOffsets(const math::point2f_t offset) override;
 
 #pragma endregion
 

@@ -10,7 +10,7 @@ auto LinearLayout::create(BuilderPtr_t builder, Orientation orien) -> LinearLayo
 LinearLayout::LinearLayout(BuilderPtr_t builder, Orientation orien)
     : Layout(builder, orien) {}
 
-void LinearLayout::setAdjacentChildOffset() {
+void LinearLayout::setAdjacentChildOffsets() {
   auto accum = math::point2f_zero;
 
   for (auto i = 0; i < getNumOfChildNodes(); ++i) {
@@ -19,8 +19,8 @@ void LinearLayout::setAdjacentChildOffset() {
       continue;
     }
 
-    auto element = core::NodeUtil::cast<Element>(node.value());
-    element->setOffset(accum);
+    auto item = core::NodeUtil::cast<LayoutItem>(node.value());
+    item->setOffset(accum);
 
     if (getOrientation() == Orientation::HORZ) {
       accum.setX(accum.getX() + Layout::getCellSize(this).getW());
@@ -28,12 +28,6 @@ void LinearLayout::setAdjacentChildOffset() {
       accum.setY(accum.getY() + Layout::getCellSize(this).getH());
     }
   }
-}
-
-void LinearLayout::recursiveUpdateItemOffset(const math::point2f_t parentOffset) {
-  setAdjacentChildOffset();
-
-  LayoutItem::recursiveUpdateItemOffset(parentOffset);
 }
 
 }  // namespace sway::ui
