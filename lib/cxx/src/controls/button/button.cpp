@@ -9,13 +9,10 @@ auto Button::create(BuilderPtr_t builder, const std::string &text) -> ButtonShar
 }
 
 Button::Button(BuilderPtr_t builder, const std::string &text)
-    : Widget(builder)
-    , hovering_(false) {
-  textView_ = std::make_shared<TextView>(builder, text);
-  this->addChildNode(textView_);
-}
+    : TextView(builder, text)
+    , hovering_(false) {}
 
-Button::~Button() { this->removeChildNode(textView_); }
+Button::~Button() {}
 
 void Button::updateState() {
   const auto oldState = hovering_;
@@ -25,21 +22,19 @@ void Button::updateState() {
   }
 
   if (hovering_) {
-    textView_->setForegroundColor(COL4F_WHITE);
+    this->setForegroundColor(COL4F_WHITE);
     this->setBackgroundColor(COL4F_GRAY2);
   } else {
-    textView_->setForegroundColor(COL4F_BEIGE);
+    this->setForegroundColor(COL4F_BEIGE);
     this->setBackgroundColor(COL4F_GRAY1);
   }
 }
 
 void Button::update() {
-  textView_->setAlignment(math::Alignment::CENTER);
-  textView_->setOffset(this->getOffset().computed);
-  // textView_->updateOffset(nullptr);
-  textView_->setSize(this->getSize());
-
-  std::cout << "label " << textView_->getOffset().computed << std::endl;
+  this->setAlignment(math::Alignment::CENTER);
+  this->setOffset(this->getOffset().computed);
+  // this->updateOffset(nullptr);
+  this->setSize(this->getSize());
 
   // updateState();
 }
@@ -50,7 +45,7 @@ void Button::repaint(PainterSharedPtr_t painter) {
 
   painter->drawRect(math::rect4f_t(offset.getX(), offset.getY(), this->getSize()), this->getBackgroundColor(), zindex);
 
-  Widget::repaint(painter);
+  TextView::repaint(painter);
 }
 
 }  // namespace sway::ui

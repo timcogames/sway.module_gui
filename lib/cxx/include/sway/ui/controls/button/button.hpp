@@ -9,7 +9,7 @@
 
 namespace sway::ui {
 
-class Button : public Widget {
+class Button : public TextView {
 public:
 #pragma region "Static methods"
   /** \~english @name Creators */ /** \~russian @name Создатели */
@@ -50,10 +50,7 @@ public:
 
 #pragma endregion
 
-  auto getLabel() const -> TextViewSharedPtr_t { return textView_; }
-
 private:
-  TextViewSharedPtr_t textView_;
   bool hovering_;
 };
 
