@@ -33,7 +33,6 @@ void Button::updateState() {
 void Button::update() {
   this->setAlignment(math::Alignment::CENTER);
   this->setOffset(this->getOffset().computed);
-  // this->updateOffset(nullptr);
   this->setSize(this->getSize());
 
   // updateState();

@@ -36,8 +36,6 @@
 #include <sway/ui/widget/composites/popup.hpp>
 #include <sway/ui/widget/progress/progressbar.hpp>
 #include <sway/ui/widget/progress/progressmodes.hpp>
-#include <sway/ui/widget/sizepolicy.hpp>
-#include <sway/ui/widget/sizepolicytypes.hpp>
 #include <sway/ui/widget/widget.hpp>
 #include <sway/ui/widget/widgetevent.hpp>
 #include <sway/ui/widget/widgeteventtypes.hpp>

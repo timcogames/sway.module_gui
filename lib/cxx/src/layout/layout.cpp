@@ -3,7 +3,7 @@
 
 namespace sway::ui {
 
-auto Layout::getCellSize(ElementPtr_t elem) -> math::size2f_t {
+auto Layout::calculatesAutoCellSize(ElementPtr_t elem) -> math::size2f_t {
   return elem->getAreaHolder().getContentSize() / elem->getNumOfChildNodes();
 }
 

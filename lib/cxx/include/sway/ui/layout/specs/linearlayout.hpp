@@ -40,6 +40,8 @@ public:
   /** @} */
 #pragma endregion
 
+  auto getTotalUsedSize() -> math::sizef_t;
+
   /**
    * \~english
    * @brief Sets the adjacent offset for each child element in the linear layout.

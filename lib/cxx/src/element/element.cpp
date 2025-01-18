@@ -43,8 +43,6 @@ void Element::updateOffset() {
     if (!parentOpt.has_value()) {
       offset_.computed = offset_.original;
     } else {
-      offset_.computed = offset_.original;
-
       auto parent = core::NodeUtil::cast<Element>(parentOpt);
       auto parentAreaHolder = parent->getAreaHolder();
       auto parentAreaPosition = parentAreaHolder.getPosition<ui::AreaType::IDX_CNT>();
@@ -66,10 +64,11 @@ void Element::updateOffset() {
         y = ((parentContentSize.getH() / parent->getNumOfChildNodes()) - childContentSize.getH());
       }
 
+      offset_.computed = offset_.original;
       offset_.computed = math::point2f_t(offset_.computed.getX() + x, offset_.computed.getY() + y);
     }
   } else if (position_ == ElementPosition::ABSOLUTE || position_ == ElementPosition::FIXED) {
-    //     // auto parentInnerSize = parent->getInnerSize();
+    // auto parentInnerSize = parent->getInnerSize();
     offset_.computed = offset_.original;
   } else {
     offset_.computed = offset_.original;

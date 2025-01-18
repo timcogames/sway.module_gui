@@ -8,8 +8,24 @@
 #include <sway/ui/element/_typedefs.hpp>
 #include <sway/ui/element/elementoffset.hpp>
 #include <sway/ui/element/elementpositions.hpp>
+#include <sway/ui/transform/sizepolicy.hpp>
 
 namespace sway::ui {
+
+class Measurable {
+public:
+  void setSizePolicy(DimensionType dim, SizePolicyType policy) { sizePolicy_.setResizePolicy(dim, policy); }
+
+  auto getSizePolicy() const -> SizePolicy { return sizePolicy_; }
+
+  void setSizeDimensions(const math::size2f_t &size) {
+    std::get<0>(sizePolicy_.dimensions[0].value) = size.getW();
+    std::get<1>(sizePolicy_.dimensions[1].value) = size.getH();
+  }
+
+private:
+  SizePolicy sizePolicy_;
+};
 
 /** @defgroup views Views */
 
@@ -20,7 +36,7 @@ namespace sway::ui {
     * [Size & Position](#size--position)
   @endverbatim
  */
-class Element : public core::Node, public core::Visibleable {
+class Element : public Measurable, public core::Node, public core::Visibleable {
   DECLARE_EVENT(EVT_POINTER_ENTER, PointerEnter)
   DECLARE_EVENT(EVT_POINTER_LEAVE, PointerLeave)
   DECLARE_EVENT(EVT_MOUSE_CLICKED, MouseClicked)

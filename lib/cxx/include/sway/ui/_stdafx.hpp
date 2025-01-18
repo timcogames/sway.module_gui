@@ -15,6 +15,7 @@
 #include <optional>
 #include <stdio.h>
 #include <string>
+#include <tuple>
 #include <type_traits>  // conditional
 #include <unordered_map>
 #include <utility>

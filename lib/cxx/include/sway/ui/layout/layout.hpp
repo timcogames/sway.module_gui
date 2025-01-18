@@ -14,15 +14,11 @@ public:
 #pragma region "Static methods"
 
   /**
-   * \~english
-   * @brief Returns the size of the layout cell.
-   * @param[in] elem Pointer to the layout element.
-   *
    * \~russian
-   * @brief Возвращает размер ячейки макета.
+   * @brief Вычисляет размер ячейки макета.
    * @param[in] elem Указатель на элемент макета.
    */
-  static auto getCellSize(ElementPtr_t elem) -> math::size2f_t;
+  static auto calculatesAutoCellSize(ElementPtr_t elem) -> math::size2f_t;
 
 #pragma endregion
 

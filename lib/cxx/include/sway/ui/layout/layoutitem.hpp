@@ -35,6 +35,13 @@ public:
 #pragma endregion
 
   MTHD_OVERRIDE(auto getBarrierType() const -> BarrierType) { return BarrierType::NONE; }
+
+  auto getWeight() const -> f32_t { return weight_; }
+
+  void setWeight(f32_t weight) { weight_ = weight; }
+
+private:
+  f32_t weight_{0.0F};
 };
 
 }  // namespace sway::ui
