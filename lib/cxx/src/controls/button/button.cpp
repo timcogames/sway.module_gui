@@ -10,7 +10,9 @@ auto Button::create(BuilderPtr_t builder, const std::string &text) -> ButtonShar
 
 Button::Button(BuilderPtr_t builder, const std::string &text)
     : TextView(builder, text)
-    , hovering_(false) {}
+    , hovering_(false) {
+  setMouseFilter(ois::MouseFilter::PASS);
+}
 
 Button::~Button() {}
 
