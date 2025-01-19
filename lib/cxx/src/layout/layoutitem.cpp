@@ -9,18 +9,12 @@ void LayoutItem::recursiveUpdateItemOffsets(const math::point2f_t parentOffset) 
   auto elementOffset = math::point2f_t(
       parentOffset.getX() + getOffset().original.getX(), parentOffset.getY() + getOffset().original.getY());
 
-  for (auto i = 0; i < getNumOfChildNodes(); ++i) {
-    auto node = getChildAt(i);
-    if (!node.has_value()) {
-      continue;
-    }
-
-    auto element = core::NodeUtil::cast<Element>(node.value());
-    element->getOffset().computed = math::point2f_t(
+  foreachItems([&](LayoutItemSharedPtr_t item) {
+    item->getOffset().computed = math::point2f_t(
         elementOffset.getX() /* + item->getMargin().getX() */, elementOffset.getY() /* + item->getMargin().getY() */);
-    element->updateOffset();
-    element->recursiveUpdateItemOffsets(parentOffset);
-  }
+    item->updateOffset();
+    item->recursiveUpdateItemOffsets(parentOffset);
+  });
 }
 
 }  // namespace sway::ui

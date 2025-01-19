@@ -5,8 +5,11 @@
 
 namespace sway::ui {
 
+class Layout;
+class LayoutItem;
 class LinearLayout;
 
+using LayoutItemSharedPtr_t = std::shared_ptr<LayoutItem>;
 using LinearLayoutPtr_t = LinearLayout *;
 using LinearLayoutSharedPtr_t = std::shared_ptr<LinearLayout>;
 

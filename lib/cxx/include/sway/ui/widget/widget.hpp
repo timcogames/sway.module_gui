@@ -44,6 +44,7 @@ class Widget : public LayoutItem {
   // DECLARE_EVENT(EVT_ENTER, Enter)
   // DECLARE_EVENT(EVT_LEAVE, Leave)
   // DECLARE_EVENT(EVT_ACTIVATE, Activate)
+
 public:
 #pragma region "Constructor(s) & Destructor"
   /** \~english @name Constructor(s) & Destructor */ /** \~russian @name Конструктор(ы) и Деструктор */

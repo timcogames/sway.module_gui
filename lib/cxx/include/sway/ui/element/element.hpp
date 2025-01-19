@@ -20,7 +20,11 @@ public:
 
   void setSizeDimensions(const math::size2f_t &size) {
     std::get<0>(sizePolicy_.dimensions[0].value) = size.getW();
-    std::get<1>(sizePolicy_.dimensions[1].value) = size.getH();
+    std::get<0>(sizePolicy_.dimensions[1].value) = size.getH();
+  }
+
+  auto getDimensions() const -> math::size2f_t {
+    return math::size2f_t(std::get<0>(sizePolicy_.dimensions[0].value), std::get<0>(sizePolicy_.dimensions[1].value));
   }
 
 private:

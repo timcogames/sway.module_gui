@@ -34,6 +34,18 @@ public:
 
 #pragma endregion
 
+  template <typename TYPE>
+  void foreachItems(const TYPE &func) {
+    for (auto i = 0; i < getNumOfChildNodes(); ++i) {
+      auto node = getChildAt(i);
+      if (!node.has_value()) {
+        continue;
+      }
+
+      func(core::NodeUtil::cast<LayoutItem>(node.value()));
+    }
+  }
+
   MTHD_OVERRIDE(auto getBarrierType() const -> BarrierType) { return BarrierType::NONE; }
 
   auto getWeight() const -> f32_t { return weight_; }

@@ -64,7 +64,7 @@ TEST(LayoutTest, build) {
   ASSERT_EQ(btn2->getSizePolicy().dimensions[0].policy, ui::SizePolicyType::MATCH_PARENT);
   ASSERT_EQ(btn2->getSizePolicy().dimensions[1].policy, ui::SizePolicyType::WRAP_CONTENT);
   ASSERT_EQ(std::get<0>(btn2->getSizePolicy().dimensions[0].value), 150.0F);
-  ASSERT_EQ(std::get<1>(btn2->getSizePolicy().dimensions[1].value), 70.0F);
+  ASSERT_EQ(std::get<0>(btn2->getSizePolicy().dimensions[1].value), 70.0F);
 
   std::cout << "btn1: " << Representation<core::NodeIndex>::get(btn1->getNodeIndex())
             << " offset: " << btn1->getOffset().computed << std::endl;
@@ -86,17 +86,25 @@ TEST(LayoutTest, build_center) {
 
   auto mainLayout = ui::LinearLayout::create(builder.get());
   mainLayout->setSize(800.0F, 600.0F);
+  mainLayout->getAreaHolder().setEdge<ui::AreaType::IDX_MRG, math::RectEdge::Enum::IDX_L>(5.0F);
+  mainLayout->getAreaHolder().setEdge<ui::AreaType::IDX_MRG, math::RectEdge::Enum::IDX_R>(5.0F);
+  mainLayout->getAreaHolder().setEdge<ui::AreaType::IDX_MRG, math::RectEdge::Enum::IDX_T>(5.0F);
+  mainLayout->getAreaHolder().setEdge<ui::AreaType::IDX_MRG, math::RectEdge::Enum::IDX_B>(5.0F);
+  mainLayout->setSizePolicy(ui::DimensionType::ALL, ui::SizePolicyType::MATCH_PARENT);
+  mainLayout->setSizeDimensions({800.0F, 600.0F});
 
   auto btn1 = ui::Button::create(builder.get(), "btn1");
   btn1->setAlignment(math::Alignment::CENTER);
   btn1->setOffset(0.0F, 0.0F);
   btn1->setSize(150.0F, 70.0F);
+  btn1->setSizeDimensions({150.0F, 70.0F});
   mainLayout->addChildNode(btn1);
 
   auto btn2 = ui::Button::create(builder.get(), "btn2");
   btn2->setAlignment(math::Alignment::CENTER);
   btn2->setOffset(0.0F, 0.0F);
   btn2->setSize(150.0F, 70.0F);
+  btn2->setSizeDimensions({150.0F, 70.0F});
   mainLayout->addChildNode(btn2);
 
   std::cout << "btn1: " << Representation<core::NodeIndex>::get(btn1->getNodeIndex())

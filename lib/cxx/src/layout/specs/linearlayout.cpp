@@ -13,13 +13,8 @@ LinearLayout::LinearLayout(BuilderPtr_t builder, Orientation orien)
 
 auto LinearLayout::getTotalUsedSize() -> math::sizef_t {
   auto size = math::size2f_zero;
-  for (auto i = 0; i < getNumOfChildNodes(); ++i) {
-    auto node = getChildAt(i);
-    if (!node.has_value()) {
-      continue;
-    }
 
-    auto item = core::NodeUtil::cast<LayoutItem>(node.value());
+  foreachItems([&](LayoutItemSharedPtr_t item) {
     auto itemMargin = item->getAreaHolder().getArea<ui::AreaType::IDX_MRG>();
     if (!itemMargin.has_value()) {
       // Empty
@@ -42,7 +37,7 @@ auto LinearLayout::getTotalUsedSize() -> math::sizef_t {
         }
       }
     }
-  }
+  });
 
   return size;
 }
@@ -51,23 +46,18 @@ void LinearLayout::setAdjacentChildOffsets() {
   auto accum = math::point2f_zero;
   auto totalUsedSize = getTotalUsedSize();
 
-  for (auto i = 0; i < getNumOfChildNodes(); ++i) {
-    auto node = getChildAt(i);
-    if (!node.has_value()) {
-      continue;
-    }
-
-    auto item = core::NodeUtil::cast<LayoutItem>(node.value());
+  foreachItems([&](LayoutItemSharedPtr_t item) {
     item->setOffset(accum);
 
     if (getOrientation() == Orientation::HORZ) {
       if (item->getWeight() != 0.0F) {
+        auto pwdt = Dimension();
         auto cwdt = getSizePolicy().dimensions[math::Size<f32_t>::IDX_WDT];
-        Dimension pwdt;
 
         auto parent = getParentNode();
         if (!parent.has_value()) {
           pwdt = cwdt;
+          std::cout << "Parent is null " << std::get<0>(pwdt.value) << std::endl;
         } else {
           pwdt =
               core::NodeUtil::cast<LayoutItem>(parent.value())->getSizePolicy().dimensions[math::Size<f32_t>::IDX_WDT];
@@ -82,9 +72,10 @@ void LinearLayout::setAdjacentChildOffsets() {
 
     } else if (getOrientation() == Orientation::VERT) {
       if (item->getWeight() != 0.0F) {
-        auto parent = getParentNode();
         auto phgt = Dimension();
         auto chgt = getSizePolicy().dimensions[math::Size<f32_t>::IDX_HGT];
+
+        auto parent = getParentNode();
         if (!parent.has_value()) {
           phgt = chgt;
         } else {
@@ -93,13 +84,13 @@ void LinearLayout::setAdjacentChildOffsets() {
         }
 
         auto csize = (chgt.policy == SizePolicyType::MATCH_PARENT) ? chgt.value : phgt.value;
-        auto nsize = std::ceil(std::get<1>(csize) - totalUsedSize.getH()) * item->getWeight();
+        auto nsize = std::ceil(std::get<0>(csize) - totalUsedSize.getH()) * item->getWeight();
         std::cout << "vert: " << nsize << std::endl;
       }
 
       accum.setY(accum.getY() + Layout::calculatesAutoCellSize(this).getH());
     }
-  }
+  });
 }
 
 }  // namespace sway::ui
